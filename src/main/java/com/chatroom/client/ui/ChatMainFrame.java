@@ -75,11 +75,6 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
     private javax.swing.Timer userListRefreshTimer;
     
     /**
-     * 状态标签更新定时器
-     */
-    private javax.swing.Timer statusLabelUpdateTimer;
-    
-    /**
      * 用户列表刷新间隔（毫秒）
      */
     private static final int USER_LIST_REFRESH_INTERVAL = 30000; // 30秒
@@ -199,17 +194,8 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         JScrollPane userListScrollPane = new JScrollPane(userList);
         userListScrollPane.setBorder(BorderFactory.createEmptyBorder());
         
-        // 添加用户状态标签
-        statusLabel = new JLabel();
-        updateStatusLabel();
-        statusLabel.setFont(new Font("Microsoft YaHei", Font.ITALIC, 10));
-        statusLabel.setForeground(Color.GRAY);
-        statusLabel.setHorizontalAlignment(JLabel.CENTER);
-        statusLabel.setBorder(BorderFactory.createEmptyBorder(8, 5, 8, 5));
-        
         userListPanel.add(titleLabel, BorderLayout.NORTH);
         userListPanel.add(userListScrollPane, BorderLayout.CENTER);
-        userListPanel.add(statusLabel, BorderLayout.SOUTH);
         
         // 添加到左侧面板
         leftPanel.add(userInfoPanel, BorderLayout.NORTH);
@@ -240,25 +226,6 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         
         // 创建默认的系统消息面板
         addSystemPanel();
-    }
-    
-    /**
-     * 更新状态标签
-     */
-    private void updateStatusLabel() {
-        String lastUpdateText = "";
-        if (lastUserListRefreshTime > 0) {
-            long timeSinceLastUpdate = System.currentTimeMillis() - lastUserListRefreshTime;
-            if (timeSinceLastUpdate < 60000) {
-                // 不到一分钟显示秒数
-                lastUpdateText = String.format("距上次更新: %d秒", timeSinceLastUpdate / 1000);
-            } else {
-                // 超过一分钟显示分钟数
-                lastUpdateText = String.format("距上次更新: %d分钟", timeSinceLastUpdate / 60000);
-            }
-        }
-        
-        statusLabel.setText(String.format("<html><center>用户列表自动刷新中<br>用户登录/退出将立即更新<br><font color='#888888'>%s</font></center></html>", lastUpdateText));
     }
     
     /**
@@ -295,38 +262,12 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         
         // 启动用户列表自动刷新
         startUserListAutoRefresh();
-        
-        // 启动状态标签定时更新
-        startStatusLabelUpdate();
-    }
-    
-    /**
-     * 启动状态标签定时更新
-     */
-    private void startStatusLabelUpdate() {
-        statusLabelUpdateTimer = new javax.swing.Timer(1000, e -> {
-            updateStatusLabel();
-        });
-        statusLabelUpdateTimer.setRepeats(true);
-        statusLabelUpdateTimer.start();
-    }
-    
-    /**
-     * 停止状态标签定时更新
-     */
-    private void stopStatusLabelUpdate() {
-        if (statusLabelUpdateTimer != null && statusLabelUpdateTimer.isRunning()) {
-            statusLabelUpdateTimer.stop();
-        }
     }
     
     @Override
     public void dispose() {
         // 停止自动刷新定时器
         stopUserListAutoRefresh();
-        
-        // 停止状态标签定时更新
-        stopStatusLabelUpdate();
         
         // 注销消息监听器
         if (client != null && client.getMessageHandler() != null) {
@@ -441,7 +382,6 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         
         // 更新最后刷新时间
         lastUserListRefreshTime = System.currentTimeMillis();
-        updateStatusLabel();
         
         // 检查当前用户是否存在
         if (client.getCurrentUser() == null) {

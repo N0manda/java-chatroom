@@ -36,6 +36,11 @@ public class LoginFrame extends JFrame implements com.chatroom.client.MessageHan
     private JTextField usernameField;
     
     /**
+     * 密码输入框
+     */
+    private JPasswordField passwordField;
+    
+    /**
      * 服务器地址和端口输入框
      */
     private JTextField serverAddressField;
@@ -89,7 +94,7 @@ public class LoginFrame extends JFrame implements com.chatroom.client.MessageHan
      */
     private void initComponents() {
         setTitle("聊天室 - 登录");
-        setSize(400, 350);
+        setSize(400, 400);  // 增加窗口高度，容纳密码输入框
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         
@@ -167,11 +172,26 @@ public class LoginFrame extends JFrame implements com.chatroom.client.MessageHan
         gbc.anchor = GridBagConstraints.WEST;
         panel.add(usernameField, gbc);
         
-        // 状态标签
-        statusLabel = new JLabel("请输入服务器信息和用户名");
-        statusLabel.setForeground(Color.BLUE);
+        // 密码标签
+        JLabel passwordLabel = new JLabel("密码:");
         gbc.gridx = 0;
         gbc.gridy = 5;
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.EAST;
+        panel.add(passwordLabel, gbc);
+        
+        // 密码输入框
+        passwordField = new JPasswordField(15);
+        gbc.gridx = 1;
+        gbc.gridy = 5;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel.add(passwordField, gbc);
+        
+        // 状态标签
+        statusLabel = new JLabel("请输入服务器信息、用户名和密码");
+        statusLabel.setForeground(Color.BLUE);
+        gbc.gridx = 0;
+        gbc.gridy = 6;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         panel.add(statusLabel, gbc);
@@ -179,7 +199,7 @@ public class LoginFrame extends JFrame implements com.chatroom.client.MessageHan
         // 登录按钮
         loginButton = new JButton("登录");
         gbc.gridx = 0;
-        gbc.gridy = 6;
+        gbc.gridy = 7;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         panel.add(loginButton, gbc);
@@ -225,8 +245,9 @@ public class LoginFrame extends JFrame implements com.chatroom.client.MessageHan
         String serverAddress = serverAddressField.getText().trim();
         int serverPort = (Integer) portSpinner.getValue();
         
-        // 获取用户名
+        // 获取用户名和密码
         String username = usernameField.getText().trim();
+        String password = new String(passwordField.getPassword());
         
         logger.info("尝试登录: 用户={}, 服务器={}:{}", username, serverAddress, serverPort);
         
@@ -248,75 +269,46 @@ public class LoginFrame extends JFrame implements com.chatroom.client.MessageHan
         statusLabel.setText("正在连接服务器...");
         statusLabel.setForeground(Color.BLUE);
         
-        // 添加到连接历史
-        addToHistory(serverAddress, serverPort);
-        
-        // 启动连接线程
-        new Thread(() -> {
+        // 如果客户端为空或已断连，创建新客户端
+        if (client == null || !client.isConnected()) {
             try {
-                logger.info("创建客户端实例");
-                // 创建客户端实例
                 client = new ChatClient(serverAddress, serverPort);
                 
-                logger.info("尝试连接到服务器 {}:{}", serverAddress, serverPort);
-                // 连接服务器
-                if (!client.connect()) {
-                    logger.error("连接服务器失败: {}:{}", serverAddress, serverPort);
-                    SwingUtilities.invokeLater(() -> {
-                        statusLabel.setText("连接服务器失败");
-                        statusLabel.setForeground(Color.RED);
-                        loginButton.setEnabled(true);
-                    });
+                // 连接到服务器
+                boolean connected = client.connect();
+                if (!connected) {
+                    loginButton.setEnabled(true);
+                    statusLabel.setText("连接服务器失败");
+                    statusLabel.setForeground(Color.RED);
+                    logger.error("连接服务器失败");
                     return;
                 }
                 
-                logger.info("成功连接到服务器，注册响应监听器");
                 // 注册响应监听器
                 client.getMessageHandler().addResponseListener(this);
-                
-                // 发送登录请求
-                SwingUtilities.invokeLater(() -> {
-                    statusLabel.setText("正在登录...");
-                    statusLabel.setForeground(Color.BLUE);
-                });
-                
-                logger.info("发送登录请求: 用户名={}", username);
-                if (!client.login(username)) {
-                    logger.error("发送登录请求失败");
-                    SwingUtilities.invokeLater(() -> {
-                        statusLabel.setText("发送登录请求失败");
-                        statusLabel.setForeground(Color.RED);
-                        loginButton.setEnabled(true);
-                    });
-                } else {
-                    logger.info("登录请求已发送，等待服务器响应");
-                    
-                    // 设置超时检查，如果10秒后仍未收到响应，则提示用户
-                    new Thread(() -> {
-                        try {
-                            Thread.sleep(10000);
-                            if (client != null && loginButton != null && !loginButton.isEnabled()) {
-                                logger.warn("登录响应超时");
-                                SwingUtilities.invokeLater(() -> {
-                                    statusLabel.setText("登录响应超时，请重试");
-                                    statusLabel.setForeground(Color.RED);
-                                    loginButton.setEnabled(true);
-                                });
-                            }
-                        } catch (InterruptedException e) {
-                            // 忽略中断
-                        }
-                    }).start();
-                }
             } catch (Exception e) {
-                logger.error("登录过程中发生异常", e);
-                SwingUtilities.invokeLater(() -> {
-                    statusLabel.setText("登录错误: " + e.getMessage());
-                    statusLabel.setForeground(Color.RED);
-                    loginButton.setEnabled(true);
-                });
+                // 连接失败
+                loginButton.setEnabled(true);
+                statusLabel.setText("连接服务器失败: " + e.getMessage());
+                statusLabel.setForeground(Color.RED);
+                logger.error("连接服务器失败", e);
+                return;
             }
-        }).start();
+        }
+        
+        // 保存连接历史
+        addToHistory(serverAddress, serverPort);
+        
+        // 发送登录请求
+        boolean loginSent = client.login(username, password);
+        
+        if (!loginSent) {
+            loginButton.setEnabled(true);
+            statusLabel.setText("发送登录请求失败");
+            statusLabel.setForeground(Color.RED);
+            logger.error("发送登录请求失败");
+            client.disconnect();
+        }
     }
     
     @Override

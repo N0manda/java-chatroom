@@ -1,6 +1,7 @@
 package com.chatroom.server.ui;
 
 import com.chatroom.server.ChatServer;
+import com.chatroom.server.ChatServerLauncher;
 import com.chatroom.server.config.ServerConfig;
 import com.chatroom.server.config.ServerConfig.NetworkAddressInfo;
 
@@ -22,19 +23,20 @@ import org.slf4j.LoggerFactory;
 public class ServerConfigFrame extends JFrame {
     private static final Logger logger = LoggerFactory.getLogger(ServerConfigFrame.class);
     
-    private final ServerConfig config;
-    private JComboBox<NetworkAddressInfo> addressComboBox;
+    private final ServerConfig serverConfig;
+    private JComboBox<NetworkAddressInfo> bindAddressComboBox;
     private JSpinner portSpinner;
     private JCheckBox autoSelectPortCheckBox;
     private JButton startButton;
     private JButton cancelButton;
     private JTextArea logArea;
+    private ChatServer server;
     
     /**
      * 构造方法
      */
     public ServerConfigFrame() {
-        this.config = ServerConfig.getInstance();
+        this.serverConfig = ServerConfig.getInstance();
         initComponents();
         setupLayout();
         setupListeners();
@@ -50,14 +52,14 @@ public class ServerConfigFrame extends JFrame {
         setSize(500, 400);
         setLocationRelativeTo(null);
         
-        List<NetworkAddressInfo> addresses = config.getAvailableNetworkAddresses();
-        addressComboBox = new JComboBox<>(addresses.toArray(new NetworkAddressInfo[0]));
+        List<NetworkAddressInfo> addresses = serverConfig.getAvailableNetworkAddresses();
+        bindAddressComboBox = new JComboBox<>(addresses.toArray(new NetworkAddressInfo[0]));
         
-        SpinnerNumberModel portModel = new SpinnerNumberModel(config.getPort(), 1024, 65535, 1);
+        SpinnerNumberModel portModel = new SpinnerNumberModel(serverConfig.getPort(), 1024, 65535, 1);
         portSpinner = new JSpinner(portModel);
         
         autoSelectPortCheckBox = new JCheckBox("端口被占用时自动选择其他端口");
-        autoSelectPortCheckBox.setSelected(config.isAutoSelectPort());
+        autoSelectPortCheckBox.setSelected(serverConfig.isAutoSelectPort());
         
         startButton = new JButton("启动服务器");
         cancelButton = new JButton("取消");
@@ -89,7 +91,7 @@ public class ServerConfigFrame extends JFrame {
         
         gbc.gridx = 1;
         gbc.weightx = 1.0;
-        configPanel.add(addressComboBox, gbc);
+        configPanel.add(bindAddressComboBox, gbc);
         
         // 端口
         gbc.gridx = 0;
@@ -149,98 +151,70 @@ public class ServerConfigFrame extends JFrame {
      */
     private void loadCurrentConfig() {
         // 设置当前绑定地址
-        String currentBindAddress = config.getBindAddress();
-        for (int i = 0; i < addressComboBox.getItemCount(); i++) {
-            NetworkAddressInfo item = addressComboBox.getItemAt(i);
+        String currentBindAddress = serverConfig.getBindAddress();
+        for (int i = 0; i < bindAddressComboBox.getItemCount(); i++) {
+            NetworkAddressInfo item = bindAddressComboBox.getItemAt(i);
             if (item.getAddress().equals(currentBindAddress)) {
-                addressComboBox.setSelectedIndex(i);
+                bindAddressComboBox.setSelectedIndex(i);
                 break;
             }
         }
         
         // 设置当前端口
-        portSpinner.setValue(config.getPort());
+        portSpinner.setValue(serverConfig.getPort());
         
         // 设置自动选择端口
-        autoSelectPortCheckBox.setSelected(config.isAutoSelectPort());
-    }
-    
-    /**
-     * 保存配置
-     */
-    private void saveConfig() {
-        NetworkAddressInfo selectedAddress = (NetworkAddressInfo) addressComboBox.getSelectedItem();
-        if (selectedAddress != null) {
-            config.setBindAddress(selectedAddress.getAddress());
-        }
-        
-        config.setPort((Integer) portSpinner.getValue());
-        config.setAutoSelectPort(autoSelectPortCheckBox.isSelected());
-        config.saveConfig();
-        
-        log("配置已保存: 绑定地址=" + config.getBindAddress() + ", 端口=" + config.getPort() + 
-            ", 自动选择端口=" + config.isAutoSelectPort());
+        autoSelectPortCheckBox.setSelected(serverConfig.isAutoSelectPort());
     }
     
     /**
      * 启动服务器
      */
     private void startServer() {
-        saveConfig();
+        int port = (Integer) portSpinner.getValue();
+        String bindAddress = ((NetworkAddressInfo) bindAddressComboBox.getSelectedItem()).getAddress();
         
+        // 保存配置
+        serverConfig.setBindAddress(bindAddress);
+        serverConfig.setPort(port);
+        serverConfig.setAutoSelectPort(autoSelectPortCheckBox.isSelected());
+        serverConfig.saveConfig();
+        
+        // 使用启动器启动服务器
+        server = ChatServerLauncher.startServer(bindAddress, port);
+        
+        if (server != null) {
+            updateUIForServerRunning();
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "服务器启动失败，请检查端口是否被占用",
+                    "启动错误",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    /**
+     * 更新UI以反映服务器正在运行
+     */
+    private void updateUIForServerRunning() {
         // 禁用界面元素
-        addressComboBox.setEnabled(false);
+        bindAddressComboBox.setEnabled(false);
         portSpinner.setEnabled(false);
         autoSelectPortCheckBox.setEnabled(false);
         startButton.setEnabled(false);
         
-        log("正在启动服务器...");
+        log("服务器已启动，监听地址: " + serverConfig.getBindAddress() + ":" + serverConfig.getPort());
         
-        // 检查端口可用性
-        boolean portAvailable = checkPortAvailability(config.getBindAddress(), config.getPort());
-        int actualPort = config.getPort();
-        
-        if (!portAvailable && config.isAutoSelectPort()) {
-            // 自动查找可用端口
-            actualPort = findAvailablePort(config.getBindAddress());
-            if (actualPort != -1) {
-                log("端口 " + config.getPort() + " 已被占用，自动切换到端口 " + actualPort);
-            } else {
-                log("错误: 无法找到可用端口，请手动配置端口");
-                resetUI();
-                return;
-            }
-        } else if (!portAvailable) {
-            log("错误: 端口 " + config.getPort() + " 已被占用，请选择其他端口或启用自动选择端口功能");
-            resetUI();
-            return;
-        }
-        
-        // 启动服务器
-        final int finalPort = actualPort;
-        new Thread(() -> {
+        // 显示IP地址提示
+        if (serverConfig.getBindAddress().equals("0.0.0.0")) {
             try {
-                ChatServer server = new ChatServer(config.getBindAddress(), finalPort);
-                log("服务器已启动，监听地址: " + config.getBindAddress() + ":" + finalPort);
-                
-                // 显示IP地址提示
-                if (config.getBindAddress().equals("0.0.0.0")) {
-                    try {
-                        String localIP = InetAddress.getLocalHost().getHostAddress();
-                        log("服务器对外IP地址: " + localIP + ":" + finalPort);
-                        log("其他用户可以通过以上地址连接到服务器");
-                    } catch (Exception ex) {
-                        logger.error("获取本地IP地址失败", ex);
-                    }
-                }
-                
-                server.start();
+                String localIP = InetAddress.getLocalHost().getHostAddress();
+                log("服务器对外IP地址: " + localIP + ":" + serverConfig.getPort());
+                log("其他用户可以通过以上地址连接到服务器");
             } catch (Exception ex) {
-                log("启动服务器失败: " + ex.getMessage());
-                logger.error("启动服务器失败", ex);
-                resetUI();
+                logger.error("获取本地IP地址失败", ex);
             }
-        }).start();
+        }
     }
     
     /**
@@ -248,7 +222,7 @@ public class ServerConfigFrame extends JFrame {
      */
     private void resetUI() {
         SwingUtilities.invokeLater(() -> {
-            addressComboBox.setEnabled(true);
+            bindAddressComboBox.setEnabled(true);
             portSpinner.setEnabled(true);
             autoSelectPortCheckBox.setEnabled(true);
             startButton.setEnabled(true);
@@ -287,7 +261,7 @@ public class ServerConfigFrame extends JFrame {
                     null : InetAddress.getByName(bindAddress);
             
             // 尝试从基础端口开始找可用端口
-            for (int port = config.getPort() + 1; port < 65535; port++) {
+            for (int port = serverConfig.getPort() + 1; port < 65535; port++) {
                 try {
                     ServerSocket socket = new ServerSocket(port, 1, bindAddr);
                     socket.close();

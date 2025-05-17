@@ -185,11 +185,27 @@ public class ChatClient {
      * 登录
      * 
      * @param username 用户名
+     * @param password 密码
+     * @return 是否发送登录请求成功
+     */
+    public boolean login(String username, String password) {
+        // 创建登录请求对象，包含用户名和密码
+        ChatRequest request = new ChatRequest(
+                com.chatroom.common.network.RequestType.LOGIN,
+                null,
+                new String[]{username, password}
+        );
+        return sendRequest(request);
+    }
+    
+    /**
+     * 登录（向下兼容无密码版本）
+     * 
+     * @param username 用户名
      * @return 是否发送登录请求成功
      */
     public boolean login(String username) {
-        ChatRequest request = ChatRequest.createLoginRequest(username);
-        return sendRequest(request);
+        return login(username, "");
     }
     
     /**

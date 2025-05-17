@@ -152,17 +152,58 @@ public class ClientHandler implements Runnable {
         logger.info("处理登录请求: {}", request);
         
         try {
-            String username = (String) request.getData();
-            logger.info("用户尝试登录: {}", username);
+            Object requestData = request.getData();
+            if (!(requestData instanceof String[]) || ((String[])requestData).length < 1) {
+                sendResponse(ChatResponse.createErrorResponse(
+                        ResponseType.LOGIN_RESULT, 
+                        "无效的登录数据格式", 
+                        null));
+                return;
+            }
             
-            // 创建新用户
-            user = User.createUser(username);
+            String[] loginData = (String[])requestData;
+            String username = loginData[0];
+            String password = loginData.length > 1 ? loginData[1] : "";
+            
+            logger.info("用户尝试登录: {}，使用密码认证", username);
+            
+            // 创建新用户对象，但此时还未验证
+            user = User.createUser(username, password);
             logger.info("已创建用户对象: {}", user);
+            
+            // 检查该用户名是否已经存在
+            for (ClientHandler existingHandler : server.getOnlineUsers().values()) {
+                User existingUser = existingHandler.getUser();
+                if (existingUser != null && existingUser.getUsername().equals(username)) {
+                    // 用户名已经存在，检查密码是否正确
+                    if (existingUser.verifyPassword(password)) {
+                        // 密码正确，踢掉旧连接（实现单点登录）
+                        logger.info("用户密码验证通过，踢掉旧连接: {}", username);
+                        existingHandler.disconnect("您的账号在其他地方登录，此连接已断开");
+                        server.getOnlineUsers().remove(existingUser.getUserId());
+                    } else {
+                        // 密码错误
+                        logger.warn("用户密码验证失败: {}", username);
+                        sendResponse(ChatResponse.createErrorResponse(
+                                ResponseType.LOGIN_RESULT, 
+                                "密码错误", 
+                                null));
+                        user = null;
+                        return;
+                    }
+                    break;
+                }
+            }
             
             // 处理登录逻辑
             logger.info("调用服务器处理登录逻辑");
             ChatResponse response = server.handleLogin(user, this);
             logger.info("登录响应: success={}, message={}", response.isSuccess(), response.getMessage());
+            
+            // 如果登录失败，清除user引用
+            if (!response.isSuccess()) {
+                user = null;
+            }
             
             // 发送响应
             sendResponse(response);

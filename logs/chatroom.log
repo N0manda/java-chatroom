@@ -2657,3 +2657,300 @@ java.net.SocketException: 你的主机中的软件中止了一个已建立的连
 	at java.base/java.lang.Thread.run(Thread.java:1575)
 2025-05-17 22:21:41.671 [pool-1-thread-1] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
 2025-05-17 22:21:41.671 [pool-1-thread-1] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
+2025-05-17 22:41:43.497 [AWT-EventQueue-0] INFO  c.c.server.config.ServerConfig - 从配置文件加载服务器配置: bindAddress=10.29.183.159, port=9999, autoSelectPort=true
+2025-05-17 22:42:49.326 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已加载 2 个历史连接记录
+2025-05-17 22:42:51.202 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已加载 2 个历史连接记录
+2025-05-17 22:43:19.560 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 尝试登录: 用户=use1, 服务器=10.29.183.159:9999
+2025-05-17 22:43:19.565 [AWT-EventQueue-0] ERROR com.chatroom.client.ui.LoginFrame - 连接服务器失败
+java.lang.NullPointerException: Cannot invoke "com.chatroom.client.MessageHandler.addResponseListener(com.chatroom.client.MessageHandler$ResponseListener)" because the return value of "com.chatroom.client.ChatClient.getMessageHandler()" is null
+	at com.chatroom.client.ui.LoginFrame.login(LoginFrame.java:277)
+	at com.chatroom.client.ui.LoginFrame.lambda$setupListeners$0(LoginFrame.java:218)
+	at java.desktop/javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:1972)
+	at java.desktop/javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2314)
+	at java.desktop/javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:407)
+	at java.desktop/javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:262)
+	at java.desktop/javax.swing.AbstractButton.doClick(AbstractButton.java:374)
+	at java.desktop/javax.swing.plaf.basic.BasicRootPaneUI$Actions.actionPerformed(BasicRootPaneUI.java:259)
+	at java.desktop/javax.swing.SwingUtilities.notifyAction(SwingUtilities.java:1810)
+	at java.desktop/javax.swing.JComponent.processKeyBinding(JComponent.java:2962)
+	at java.desktop/javax.swing.KeyboardManager.fireBinding(KeyboardManager.java:309)
+	at java.desktop/javax.swing.KeyboardManager.fireKeyboardAction(KeyboardManager.java:251)
+	at java.desktop/javax.swing.JComponent.processKeyBindingsForAllComponents(JComponent.java:3055)
+	at java.desktop/javax.swing.JComponent.processKeyBindings(JComponent.java:3047)
+	at java.desktop/javax.swing.JComponent.processKeyEvent(JComponent.java:2924)
+	at java.desktop/java.awt.Component.processEvent(Component.java:6398)
+	at java.desktop/java.awt.Container.processEvent(Container.java:2266)
+	at java.desktop/java.awt.Component.dispatchEventImpl(Component.java:4996)
+	at java.desktop/java.awt.Container.dispatchEventImpl(Container.java:2324)
+	at java.desktop/java.awt.Component.dispatchEvent(Component.java:4828)
+	at java.desktop/java.awt.KeyboardFocusManager.redispatchEvent(KeyboardFocusManager.java:1942)
+	at java.desktop/java.awt.DefaultKeyboardFocusManager.dispatchKeyEvent(DefaultKeyboardFocusManager.java:883)
+	at java.desktop/java.awt.DefaultKeyboardFocusManager.preDispatchKeyEvent(DefaultKeyboardFocusManager.java:1146)
+	at java.desktop/java.awt.DefaultKeyboardFocusManager.typeAheadAssertions(DefaultKeyboardFocusManager.java:1020)
+	at java.desktop/java.awt.DefaultKeyboardFocusManager.dispatchEvent(DefaultKeyboardFocusManager.java:848)
+	at java.desktop/java.awt.Component.dispatchEventImpl(Component.java:4877)
+	at java.desktop/java.awt.Container.dispatchEventImpl(Container.java:2324)
+	at java.desktop/java.awt.Window.dispatchEventImpl(Window.java:2780)
+	at java.desktop/java.awt.Component.dispatchEvent(Component.java:4828)
+	at java.desktop/java.awt.EventQueue.dispatchEventImpl(EventQueue.java:775)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:720)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:714)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:98)
+	at java.desktop/java.awt.EventQueue$5.run(EventQueue.java:747)
+	at java.desktop/java.awt.EventQueue$5.run(EventQueue.java:745)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.desktop/java.awt.EventQueue.dispatchEvent(EventQueue.java:744)
+	at java.desktop/java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:203)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:124)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:113)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:109)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.desktop/java.awt.EventDispatchThread.run(EventDispatchThread.java:90)
+2025-05-17 22:43:21.026 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 尝试登录: 用户=use1, 服务器=10.29.183.159:9999
+2025-05-17 22:43:21.027 [AWT-EventQueue-0] ERROR com.chatroom.client.ui.LoginFrame - 连接服务器失败
+java.lang.NullPointerException: Cannot invoke "com.chatroom.client.MessageHandler.addResponseListener(com.chatroom.client.MessageHandler$ResponseListener)" because the return value of "com.chatroom.client.ChatClient.getMessageHandler()" is null
+	at com.chatroom.client.ui.LoginFrame.login(LoginFrame.java:277)
+	at com.chatroom.client.ui.LoginFrame.lambda$setupListeners$0(LoginFrame.java:218)
+	at java.desktop/javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:1972)
+	at java.desktop/javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2314)
+	at java.desktop/javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:407)
+	at java.desktop/javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:262)
+	at java.desktop/javax.swing.plaf.basic.BasicButtonListener.mouseReleased(BasicButtonListener.java:279)
+	at java.desktop/java.awt.Component.processMouseEvent(Component.java:6621)
+	at java.desktop/javax.swing.JComponent.processMouseEvent(JComponent.java:3404)
+	at java.desktop/java.awt.Component.processEvent(Component.java:6386)
+	at java.desktop/java.awt.Container.processEvent(Container.java:2266)
+	at java.desktop/java.awt.Component.dispatchEventImpl(Component.java:4996)
+	at java.desktop/java.awt.Container.dispatchEventImpl(Container.java:2324)
+	at java.desktop/java.awt.Component.dispatchEvent(Component.java:4828)
+	at java.desktop/java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4948)
+	at java.desktop/java.awt.LightweightDispatcher.processMouseEvent(Container.java:4575)
+	at java.desktop/java.awt.LightweightDispatcher.dispatchEvent(Container.java:4516)
+	at java.desktop/java.awt.Container.dispatchEventImpl(Container.java:2310)
+	at java.desktop/java.awt.Window.dispatchEventImpl(Window.java:2780)
+	at java.desktop/java.awt.Component.dispatchEvent(Component.java:4828)
+	at java.desktop/java.awt.EventQueue.dispatchEventImpl(EventQueue.java:775)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:720)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:714)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:98)
+	at java.desktop/java.awt.EventQueue$5.run(EventQueue.java:747)
+	at java.desktop/java.awt.EventQueue$5.run(EventQueue.java:745)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.desktop/java.awt.EventQueue.dispatchEvent(EventQueue.java:744)
+	at java.desktop/java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:203)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:124)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:113)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:109)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.desktop/java.awt.EventDispatchThread.run(EventDispatchThread.java:90)
+2025-05-17 22:43:55.472 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 尝试登录: 用户=admin, 服务器=10.29.183.159:9999
+2025-05-17 22:43:55.474 [AWT-EventQueue-0] ERROR com.chatroom.client.ui.LoginFrame - 连接服务器失败
+java.lang.NullPointerException: Cannot invoke "com.chatroom.client.MessageHandler.addResponseListener(com.chatroom.client.MessageHandler$ResponseListener)" because the return value of "com.chatroom.client.ChatClient.getMessageHandler()" is null
+	at com.chatroom.client.ui.LoginFrame.login(LoginFrame.java:277)
+	at com.chatroom.client.ui.LoginFrame.lambda$setupListeners$0(LoginFrame.java:218)
+	at java.desktop/javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:1972)
+	at java.desktop/javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2314)
+	at java.desktop/javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:407)
+	at java.desktop/javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:262)
+	at java.desktop/javax.swing.plaf.basic.BasicButtonListener.mouseReleased(BasicButtonListener.java:279)
+	at java.desktop/java.awt.Component.processMouseEvent(Component.java:6621)
+	at java.desktop/javax.swing.JComponent.processMouseEvent(JComponent.java:3404)
+	at java.desktop/java.awt.Component.processEvent(Component.java:6386)
+	at java.desktop/java.awt.Container.processEvent(Container.java:2266)
+	at java.desktop/java.awt.Component.dispatchEventImpl(Component.java:4996)
+	at java.desktop/java.awt.Container.dispatchEventImpl(Container.java:2324)
+	at java.desktop/java.awt.Component.dispatchEvent(Component.java:4828)
+	at java.desktop/java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4948)
+	at java.desktop/java.awt.LightweightDispatcher.processMouseEvent(Container.java:4575)
+	at java.desktop/java.awt.LightweightDispatcher.dispatchEvent(Container.java:4516)
+	at java.desktop/java.awt.Container.dispatchEventImpl(Container.java:2310)
+	at java.desktop/java.awt.Window.dispatchEventImpl(Window.java:2780)
+	at java.desktop/java.awt.Component.dispatchEvent(Component.java:4828)
+	at java.desktop/java.awt.EventQueue.dispatchEventImpl(EventQueue.java:775)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:720)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:714)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:98)
+	at java.desktop/java.awt.EventQueue$5.run(EventQueue.java:747)
+	at java.desktop/java.awt.EventQueue$5.run(EventQueue.java:745)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.desktop/java.awt.EventQueue.dispatchEvent(EventQueue.java:744)
+	at java.desktop/java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:203)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:124)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:113)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:109)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.desktop/java.awt.EventDispatchThread.run(EventDispatchThread.java:90)
+2025-05-17 22:43:56.451 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 尝试登录: 用户=admin, 服务器=10.29.183.159:9999
+2025-05-17 22:43:56.452 [AWT-EventQueue-0] ERROR com.chatroom.client.ui.LoginFrame - 连接服务器失败
+java.lang.NullPointerException: Cannot invoke "com.chatroom.client.MessageHandler.addResponseListener(com.chatroom.client.MessageHandler$ResponseListener)" because the return value of "com.chatroom.client.ChatClient.getMessageHandler()" is null
+	at com.chatroom.client.ui.LoginFrame.login(LoginFrame.java:277)
+	at com.chatroom.client.ui.LoginFrame.lambda$setupListeners$0(LoginFrame.java:218)
+	at java.desktop/javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:1972)
+	at java.desktop/javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2314)
+	at java.desktop/javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:407)
+	at java.desktop/javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:262)
+	at java.desktop/javax.swing.plaf.basic.BasicButtonListener.mouseReleased(BasicButtonListener.java:279)
+	at java.desktop/java.awt.Component.processMouseEvent(Component.java:6621)
+	at java.desktop/javax.swing.JComponent.processMouseEvent(JComponent.java:3404)
+	at java.desktop/java.awt.Component.processEvent(Component.java:6386)
+	at java.desktop/java.awt.Container.processEvent(Container.java:2266)
+	at java.desktop/java.awt.Component.dispatchEventImpl(Component.java:4996)
+	at java.desktop/java.awt.Container.dispatchEventImpl(Container.java:2324)
+	at java.desktop/java.awt.Component.dispatchEvent(Component.java:4828)
+	at java.desktop/java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4948)
+	at java.desktop/java.awt.LightweightDispatcher.processMouseEvent(Container.java:4575)
+	at java.desktop/java.awt.LightweightDispatcher.dispatchEvent(Container.java:4516)
+	at java.desktop/java.awt.Container.dispatchEventImpl(Container.java:2310)
+	at java.desktop/java.awt.Window.dispatchEventImpl(Window.java:2780)
+	at java.desktop/java.awt.Component.dispatchEvent(Component.java:4828)
+	at java.desktop/java.awt.EventQueue.dispatchEventImpl(EventQueue.java:775)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:720)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:714)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:98)
+	at java.desktop/java.awt.EventQueue$5.run(EventQueue.java:747)
+	at java.desktop/java.awt.EventQueue$5.run(EventQueue.java:745)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:87)
+	at java.desktop/java.awt.EventQueue.dispatchEvent(EventQueue.java:744)
+	at java.desktop/java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:203)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:124)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:113)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:109)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.desktop/java.awt.EventDispatchThread.run(EventDispatchThread.java:90)
+2025-05-17 22:49:32.061 [AWT-EventQueue-0] INFO  c.c.server.config.ServerConfig - 从配置文件加载服务器配置: bindAddress=10.29.183.159, port=9999, autoSelectPort=true
+2025-05-17 22:49:33.376 [AWT-EventQueue-0] INFO  c.c.server.config.ServerConfig - 服务器配置已保存
+2025-05-17 22:49:33.378 [AWT-EventQueue-0] INFO  c.c.server.config.UserCredentials - 已加载 4 个用户凭据
+2025-05-17 22:49:33.378 [AWT-EventQueue-0] INFO  c.chatroom.server.ChatServerLauncher - 已初始化用户凭据管理器
+2025-05-17 22:49:33.381 [AWT-EventQueue-0] INFO  com.chatroom.server.ChatServer - 已创建公共聊天室: 公共聊天室
+2025-05-17 22:49:33.382 [AWT-EventQueue-0] INFO  c.chatroom.server.ChatServerLauncher - 服务器已启动: 10.29.183.159:9999
+2025-05-17 22:49:33.383 [ForkJoinPool.commonPool-worker-1] INFO  com.chatroom.server.ChatServer - 聊天服务器已启动，监听地址: 10.29.183.159:9999
+2025-05-17 22:49:33.386 [AWT-EventQueue-0] INFO  c.c.server.ui.ServerConfigFrame - 服务器已启动，监听地址: 10.29.183.159:9999
+2025-05-17 22:49:37.352 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已加载 2 个历史连接记录
+2025-05-17 22:49:45.599 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 尝试登录: 用户=admin, 服务器=10.29.183.159:9999
+2025-05-17 22:49:45.600 [ForkJoinPool.commonPool-worker-1] INFO  com.chatroom.server.ChatServer - 新客户端连接: /10.29.183.159:4777
+2025-05-17 22:49:45.602 [AWT-EventQueue-0] INFO  com.chatroom.client.ChatClient - 已连接到服务器: 10.29.183.159:9999
+2025-05-17 22:49:45.603 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已保存 2 个历史连接记录
+2025-05-17 22:49:45.607 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 处理登录请求: ChatRequest{requestId='db1bd7e1-ceb1-4912-a136-4059b6f92f67', type=LOGIN, sender=null, timestamp=1747493385605}
+2025-05-17 22:49:45.611 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 用户尝试登录: admin，使用密码认证
+2025-05-17 22:49:45.611 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 已创建用户对象: com.chatroom.common.model.User@277d3afb
+2025-05-17 22:49:45.611 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 调用服务器处理登录逻辑
+2025-05-17 22:49:45.612 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 登录响应: success=false, message=用户名或密码错误
+2025-05-17 22:49:45.613 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 已发送登录响应
+2025-05-17 22:49:45.614 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到服务器响应: 类型=LOGIN_RESULT, 成功=false, 消息=用户名或密码错误
+2025-05-17 22:49:45.614 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 处理登录响应: 成功=false, 消息=用户名或密码错误
+2025-05-17 22:49:45.614 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 通知 1 个响应监听器
+2025-05-17 22:49:45.615 [pool-1-thread-1] INFO  com.chatroom.client.ui.LoginFrame - 收到响应: 类型=LOGIN_RESULT, 成功=false, 消息=用户名或密码错误
+2025-05-17 22:49:45.615 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 成功通知了 1 个响应监听器
+2025-05-17 22:49:45.622 [AWT-EventQueue-0] WARN  com.chatroom.client.ui.LoginFrame - 登录失败: 用户名或密码错误
+2025-05-17 22:50:12.795 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 尝试登录: 用户=test, 服务器=10.29.183.159:9999
+2025-05-17 22:50:12.798 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已保存 2 个历史连接记录
+2025-05-17 22:50:12.798 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 处理登录请求: ChatRequest{requestId='04b3174a-dc19-4d5b-8da2-556e012fcc9a', type=LOGIN, sender=null, timestamp=1747493412798}
+2025-05-17 22:50:12.798 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 用户尝试登录: test，使用密码认证
+2025-05-17 22:50:12.799 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 已创建用户对象: com.chatroom.common.model.User@25e3a9e0
+2025-05-17 22:50:12.799 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 调用服务器处理登录逻辑
+2025-05-17 22:50:12.799 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 登录响应: success=false, message=用户名或密码错误
+2025-05-17 22:50:12.799 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 已发送登录响应
+2025-05-17 22:50:12.799 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到服务器响应: 类型=LOGIN_RESULT, 成功=false, 消息=用户名或密码错误
+2025-05-17 22:50:12.799 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 处理登录响应: 成功=false, 消息=用户名或密码错误
+2025-05-17 22:50:12.799 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 通知 1 个响应监听器
+2025-05-17 22:50:12.799 [pool-1-thread-1] INFO  com.chatroom.client.ui.LoginFrame - 收到响应: 类型=LOGIN_RESULT, 成功=false, 消息=用户名或密码错误
+2025-05-17 22:50:12.800 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 成功通知了 1 个响应监听器
+2025-05-17 22:50:12.800 [AWT-EventQueue-0] WARN  com.chatroom.client.ui.LoginFrame - 登录失败: 用户名或密码错误
+2025-05-17 22:50:16.838 [AWT-EventQueue-0] INFO  com.chatroom.client.ChatClient - 已断开与服务器的连接
+2025-05-17 22:50:16.838 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 客户端断开连接: /10.29.183.159:4777
+2025-05-17 22:50:16.838 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 客户端连接已关闭: /10.29.183.159:4777
+2025-05-17 22:50:16.838 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 消息处理器已停止
+2025-05-17 22:54:34.346 [AWT-EventQueue-0] INFO  c.c.server.config.ServerConfig - 从配置文件加载服务器配置: bindAddress=10.29.183.159, port=9999, autoSelectPort=true
+2025-05-17 22:54:36.284 [AWT-EventQueue-0] INFO  c.c.server.config.ServerConfig - 服务器配置已保存
+2025-05-17 22:54:36.285 [AWT-EventQueue-0] INFO  c.c.server.config.UserCredentials - 用户凭据文件不存在，将创建新文件
+2025-05-17 22:54:36.285 [AWT-EventQueue-0] INFO  c.c.server.config.UserCredentials - 已添加/更新用户: admin
+2025-05-17 22:54:36.286 [AWT-EventQueue-0] INFO  c.c.server.config.UserCredentials - 已保存 1 个用户凭据
+2025-05-17 22:54:36.286 [AWT-EventQueue-0] INFO  c.chatroom.server.ChatServerLauncher - 已初始化用户凭据管理器
+2025-05-17 22:54:36.289 [AWT-EventQueue-0] INFO  com.chatroom.server.ChatServer - 已创建公共聊天室: 公共聊天室
+2025-05-17 22:54:36.290 [AWT-EventQueue-0] INFO  c.chatroom.server.ChatServerLauncher - 服务器已启动: 10.29.183.159:9999
+2025-05-17 22:54:36.290 [ForkJoinPool.commonPool-worker-1] INFO  com.chatroom.server.ChatServer - 聊天服务器已启动，监听地址: 10.29.183.159:9999
+2025-05-17 22:54:36.292 [AWT-EventQueue-0] INFO  c.c.server.ui.ServerConfigFrame - 服务器已启动，监听地址: 10.29.183.159:9999
+2025-05-17 22:55:21.968 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已加载 2 个历史连接记录
+2025-05-17 22:55:24.511 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 尝试登录: 用户=1, 服务器=10.29.183.159:9999
+2025-05-17 22:55:24.512 [ForkJoinPool.commonPool-worker-1] INFO  com.chatroom.server.ChatServer - 新客户端连接: /10.29.183.159:1431
+2025-05-17 22:55:24.514 [AWT-EventQueue-0] INFO  com.chatroom.client.ChatClient - 已连接到服务器: 10.29.183.159:9999
+2025-05-17 22:55:24.515 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已保存 2 个历史连接记录
+2025-05-17 22:55:24.520 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 处理登录请求: ChatRequest{requestId='0d707776-9088-41d0-a206-4cdd4efdb666', type=LOGIN, sender=null, timestamp=1747493724517}
+2025-05-17 22:55:24.523 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 用户尝试登录: 1，使用密码认证
+2025-05-17 22:55:24.524 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 已创建用户对象: com.chatroom.common.model.User@75e35e0e
+2025-05-17 22:55:24.524 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 调用服务器处理登录逻辑
+2025-05-17 22:55:24.524 [pool-1-thread-1] INFO  c.c.server.config.UserCredentials - 已添加/更新用户: 1
+2025-05-17 22:55:24.524 [pool-1-thread-1] INFO  c.c.server.config.UserCredentials - 已保存 2 个用户凭据
+2025-05-17 22:55:24.525 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 已添加新用户: 1
+2025-05-17 22:55:24.526 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 广播用户状态变更: [STATUS_CHANGE]1 已登录
+2025-05-17 22:55:24.529 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 已将用户 1 添加到公共聊天室
+2025-05-17 22:55:24.530 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 登录响应: success=true, message=登录成功
+2025-05-17 22:55:24.533 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 已发送登录响应
+2025-05-17 22:55:24.535 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到服务器响应: 类型=GENERIC_RESULT, 成功=true, 消息=登录成功
+2025-05-17 22:55:24.536 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 处理登录响应: 成功=true, 消息=登录成功
+2025-05-17 22:55:24.536 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 登录响应包含 2 个用户对象
+2025-05-17 22:55:24.536 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 设置当前用户: 1
+2025-05-17 22:55:24.536 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 发送获取用户列表请求
+2025-05-17 22:55:24.537 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 通知 1 个响应监听器
+2025-05-17 22:55:24.537 [pool-1-thread-1] INFO  com.chatroom.client.ui.LoginFrame - 收到响应: 类型=GENERIC_RESULT, 成功=true, 消息=登录成功
+2025-05-17 22:55:24.538 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 成功通知了 1 个响应监听器
+2025-05-17 22:55:24.538 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 登录成功，准备打开主界面
+2025-05-17 22:55:24.538 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 收到公共聊天室: 公共聊天室
+2025-05-17 22:55:24.540 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到服务器响应: 类型=USER_LIST, 成功=true, 消息=获取用户列表成功
+2025-05-17 22:55:24.540 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 通知 0 个响应监听器
+2025-05-17 22:55:24.540 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 成功通知了 0 个响应监听器
+2025-05-17 22:55:24.699 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 正在刷新用户列表...
+2025-05-17 22:55:24.700 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表自动刷新已启动，间隔: 30秒
+2025-05-17 22:55:24.700 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到服务器响应: 类型=USER_LIST, 成功=true, 消息=获取用户列表成功
+2025-05-17 22:55:24.700 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 正在刷新用户列表...
+2025-05-17 22:55:24.700 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 通知 1 个响应监听器
+2025-05-17 22:55:24.701 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 打开公共聊天室: 公共聊天室
+2025-05-17 22:55:24.700 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到用户列表响应：ChatResponse{responseId='99f98196-828e-40e8-a8d4-1010204d38ef', requestId='2c4bcaa1-1724-4e81-b01e-f50ffabe1358', type=USER_LIST, success=true, message='获取用户列表成功', timestamp=1747493724700}
+2025-05-17 22:55:24.704 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 成功通知了 1 个响应监听器
+2025-05-17 22:55:24.704 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到服务器响应: 类型=USER_LIST, 成功=true, 消息=获取用户列表成功
+2025-05-17 22:55:24.704 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 通知 1 个响应监听器
+2025-05-17 22:55:24.704 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到用户列表响应：ChatResponse{responseId='5d93d34d-d4dd-4abc-a8e1-e71ad37e7e9a', requestId='c58b118d-c061-462b-8460-1b1a5acb30b7', type=USER_LIST, success=true, message='获取用户列表成功', timestamp=1747493724701}
+2025-05-17 22:55:24.705 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 成功通知了 1 个响应监听器
+2025-05-17 22:55:24.788 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表不为空，共 1 个用户
+2025-05-17 22:55:24.789 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表已更新，共 0 个用户
+2025-05-17 22:55:24.789 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表不为空，共 1 个用户
+2025-05-17 22:55:24.789 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表已更新，共 0 个用户
+2025-05-17 22:55:27.532 [AWT-EventQueue-0] INFO  com.chatroom.client.ChatClient - 已断开与服务器的连接
+2025-05-17 22:55:27.532 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 广播用户状态变更: [STATUS_CHANGE]用户离线: 1
+2025-05-17 22:55:27.532 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 用户 1 已从群组 公共聊天室 中移除
+2025-05-17 22:55:27.532 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 消息处理器已停止
+2025-05-17 22:55:27.534 [pool-1-thread-1] ERROR c.c.server.handler.ClientHandler - 发送响应时出错: 你的主机中的软件中止了一个已建立的连接。
+java.net.SocketException: 你的主机中的软件中止了一个已建立的连接。
+	at java.base/sun.nio.ch.SocketDispatcher.write0(Native Method)
+	at java.base/sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:54)
+	at java.base/sun.nio.ch.NioSocketImpl.tryWrite(NioSocketImpl.java:394)
+	at java.base/sun.nio.ch.NioSocketImpl.implWrite(NioSocketImpl.java:410)
+	at java.base/sun.nio.ch.NioSocketImpl.write(NioSocketImpl.java:440)
+	at java.base/sun.nio.ch.NioSocketImpl$2.write(NioSocketImpl.java:819)
+	at java.base/java.net.Socket$SocketOutputStream.implWrite(Socket.java:1231)
+	at java.base/java.net.Socket$SocketOutputStream.write(Socket.java:1218)
+	at java.base/java.io.ObjectOutputStream$BlockDataOutputStream.drain(ObjectOutputStream.java:1900)
+	at java.base/java.io.ObjectOutputStream$BlockDataOutputStream.setBlockDataMode(ObjectOutputStream.java:1809)
+	at java.base/java.io.ObjectOutputStream.writeFatalException(ObjectOutputStream.java:1619)
+	at java.base/java.io.ObjectOutputStream.writeObject(ObjectOutputStream.java:362)
+	at com.chatroom.server.handler.ClientHandler.sendResponse(ClientHandler.java:399)
+	at com.chatroom.server.handler.ClientHandler.handleLogout(ClientHandler.java:228)
+	at com.chatroom.server.handler.ClientHandler.handleRequest(ClientHandler.java:113)
+	at com.chatroom.server.handler.ClientHandler.run(ClientHandler.java:78)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2025-05-17 22:55:27.536 [pool-1-thread-1] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
+2025-05-17 22:55:27.536 [pool-1-thread-1] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed

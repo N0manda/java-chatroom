@@ -1,8 +1,18 @@
 package com.chatroom.server;
 
+import com.chatroom.server.config.ServerConfig;
+import com.chatroom.server.config.UserCredentials;
 import com.chatroom.server.ui.ServerConfigFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 聊天服务器启动器
@@ -54,7 +64,7 @@ public class ChatServerLauncher {
      */
     private static void launchWithCli(LaunchParams params) {
         logger.info("使用命令行方式启动服务器，绑定地址: {}，端口: {}", params.bindAddress, params.port);
-        ChatServer server = new ChatServer(params.bindAddress, params.port);
+        ChatServer server = startServer(params.bindAddress, params.port);
         
         // 显示启动信息
         System.out.println("=================================================");
@@ -62,9 +72,34 @@ public class ChatServerLauncher {
         System.out.println("  绑定地址: " + params.bindAddress);
         System.out.println("  监听端口: " + params.port);
         System.out.println("=================================================");
-        
-        // 启动服务器
-        server.start();
+    }
+    
+    /**
+     * 启动服务器
+     * 
+     * @param bindAddress 绑定地址
+     * @param port 端口
+     * @return 服务器实例
+     */
+    public static ChatServer startServer(String bindAddress, int port) {
+        try {
+            // 初始化用户凭据管理器
+            UserCredentials.getInstance();
+            logger.info("已初始化用户凭据管理器");
+            
+            ChatServer server = new ChatServer(bindAddress, port);
+            
+            // 异步启动服务器
+            CompletableFuture.runAsync(() -> {
+                server.start();
+            });
+            
+            logger.info("服务器已启动: {}:{}", bindAddress, port);
+            return server;
+        } catch (Exception e) {
+            logger.error("启动服务器失败: {}", e.getMessage());
+            return null;
+        }
     }
     
     /**

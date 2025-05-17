@@ -8,6 +8,7 @@ import com.chatroom.common.network.ChatRequest;
 import com.chatroom.common.network.ChatResponse;
 import com.chatroom.common.network.RequestType;
 import com.chatroom.common.network.ResponseType;
+import com.chatroom.server.config.UserCredentials;
 import com.chatroom.server.handler.ClientHandler;
 import com.chatroom.server.ui.ServerConfigFrame;
 import org.slf4j.Logger;
@@ -238,10 +239,18 @@ public class ChatServer {
      * @return 登录结果响应
      */
     public synchronized ChatResponse handleLogin(User user, ClientHandler handler) {
+        // 获取用户凭据管理器
+        UserCredentials credentials = UserCredentials.getInstance();
+        
+        // 验证用户凭据
+        String username = user.getUsername();
+        String password = user.getPasswordHash().isEmpty() ? "" : user.getPasswordHash(); // 获取密码
+        
         // 检查用户名是否已经存在
         for (ClientHandler existingHandler : onlineUsers.values()) {
             User existingUser = existingHandler.getUser();
-            if (existingUser != null && existingUser.getUsername().equals(user.getUsername())) {
+            if (existingUser != null && existingUser.getUsername().equals(username)) {
+                // 用户已在线（此处逻辑保留，已在ClientHandler中实现更全面的检查）
                 return ChatResponse.createErrorResponse(
                         ResponseType.LOGIN_RESULT, 
                         "用户名已存在", 
@@ -249,8 +258,33 @@ public class ChatServer {
             }
         }
         
-        // 添加用户到在线用户列表
+        // 检查用户是否在凭据文件中，如果不在则可以自动注册（向下兼容）
+        // 或者检查用户凭据是否正确
+        boolean userExists = credentials.userExists(username);
+        boolean credentialsValid = userExists && credentials.validateCredentials(username, password);
+        
+        // 如果用户不存在且系统允许自动注册，则添加用户
+        if (!userExists) {
+            // 添加新用户到凭据文件
+            credentials.addUser(username, password);
+            credentials.saveCredentials();
+            logger.info("已添加新用户: {}", username);
+            credentialsValid = true;
+        }
+        
+        // 验证失败
+        if (!credentialsValid) {
+            return ChatResponse.createErrorResponse(
+                    ResponseType.LOGIN_RESULT, 
+                    "用户名或密码错误", 
+                    null);
+        }
+        
+        // 登录成功
         onlineUsers.put(user.getUserId(), handler);
+        
+        // 广播用户登录消息
+        broadcastUserStatusChange(username + " 已登录", true);
         
         // 获取公共聊天室
         ChatGroup publicChatRoom = getPublicChatRoom();
@@ -258,27 +292,15 @@ public class ChatServer {
         // 将用户添加到公共聊天室
         if (publicChatRoom != null) {
             publicChatRoom.addMember(user.getUserId());
-            
-            // 向公共聊天室发送欢迎消息
-            String welcomeMessage = "欢迎 " + user.getUsername() + " 加入公共聊天室！";
-            Message groupWelcome = Message.createSystemMessage(welcomeMessage, publicChatRoom.getGroupId(), true);
-            broadcastToGroup(groupWelcome, publicChatRoom.getGroupId());
-            
-            logger.info("用户 {} 已自动加入公共聊天室", user.getUsername());
+            logger.info("已将用户 {} 添加到公共聊天室", username);
         }
         
-        // 创建登录成功响应
-        Object[] data = {user, publicChatRoom};
-        
-        // 通知其他用户有新用户登录
-        String notificationContent = user.getUsername() + " 已加入聊天室";
-        Message notification = Message.createSystemMessage(notificationContent, null, false);
-        broadcastMessage(notification);
-        
-        // 发送用户状态变更控制消息（标记为重要状态变更）
-        broadcastUserStatusChange("用户上线: " + user.getUsername(), true);
-        
-        return ChatResponse.createSuccessResponse(null, "登录成功", data);
+        // 返回成功响应和公共聊天室信息
+        return ChatResponse.createSuccessResponse(
+                null,
+                "登录成功",
+                new Object[]{user, publicChatRoom}
+        );
     }
     
     /**
