@@ -81,6 +81,37 @@ public class ChatServer {
         this.executorService = Executors.newCachedThreadPool();
         this.onlineUsers = new ConcurrentHashMap<>();
         this.chatGroups = new ConcurrentHashMap<>();
+        
+        // 创建默认的公共聊天室
+        createPublicChatRoom();
+    }
+    
+    /**
+     * 创建公共聊天室
+     */
+    private void createPublicChatRoom() {
+        // 创建系统用户作为群主
+        User systemUser = User.createUser("系统");
+        
+        // 创建默认群组
+        ChatGroup publicGroup = ChatGroup.createGroup("公共聊天室", systemUser);
+        
+        // 将群组ID设为固定值，便于后续识别
+        publicGroup.setGroupId("public_chat_room");
+        
+        // 添加到群组映射
+        chatGroups.put(publicGroup.getGroupId(), publicGroup);
+        
+        logger.info("已创建公共聊天室: {}", publicGroup.getGroupName());
+    }
+    
+    /**
+     * 获取公共聊天室
+     * 
+     * @return 公共聊天室对象
+     */
+    public ChatGroup getPublicChatRoom() {
+        return chatGroups.get("public_chat_room");
     }
     
     /**
@@ -197,15 +228,30 @@ public class ChatServer {
         // 添加用户到在线用户列表
         onlineUsers.put(user.getUserId(), handler);
         
+        // 获取公共聊天室
+        ChatGroup publicChatRoom = getPublicChatRoom();
+        
+        // 将用户添加到公共聊天室
+        if (publicChatRoom != null) {
+            publicChatRoom.addMember(user.getUserId());
+            
+            // 向公共聊天室发送欢迎消息
+            String welcomeMessage = "欢迎 " + user.getUsername() + " 加入公共聊天室！";
+            Message groupWelcome = Message.createSystemMessage(welcomeMessage, publicChatRoom.getGroupId(), true);
+            broadcastToGroup(groupWelcome, publicChatRoom.getGroupId());
+            
+            logger.info("用户 {} 已自动加入公共聊天室", user.getUsername());
+        }
+        
         // 创建登录成功响应
-        Object[] users = {user};
+        Object[] data = {user, publicChatRoom};
         
         // 通知其他用户有新用户登录
         String notificationContent = user.getUsername() + " 已加入聊天室";
         Message notification = Message.createSystemMessage(notificationContent, null, false);
         broadcastMessage(notification);
         
-        return ChatResponse.createSuccessResponse(null, "登录成功", users);
+        return ChatResponse.createSuccessResponse(null, "登录成功", data);
     }
     
     /**

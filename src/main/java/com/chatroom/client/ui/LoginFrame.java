@@ -334,8 +334,22 @@ public class LoginFrame extends JFrame implements com.chatroom.client.MessageHan
                     statusLabel.setForeground(Color.GREEN);
                     client.getMessageHandler().removeResponseListener(this);
                     
-                    // 打开主聊天窗口
-                    openChatMainFrame();
+                    // 获取响应数据（用户和公共聊天室）
+                    Object[] data = (Object[]) response.getData();
+                    if (data != null && data.length > 0) {
+                        // 如果存在公共聊天室，将其传递给主窗口
+                        com.chatroom.common.model.ChatGroup publicChatRoom = null;
+                        if (data.length > 1 && data[1] instanceof com.chatroom.common.model.ChatGroup) {
+                            publicChatRoom = (com.chatroom.common.model.ChatGroup) data[1];
+                            logger.info("收到公共聊天室: {}", publicChatRoom.getGroupName());
+                        }
+                        
+                        // 打开主聊天窗口，传递公共聊天室
+                        openChatMainFrame(publicChatRoom);
+                    } else {
+                        // 如果没有收到数据，仍然打开主窗口
+                        openChatMainFrame(null);
+                    }
                 } else {
                     // 登录失败
                     logger.warn("登录失败: {}", response.getMessage());
@@ -351,15 +365,17 @@ public class LoginFrame extends JFrame implements com.chatroom.client.MessageHan
     
     /**
      * 打开主聊天窗口
+     * 
+     * @param publicChatRoom 公共聊天室（可为null）
      */
-    private void openChatMainFrame() {
+    private void openChatMainFrame(com.chatroom.common.model.ChatGroup publicChatRoom) {
         // 关闭登录窗口
         setVisible(false);
         dispose();
         
         // 打开主聊天窗口
         SwingUtilities.invokeLater(() -> {
-            ChatMainFrame mainFrame = new ChatMainFrame(client);
+            ChatMainFrame mainFrame = new ChatMainFrame(client, publicChatRoom);
             mainFrame.setVisible(true);
         });
     }

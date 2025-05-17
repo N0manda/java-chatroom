@@ -16,6 +16,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,7 +46,7 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
     /**
      * 活跃窗口
      */
-    private final List<ChatPanel> chatPanels;
+    private final List<MessagePanel> chatPanels;
     
     /**
      * 聊天面板
@@ -53,19 +54,42 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
     private JTabbedPane tabbedPane;
     
     /**
+     * 添加一个最近消息缓存，用于去重
+     */
+    private final java.util.Map<String, Boolean> recentMessageCache = java.util.Collections.synchronizedMap(
+            new java.util.LinkedHashMap<String, Boolean>() {
+                @Override
+                protected boolean removeEldestEntry(java.util.Map.Entry<String, Boolean> eldest) {
+                    return size() > 50; // 最多保留50条消息ID
+                }
+            });
+    
+    /**
+     * 当前聊天室对象
+     */
+    private com.chatroom.common.model.ChatGroup publicChatRoom;
+    
+    /**
      * 构造方法
      * 
      * @param client 客户端引用
+     * @param publicChatRoom 公共聊天室对象
      */
-    public ChatMainFrame(ChatClient client) {
+    public ChatMainFrame(ChatClient client, com.chatroom.common.model.ChatGroup publicChatRoom) {
         this.client = client;
         this.chatPanels = new ArrayList<>();
+        this.publicChatRoom = publicChatRoom;
         
         initComponents();
         setupListeners();
         
         // 初始化时刷新用户列表
         refreshUserList();
+        
+        // 如果有公共聊天室，自动打开
+        if (publicChatRoom != null) {
+            openPublicChatRoom();
+        }
     }
     
     /**
@@ -73,9 +97,16 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
      */
     private void initComponents() {
         setTitle("聊天室 - " + client.getCurrentUser().getUsername());
-        setSize(800, 600);
+        setSize(900, 650);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);
+        
+        try {
+            // 设置外观为系统外观
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            logger.error("设置界面外观失败: " + e.getMessage());
+        }
         
         // 创建菜单栏
         JMenuBar menuBar = new JMenuBar();
@@ -96,26 +127,81 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         
         // 创建分割面板
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        splitPane.setDividerLocation(200);
+        splitPane.setDividerLocation(250);
         splitPane.setDividerSize(5);
         
         // 用户列表面板
         JPanel leftPanel = new JPanel(new BorderLayout());
-        leftPanel.setBorder(BorderFactory.createTitledBorder("在线用户"));
+        leftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        
+        // 创建用户信息面板
+        JPanel userInfoPanel = new JPanel(new BorderLayout());
+        userInfoPanel.setBackground(new Color(240, 240, 240));
+        userInfoPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        ));
+        
+        // 用户头像和用户名
+        JLabel avatarLabel = new JLabel();
+        avatarLabel.setIcon(createDefaultAvatar(client.getCurrentUser().getUsername(), 40));
+        avatarLabel.setHorizontalAlignment(JLabel.CENTER);
+        
+        JLabel usernameLabel = new JLabel(client.getCurrentUser().getUsername());
+        usernameLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 14));
+        usernameLabel.setHorizontalAlignment(JLabel.CENTER);
+        
+        JPanel avatarPanel = new JPanel(new BorderLayout());
+        avatarPanel.setOpaque(false);
+        avatarPanel.add(avatarLabel, BorderLayout.CENTER);
+        avatarPanel.add(usernameLabel, BorderLayout.SOUTH);
+        
+        userInfoPanel.add(avatarPanel, BorderLayout.CENTER);
+        
+        // 在线用户列表面板
+        JPanel userListPanel = new JPanel(new BorderLayout());
+        userListPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+        
+        // 列表标题
+        JLabel titleLabel = new JLabel("在线用户");
+        titleLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 12));
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         
         // 创建用户列表
         userList = new JList<>();
         userList.setCellRenderer(new UserListCellRenderer());
+        userList.setFixedCellHeight(50);
         JScrollPane userListScrollPane = new JScrollPane(userList);
-        leftPanel.add(userListScrollPane, BorderLayout.CENTER);
+        userListScrollPane.setBorder(BorderFactory.createEmptyBorder());
         
         // 刷新按钮
         JButton refreshButton = new JButton("刷新用户列表");
-        leftPanel.add(refreshButton, BorderLayout.SOUTH);
+        refreshButton.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
         refreshButton.addActionListener(e -> refreshUserList());
+        
+        userListPanel.add(titleLabel, BorderLayout.NORTH);
+        userListPanel.add(userListScrollPane, BorderLayout.CENTER);
+        userListPanel.add(refreshButton, BorderLayout.SOUTH);
+        
+        // 添加到左侧面板
+        leftPanel.add(userInfoPanel, BorderLayout.NORTH);
+        leftPanel.add(userListPanel, BorderLayout.CENTER);
         
         // 创建聊天选项卡面板
         tabbedPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
+        tabbedPane.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
+        
+        // 选项卡切换监听器，清除新消息标记
+        tabbedPane.addChangeListener(e -> {
+            int selectedIndex = tabbedPane.getSelectedIndex();
+            if (selectedIndex >= 0) {
+                String title = tabbedPane.getTitleAt(selectedIndex);
+                if (title.startsWith("* ")) {
+                    // 清除新消息标记
+                    tabbedPane.setTitleAt(selectedIndex, title.substring(2));
+                }
+            }
+        });
         
         // 添加到分割面板
         splitPane.setLeftComponent(leftPanel);
@@ -186,7 +272,7 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         
         // 检查是否已存在与该用户的聊天
         for (int i = 0; i < chatPanels.size(); i++) {
-            ChatPanel panel = chatPanels.get(i);
+            MessagePanel panel = chatPanels.get(i);
             User targetUser = panel.getTargetUser();
             
             if (targetUser != null && targetUser.getUserId() != null && 
@@ -216,6 +302,49 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
     }
     
     /**
+     * 打开公共聊天室面板
+     */
+    private void openPublicChatRoom() {
+        logger.info("打开公共聊天室: {}", publicChatRoom.getGroupName());
+        
+        // 创建聊天面板
+        GroupChatPanel chatPanel = new GroupChatPanel(publicChatRoom.getGroupName(), publicChatRoom, client, userList);
+        chatPanels.add(chatPanel);
+        
+        // 添加到选项卡
+        tabbedPane.addTab(publicChatRoom.getGroupName(), null, chatPanel, "公共聊天室");
+        tabbedPane.setIconAt(tabbedPane.getTabCount() - 1, createGroupIcon());
+        tabbedPane.setSelectedIndex(tabbedPane.getTabCount() - 1);
+    }
+    
+    /**
+     * 创建群组图标
+     */
+    private ImageIcon createGroupIcon() {
+        // 创建一个简单的群组图标
+        BufferedImage image = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = image.createGraphics();
+        
+        // 抗锯齿
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        // 绘制背景
+        g2d.setColor(new Color(70, 130, 180));  // 钢蓝色
+        g2d.fillRect(0, 0, 16, 16);
+        
+        // 绘制群组符号
+        g2d.setColor(Color.WHITE);
+        g2d.fillOval(3, 3, 4, 4);
+        g2d.fillOval(9, 3, 4, 4);
+        g2d.fillOval(3, 9, 4, 4);
+        g2d.fillOval(9, 9, 4, 4);
+        
+        g2d.dispose();
+        
+        return new ImageIcon(image);
+    }
+    
+    /**
      * 刷新用户列表
      */
     private void refreshUserList() {
@@ -240,6 +369,8 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         final MessageHandler.ResponseListener responseListener = new MessageHandler.ResponseListener() {
             @Override
             public void onResponseReceived(ChatResponse response) {
+                logger.debug("收到响应: {}", response);
+                
                 if (response.getType() == ResponseType.USER_LIST) {
                     if (response.isSuccess()) {
                         logger.info("收到用户列表响应：{}", response);
@@ -258,7 +389,22 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
                             
                             // 更新UI上的用户列表
                             SwingUtilities.invokeLater(() -> {
-                                userList.setListData(users.toArray(new User[0]));
+                                if (users.isEmpty()) {
+                                    logger.warn("服务器返回的用户列表为空");
+                                } else {
+                                    logger.info("用户列表不为空，共 {} 个用户", users.size());
+                                }
+                                
+                                // 清除当前用户
+                                users.removeIf(user -> user.getUserId().equals(client.getCurrentUser().getUserId()));
+                                
+                                userList.setModel(new DefaultListModel<User>() {
+                                    {
+                                        for (User user : users) {
+                                            addElement(user);
+                                        }
+                                    }
+                                });
                                 logger.info("用户列表已更新，共 {} 个用户", users.size());
                             });
                         } else {
@@ -266,6 +412,11 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
                         }
                     } else {
                         logger.warn("获取用户列表失败: {}", response.getMessage());
+                        SwingUtilities.invokeLater(() -> 
+                            JOptionPane.showMessageDialog(ChatMainFrame.this, 
+                                "获取用户列表失败: " + response.getMessage(), 
+                                "错误", JOptionPane.ERROR_MESSAGE)
+                        );
                     }
                     
                     // 使用后移除监听器，防止重复处理
@@ -280,6 +431,11 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
             // 如果发送失败，移除监听器
             logger.error("发送获取用户列表请求失败");
             client.getMessageHandler().removeResponseListener(responseListener);
+            SwingUtilities.invokeLater(() -> 
+                JOptionPane.showMessageDialog(this, 
+                    "发送获取用户列表请求失败，请检查网络连接", 
+                    "错误", JOptionPane.ERROR_MESSAGE)
+            );
         }
     }
     
@@ -313,44 +469,190 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
     
     @Override
     public void onMessageReceived(Message message) {
+        // 检查消息有效性
+        if (message == null) {
+            logger.error("收到无效消息");
+            return;
+        }
+        
+        // 创建消息唯一标识，用于去重
+        String messageId = message.getSender() != null ? message.getSender().getUserId() : "system";
+        messageId += "_" + (message.getTimestamp() != null ? message.getTimestamp().getTime() : System.currentTimeMillis());
+        messageId += "_" + message.getContent();
+        
+        // 如果是最近处理过的消息，则忽略
+        if (recentMessageCache.containsKey(messageId)) {
+            logger.debug("忽略重复消息: {}", messageId);
+            return;
+        }
+        
+        // 添加到缓存
+        recentMessageCache.put(messageId, Boolean.TRUE);
+        
+        logger.info("收到消息: 发送者={}, 接收者={}, 内容={}, 是否群消息={}", 
+            message.getSender() != null ? message.getSender().getUsername() : "系统",
+            message.getReceiverId(),
+            message.getContent(),
+            message.isGroupMessage());
+            
         SwingUtilities.invokeLater(() -> {
             // 处理接收到的消息
             if (message.getType() == MessageType.SYSTEM) {
-                // 系统消息，显示在系统消息面板
-                ChatPanel systemPanel = chatPanels.get(0);
-                systemPanel.appendMessage(message);
-            } else {
-                // 个人消息，找到对应的聊天面板
-                User sender = message.getSender();
-                boolean handled = false;
-                
-                if (sender != null) {
+                // 判断是否是群组系统消息
+                if (message.isGroupMessage() && publicChatRoom != null && 
+                    message.getReceiverId() != null && 
+                    message.getReceiverId().equals(publicChatRoom.getGroupId())) {
+                    
+                    // 找到公共聊天室面板
+                    boolean foundPanel = false;
                     for (int i = 0; i < chatPanels.size(); i++) {
-                        ChatPanel panel = chatPanels.get(i);
-                        User targetUser = panel.getTargetUser();
+                        MessagePanel panel = chatPanels.get(i);
+                        com.chatroom.common.model.ChatGroup group = panel.getChatGroup();
                         
-                        if (targetUser != null && targetUser.getUserId().equals(sender.getUserId())) {
+                        if (group != null && group.getGroupId().equals(publicChatRoom.getGroupId())) {
+                            panel.appendMessage(message);
+                            foundPanel = true;
+                            
+                            // 如果不是当前选中的选项卡，标记为有新消息
+                            if (i != tabbedPane.getSelectedIndex()) {
+                                tabbedPane.setTitleAt(i, "* " + publicChatRoom.getGroupName());
+                            }
+                            break;
+                        }
+                    }
+                    
+                    // 如果没有找到面板，尝试打开
+                    if (!foundPanel && publicChatRoom != null) {
+                        openPublicChatRoom();
+                        // 将消息添加到新打开的面板
+                        chatPanels.get(chatPanels.size() - 1).appendMessage(message);
+                    }
+                } else {
+                    // 其他系统消息显示在系统消息面板
+                    logger.debug("处理系统消息");
+                    if (!chatPanels.isEmpty()) {
+                        chatPanels.get(0).appendMessage(message);
+                    } else {
+                        logger.error("系统消息面板不存在，无法显示系统消息");
+                    }
+                }
+            } else if (message.isGroupMessage()) {
+                // 处理群聊消息
+                if (publicChatRoom != null && message.getReceiverId() != null && 
+                    message.getReceiverId().equals(publicChatRoom.getGroupId())) {
+                    
+                    // 查找公共聊天室面板
+                    boolean foundPanel = false;
+                    for (int i = 0; i < chatPanels.size(); i++) {
+                        MessagePanel panel = chatPanels.get(i);
+                        com.chatroom.common.model.ChatGroup group = panel.getChatGroup();
+                        
+                        if (group != null && group.getGroupId().equals(publicChatRoom.getGroupId())) {
+                            panel.appendMessage(message);
+                            foundPanel = true;
+                            
+                            // 如果不是当前选中的选项卡，标记为有新消息
+                            if (i != tabbedPane.getSelectedIndex()) {
+                                tabbedPane.setTitleAt(i, "* " + publicChatRoom.getGroupName());
+                            }
+                            break;
+                        }
+                    }
+                    
+                    // 如果没有找到面板，尝试打开
+                    if (!foundPanel && publicChatRoom != null) {
+                        openPublicChatRoom();
+                        // 将消息添加到新打开的面板
+                        chatPanels.get(chatPanels.size() - 1).appendMessage(message);
+                    }
+                }
+            } else {
+                // 处理私聊消息
+                boolean handled = false;
+                User currentUser = client.getCurrentUser();
+                User sender = message.getSender();
+                String receiverId = message.getReceiverId();
+                
+                logger.debug("处理用户消息: 当前用户={}, 发送者={}, 接收者={}", 
+                    currentUser != null ? currentUser.getUsername() : "未知",
+                    sender != null ? sender.getUsername() : "未知",
+                    receiverId);
+                
+                // 确定目标用户（与谁聊天）
+                User targetUser = null;
+                
+                // 如果当前用户是接收者，那么发送者就是目标用户
+                if (currentUser != null && receiverId != null && 
+                    receiverId.equals(currentUser.getUserId())) {
+                    targetUser = sender;
+                    logger.debug("当前用户是接收者，发送者是目标用户: {}", 
+                        targetUser != null ? targetUser.getUsername() : "未知");
+                } 
+                // 如果当前用户是发送者，那么接收者就是目标用户
+                else if (currentUser != null && sender != null && 
+                         currentUser.getUserId().equals(sender.getUserId())) {
+                    // 这里我们需要找到接收者的User对象
+                    // 由于接收者可能不在当前用户列表中，所以这里可能为空
+                    // 在实际应用中，可能需要从服务器获取用户信息
+                    for (int i = 0; i < userList.getModel().getSize(); i++) {
+                        User user = userList.getModel().getElementAt(i);
+                        if (user.getUserId().equals(receiverId)) {
+                            targetUser = user;
+                            break;
+                        }
+                    }
+                    logger.debug("当前用户是发送者，接收者是目标用户: {}", 
+                        targetUser != null ? targetUser.getUsername() : "未知ID:" + receiverId);
+                }
+                
+                // 查找或创建聊天面板
+                if (targetUser != null) {
+                    // 查找现有面板
+                    for (int i = 0; i < chatPanels.size(); i++) {
+                        MessagePanel panel = chatPanels.get(i);
+                        User panelTargetUser = panel.getTargetUser();
+                        
+                        if (panelTargetUser != null && panelTargetUser.getUserId() != null && 
+                            panelTargetUser.getUserId().equals(targetUser.getUserId())) {
                             // 找到对应的聊天面板
+                            logger.debug("找到聊天面板 [{}]，添加消息", i);
                             panel.appendMessage(message);
                             handled = true;
                             
                             // 如果不是当前选中的选项卡，标记为有新消息
                             if (i != tabbedPane.getSelectedIndex()) {
-                                tabbedPane.setTitleAt(i, "* " + targetUser.getUsername());
+                                tabbedPane.setTitleAt(i, "* " + panelTargetUser.getUsername());
                             }
                             
                             break;
                         }
                     }
+                    
+                    // 没有找到面板，创建新的
+                    if (!handled) {
+                        logger.debug("未找到聊天面板，创建新面板");
+                        openChatWithUser(targetUser);
+                        
+                        if (!chatPanels.isEmpty()) {
+                            // 添加消息到新打开的面板
+                            logger.debug("添加消息到新创建的聊天面板");
+                            chatPanels.get(chatPanels.size() - 1).appendMessage(message);
+                            handled = true;
+                        } else {
+                            logger.error("创建聊天面板失败，无法显示消息");
+                        }
+                    }
+                } else {
+                    logger.warn("无法确定目标用户，消息将显示在系统消息面板");
+                    // 如果无法确定目标用户，显示在系统消息面板
+                    if (!chatPanels.isEmpty()) {
+                        chatPanels.get(0).appendMessage(message);
+                        handled = true;
+                    }
                 }
                 
                 if (!handled) {
-                    // 如果没有对应的聊天面板，打开一个新的
-                    if (sender != null && !sender.getUserId().equals(client.getCurrentUser().getUserId())) {
-                        openChatWithUser(sender);
-                        // 添加消息到新打开的面板
-                        chatPanels.get(chatPanels.size() - 1).appendMessage(message);
-                    }
+                    logger.error("消息未被处理: {}", message.getContent());
                 }
             }
         });
@@ -359,33 +661,75 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
     /**
      * 用户列表单元格渲染器
      */
-    private static class UserListCellRenderer extends DefaultListCellRenderer {
+    private class UserListCellRenderer extends DefaultListCellRenderer {
         @Override
         public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            JPanel panel = new JPanel(new BorderLayout(10, 0));
+            panel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+            
+            if (isSelected) {
+                panel.setBackground(new Color(240, 248, 255)); // 浅蓝色背景
+                panel.setBorder(BorderFactory.createMatteBorder(0, 3, 0, 0, new Color(52, 152, 219)));
+            } else {
+                panel.setBackground(Color.WHITE);
+            }
             
             if (value instanceof User) {
                 User user = (User) value;
-                setText(user.getUsername());
+                
+                // 创建用户头像
+                JLabel avatarLabel = new JLabel();
+                avatarLabel.setIcon(createDefaultAvatar(user.getUsername(), 30));
+                
+                // 用户名和状态
+                JPanel userInfoPanel = new JPanel(new BorderLayout());
+                userInfoPanel.setOpaque(false);
+                
+                JLabel nameLabel = new JLabel(user.getUsername());
+                nameLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 13));
+                
+                JLabel statusLabel = new JLabel("在线");
+                statusLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 11));
+                statusLabel.setForeground(new Color(46, 204, 113)); // 绿色
+                
+                userInfoPanel.add(nameLabel, BorderLayout.NORTH);
+                userInfoPanel.add(statusLabel, BorderLayout.SOUTH);
+                
+                // 添加到面板
+                panel.add(avatarLabel, BorderLayout.WEST);
+                panel.add(userInfoPanel, BorderLayout.CENTER);
+                
+                // 添加一个双击提示标签
+                JLabel tipLabel = new JLabel("双击开始聊天");
+                tipLabel.setFont(new Font("Microsoft YaHei", Font.ITALIC, 10));
+                tipLabel.setForeground(Color.GRAY);
+                tipLabel.setHorizontalAlignment(JLabel.RIGHT);
+                
+                panel.add(tipLabel, BorderLayout.EAST);
             }
             
-            return c;
+            return panel;
         }
     }
     
     /**
      * 聊天面板
      */
-    private static class ChatPanel extends JPanel {
+    private static class ChatPanel extends JPanel implements MessagePanel {
         /**
          * 目标用户
          */
         private final User targetUser;
         
         /**
-         * 聊天记录
+         * 聊天记录面板
          */
-        private final JTextPane chatArea;
+        private final JPanel chatArea;
+        
+        /**
+         * 聊天记录滚动窗格
+         */
+        private final JScrollPane chatScrollPane;
         
         /**
          * 消息输入框
@@ -420,12 +764,14 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
             
             setLayout(new BorderLayout());
             
-            // 聊天记录区域
-            chatArea = new JTextPane();
-            chatArea.setEditable(false);
-            chatArea.setContentType("text/html");
-            JScrollPane chatScrollPane = new JScrollPane(chatArea);
+            // 聊天记录区域 - 改为垂直BoxLayout的JPanel
+            chatArea = new JPanel();
+            chatArea.setLayout(new BoxLayout(chatArea, BoxLayout.Y_AXIS));
+            chatArea.setBackground(Color.WHITE);
+            
+            chatScrollPane = new JScrollPane(chatArea);
             chatScrollPane.setPreferredSize(new Dimension(400, 300));
+            chatScrollPane.getVerticalScrollBar().setUnitIncrement(16);
             
             // 输入区域
             inputArea = new JTextArea();
@@ -463,19 +809,43 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
                 }
             });
             
-            // 如果是系统消息面板，禁用输入
-            if (targetUser == null) {
-                inputArea.setEnabled(false);
-                sendButton.setEnabled(false);
-                
-                // 添加系统面板说明
-                String welcomeText = "<html><body><div style='color:blue; font-family:Microsoft YaHei;'>这是系统消息面板，将显示系统通知和公告。</div></body></html>";
-                chatArea.setText(welcomeText);
-            } else {
-                // 添加用户聊天欢迎消息
-                String welcomeText = "<html><body><div style='color:blue; font-family:Microsoft YaHei;'>已开始与 " + targetUser.getUsername() + " 的聊天。</div></body></html>";
-                chatArea.setText(welcomeText);
+            // 初始欢迎消息
+            try {
+                if (targetUser == null) {
+                    // 系统消息面板
+                    inputArea.setEnabled(false);
+                    sendButton.setEnabled(false);
+                    
+                    // 添加系统面板说明
+                    addSystemMessage("这是系统消息面板，将显示系统通知和公告。");
+                } else {
+                    // 添加用户聊天欢迎消息
+                    addSystemMessage("已开始与 " + targetUser.getUsername() + " 的聊天。");
+                }
+            } catch (Exception e) {
+                System.out.println("设置初始消息失败: " + e.getMessage());
             }
+        }
+        
+        /**
+         * 添加系统消息
+         * 
+         * @param text 系统消息文本
+         */
+        private void addSystemMessage(String text) {
+            JPanel messagePanel = new JPanel();
+            messagePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+            messagePanel.setBackground(Color.WHITE);
+            
+            JLabel messageLabel = new JLabel(text);
+            messageLabel.setForeground(Color.GRAY);
+            messageLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
+            
+            messagePanel.add(messageLabel);
+            chatArea.add(messagePanel);
+            
+            updateUI();
+            scrollToBottom();
         }
         
         /**
@@ -491,6 +861,11 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
                 return;
             }
             
+            if (client == null || client.getCurrentUser() == null) {
+                JOptionPane.showMessageDialog(this, "无法发送消息：客户端未连接或未登录", "发送失败", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
             // 创建消息对象
             Message message = Message.createTextMessage(
                     client.getCurrentUser(),
@@ -500,38 +875,126 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
             );
             
             // 发送消息
-            if (client.sendMessage(message)) {
+            boolean sent = client.sendMessage(message);
+            
+            // 添加日志确认消息发送状态
+            if (sent) {
                 // 清空输入框
                 inputArea.setText("");
                 
-                // 添加消息到聊天区域
-                appendMessage(message);
+                // 不再在本地直接添加消息，等待服务器回传
+                // 这样可以避免消息重复显示
+                System.out.println("消息已发送，等待服务器确认: " + message.getContent());
+            } else {
+                JOptionPane.showMessageDialog(this, "发送消息失败，请检查网络连接", "发送失败", JOptionPane.ERROR_MESSAGE);
+                System.out.println("消息发送失败: " + message.getContent());
             }
         }
         
         /**
          * 添加消息到聊天区域
-         * 
-         * @param message 消息对象
          */
+        @Override
         public void appendMessage(Message message) {
-            String time = dateFormat.format(message.getTimestamp() != null ? message.getTimestamp() : new Date());
-            String sender = message.getSender() != null ? message.getSender().getUsername() : "系统";
-            String content = message.getContent();
+            if (message == null) {
+                System.out.println("警告：尝试添加空消息");
+                return;
+            }
             
-            // 构建HTML消息
-            String color = message.getType() == MessageType.SYSTEM ? "gray" : 
-                          (message.getSender() != null && message.getSender().getUserId().equals(client.getCurrentUser().getUserId()) ? "green" : "blue");
-            
-            String htmlMessage = String.format("<div style='color:%s; font-family:Microsoft YaHei;'>[%s] %s: %s</div>", 
-                    color, time, sender, content);
-            
-            // 添加到聊天区域
-            String currentText = chatArea.getText();
-            chatArea.setText(currentText.replace("</body></html>", "") + htmlMessage + "</body></html>");
-            
-            // 滚动到底部
-            chatArea.setCaretPosition(chatArea.getDocument().getLength());
+            SwingUtilities.invokeLater(() -> {
+                String time = dateFormat.format(message.getTimestamp() != null ? message.getTimestamp() : new Date());
+                String sender = message.getSender() != null ? message.getSender().getUsername() : "系统";
+                String content = message.getContent() != null ? message.getContent() : "";
+                
+                try {
+                    if (message.getType() == MessageType.SYSTEM) {
+                        // 系统消息居中显示
+                        addSystemMessage(content);
+                    } else {
+                        // 判断是否是自己发送的消息
+                        boolean isSelfMessage = message.getSender() != null && client.getCurrentUser() != null && 
+                                              message.getSender().getUserId().equals(client.getCurrentUser().getUserId());
+                        
+                        // 创建消息面板
+                        JPanel messagePanel = new JPanel();
+                        messagePanel.setLayout(new BorderLayout());
+                        messagePanel.setBackground(Color.WHITE);
+                        
+                        // 设置对齐方式
+                        JPanel alignPanel = new JPanel();
+                        alignPanel.setLayout(new FlowLayout(isSelfMessage ? FlowLayout.RIGHT : FlowLayout.LEFT));
+                        alignPanel.setBackground(Color.WHITE);
+                        
+                        // 创建气泡面板
+                        JPanel bubblePanel = new JPanel();
+                        bubblePanel.setLayout(new BorderLayout());
+                        bubblePanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+                        bubblePanel.setBackground(isSelfMessage ? new Color(144, 238, 144) : new Color(173, 216, 230));
+                        
+                        // 消息内容
+                        JTextArea contentArea = new JTextArea(content);
+                        contentArea.setEditable(false);
+                        contentArea.setLineWrap(true);
+                        contentArea.setWrapStyleWord(true);
+                        contentArea.setBackground(isSelfMessage ? new Color(144, 238, 144) : new Color(173, 216, 230));
+                        contentArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                        contentArea.setFont(new Font("Microsoft YaHei", Font.PLAIN, 14));
+                        
+                        // 消息头：发送者和时间
+                        JPanel headerPanel = new JPanel(new BorderLayout());
+                        headerPanel.setOpaque(false);
+                        
+                        JLabel senderLabel = new JLabel(isSelfMessage ? "我" : sender);
+                        senderLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 12));
+                        
+                        JLabel timeLabel = new JLabel(time);
+                        timeLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 10));
+                        timeLabel.setForeground(Color.GRAY);
+                        
+                        headerPanel.add(senderLabel, BorderLayout.WEST);
+                        headerPanel.add(timeLabel, BorderLayout.EAST);
+                        
+                        // 组装气泡
+                        bubblePanel.add(headerPanel, BorderLayout.NORTH);
+                        bubblePanel.add(contentArea, BorderLayout.CENTER);
+                        
+                        // 限制气泡最大宽度
+                        int maxWidth = 300;
+                        Dimension prefSize = bubblePanel.getPreferredSize();
+                        if (prefSize.width > maxWidth) {
+                            prefSize.width = maxWidth;
+                            bubblePanel.setPreferredSize(prefSize);
+                        }
+                        
+                        alignPanel.add(bubblePanel);
+                        messagePanel.add(alignPanel, BorderLayout.CENTER);
+                        
+                        // 添加到聊天区域
+                        chatArea.add(messagePanel);
+                        
+                        System.out.println("群聊面板添加了新消息气泡：" + content);
+                    }
+                    
+                    // 更新UI并滚动到底部
+                    chatArea.revalidate();
+                    chatArea.repaint();
+                    scrollToBottom();
+                    
+                } catch (Exception e) {
+                    System.out.println("添加消息到群聊区域时出错：" + e.getMessage());
+                    e.printStackTrace();
+                }
+            });
+        }
+        
+        /**
+         * 滚动到底部
+         */
+        private void scrollToBottom() {
+            SwingUtilities.invokeLater(() -> {
+                JScrollBar vertical = chatScrollPane.getVerticalScrollBar();
+                vertical.setValue(vertical.getMaximum());
+            });
         }
         
         /**
@@ -542,5 +1005,440 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         public User getTargetUser() {
             return targetUser;
         }
+        
+        /**
+         * 获取群组，如果是私聊则返回null
+         */
+        public com.chatroom.common.model.ChatGroup getChatGroup() {
+            return null;
+        }
+    }
+    
+    /**
+     * 群聊面板
+     */
+    private static class GroupChatPanel extends JPanel implements MessagePanel {
+        /**
+         * 群组对象
+         */
+        private final com.chatroom.common.model.ChatGroup chatGroup;
+        
+        /**
+         * 聊天记录面板
+         */
+        private final JPanel chatArea;
+        
+        /**
+         * 聊天记录滚动窗格
+         */
+        private final JScrollPane chatScrollPane;
+        
+        /**
+         * 消息输入框
+         */
+        private final JTextArea inputArea;
+        
+        /**
+         * 客户端引用
+         */
+        private final ChatClient client;
+        
+        /**
+         * 用户列表
+         */
+        private final JList<User> userList;
+        
+        /**
+         * 日期格式化
+         */
+        private final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        
+        /**
+         * 构造方法
+         * 
+         * @param title 面板标题
+         * @param chatGroup 群组对象
+         * @param client 客户端引用
+         * @param userList 用户列表
+         */
+        public GroupChatPanel(String title, com.chatroom.common.model.ChatGroup chatGroup, ChatClient client, JList<User> userList) {
+            this.chatGroup = chatGroup;
+            this.client = client;
+            this.userList = userList;
+            
+            // 检查客户端是否有效
+            if (client == null) {
+                throw new IllegalArgumentException("客户端引用不能为空");
+            }
+            
+            setLayout(new BorderLayout());
+            
+            // 聊天记录区域 - 使用BoxLayout
+            chatArea = new JPanel();
+            chatArea.setLayout(new BoxLayout(chatArea, BoxLayout.Y_AXIS));
+            chatArea.setBackground(Color.WHITE);
+            
+            chatScrollPane = new JScrollPane(chatArea);
+            chatScrollPane.setPreferredSize(new Dimension(400, 300));
+            chatScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+            
+            // 输入区域
+            inputArea = new JTextArea();
+            inputArea.setLineWrap(true);
+            inputArea.setWrapStyleWord(true);
+            JScrollPane inputScrollPane = new JScrollPane(inputArea);
+            inputScrollPane.setPreferredSize(new Dimension(400, 100));
+            
+            // 发送按钮
+            JButton sendButton = new JButton("发送");
+            sendButton.addActionListener(e -> sendMessage());
+            
+            // 成员列表按钮
+            JButton membersButton = new JButton("成员列表");
+            membersButton.addActionListener(e -> showMemberList());
+            
+            // 输入面板
+            JPanel inputPanel = new JPanel(new BorderLayout());
+            inputPanel.add(inputScrollPane, BorderLayout.CENTER);
+            
+            // 按钮面板
+            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            buttonPanel.add(membersButton);
+            buttonPanel.add(sendButton);
+            inputPanel.add(buttonPanel, BorderLayout.SOUTH);
+            
+            // 添加组件
+            add(chatScrollPane, BorderLayout.CENTER);
+            add(inputPanel, BorderLayout.SOUTH);
+            
+            // 注册按键监听
+            inputArea.addKeyListener(new java.awt.event.KeyAdapter() {
+                @Override
+                public void keyPressed(java.awt.event.KeyEvent e) {
+                    // Ctrl+Enter 发送消息
+                    if (e.isControlDown() && e.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+                        sendMessage();
+                        e.consume();
+                    }
+                }
+            });
+            
+            // 添加欢迎消息
+            addSystemMessage("欢迎加入" + title + "！");
+            
+            // 显示在线成员提示
+            if (chatGroup.getMemberIds().size() > 0) {
+                addSystemMessage("当前在线成员: " + chatGroup.getMemberIds().size() + " 人");
+            }
+        }
+        
+        /**
+         * 获取群组对象
+         */
+        @Override
+        public com.chatroom.common.model.ChatGroup getChatGroup() {
+            return chatGroup;
+        }
+        
+        /**
+         * 获取目标用户，群聊返回null
+         */
+        @Override
+        public User getTargetUser() {
+            return null;
+        }
+        
+        /**
+         * 添加系统消息
+         */
+        private void addSystemMessage(String text) {
+            JPanel messagePanel = new JPanel();
+            messagePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+            messagePanel.setBackground(Color.WHITE);
+            
+            JLabel messageLabel = new JLabel(text);
+            messageLabel.setForeground(Color.GRAY);
+            messageLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
+            
+            messagePanel.add(messageLabel);
+            chatArea.add(messagePanel);
+            
+            chatArea.revalidate();
+            chatArea.repaint();
+            scrollToBottom();
+        }
+        
+        /**
+         * 发送消息
+         */
+        private void sendMessage() {
+            String content = inputArea.getText().trim();
+            if (content.isEmpty()) return;
+            
+            // 检查群组是否有效
+            if (chatGroup == null) {
+                JOptionPane.showMessageDialog(this, "无法发送消息：群组不存在", "发送失败", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            if (client == null || client.getCurrentUser() == null) {
+                JOptionPane.showMessageDialog(this, "无法发送消息：客户端未连接或未登录", "发送失败", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // 创建群聊消息对象
+            Message message = Message.createTextMessage(
+                    client.getCurrentUser(),
+                    chatGroup.getGroupId(),
+                    content,
+                    true  // 设置为群聊消息
+            );
+            
+            // 发送消息
+            boolean sent = client.sendMessage(message);
+            
+            // 添加日志确认消息发送状态
+            if (sent) {
+                // 清空输入框
+                inputArea.setText("");
+                
+                // 不在本地添加消息，等待服务器回传
+                System.out.println("群聊消息已发送: " + message.getContent());
+            } else {
+                JOptionPane.showMessageDialog(this, "发送消息失败，请检查网络连接", "发送失败", JOptionPane.ERROR_MESSAGE);
+                System.out.println("群聊消息发送失败: " + message.getContent());
+            }
+        }
+        
+        /**
+         * 显示成员列表
+         */
+        private void showMemberList() {
+            if (chatGroup == null || chatGroup.getMemberIds() == null || chatGroup.getMemberIds().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "暂无成员信息", "成员列表", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            
+            StringBuilder memberList = new StringBuilder("<html><body>");
+            memberList.append("<h3>").append(chatGroup.getGroupName()).append(" 成员列表</h3>");
+            memberList.append("<ul>");
+            
+            for (String memberId : chatGroup.getMemberIds()) {
+                String memberName = "未知用户";
+                
+                // 如果是当前用户
+                if (client.getCurrentUser() != null && client.getCurrentUser().getUserId().equals(memberId)) {
+                    memberName = client.getCurrentUser().getUsername() + " (我)";
+                } else {
+                    // 查找用户名
+                    for (int i = 0; i < userList.getModel().getSize(); i++) {
+                        User user = userList.getModel().getElementAt(i);
+                        if (user.getUserId().equals(memberId)) {
+                            memberName = user.getUsername();
+                            break;
+                        }
+                    }
+                }
+                
+                memberList.append("<li>").append(memberName).append("</li>");
+            }
+            
+            memberList.append("</ul></body></html>");
+            
+            JOptionPane.showMessageDialog(
+                    this,
+                    new JLabel(memberList.toString()),
+                    chatGroup.getGroupName() + " 成员列表",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        }
+        
+        /**
+         * 滚动到底部
+         */
+        private void scrollToBottom() {
+            SwingUtilities.invokeLater(() -> {
+                JScrollBar vertical = chatScrollPane.getVerticalScrollBar();
+                vertical.setValue(vertical.getMaximum());
+            });
+        }
+        
+        /**
+         * 添加消息到聊天区域
+         */
+        @Override
+        public void appendMessage(Message message) {
+            if (message == null) {
+                System.out.println("警告：尝试添加空消息");
+                return;
+            }
+            
+            SwingUtilities.invokeLater(() -> {
+                String time = dateFormat.format(message.getTimestamp() != null ? message.getTimestamp() : new Date());
+                String sender = message.getSender() != null ? message.getSender().getUsername() : "系统";
+                String content = message.getContent() != null ? message.getContent() : "";
+                
+                try {
+                    if (message.getType() == MessageType.SYSTEM) {
+                        // 系统消息居中显示
+                        addSystemMessage(content);
+                    } else {
+                        // 判断是否是自己发送的消息
+                        boolean isSelfMessage = message.getSender() != null && client.getCurrentUser() != null && 
+                                              message.getSender().getUserId().equals(client.getCurrentUser().getUserId());
+                        
+                        // 创建消息面板
+                        JPanel messagePanel = new JPanel();
+                        messagePanel.setLayout(new BorderLayout());
+                        messagePanel.setBackground(Color.WHITE);
+                        
+                        // 设置对齐方式
+                        JPanel alignPanel = new JPanel();
+                        alignPanel.setLayout(new FlowLayout(isSelfMessage ? FlowLayout.RIGHT : FlowLayout.LEFT));
+                        alignPanel.setBackground(Color.WHITE);
+                        
+                        // 创建气泡面板
+                        JPanel bubblePanel = new JPanel();
+                        bubblePanel.setLayout(new BorderLayout());
+                        bubblePanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+                        bubblePanel.setBackground(isSelfMessage ? new Color(144, 238, 144) : new Color(173, 216, 230));
+                        
+                        // 消息内容
+                        JTextArea contentArea = new JTextArea(content);
+                        contentArea.setEditable(false);
+                        contentArea.setLineWrap(true);
+                        contentArea.setWrapStyleWord(true);
+                        contentArea.setBackground(isSelfMessage ? new Color(144, 238, 144) : new Color(173, 216, 230));
+                        contentArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                        contentArea.setFont(new Font("Microsoft YaHei", Font.PLAIN, 14));
+                        
+                        // 消息头：发送者和时间
+                        JPanel headerPanel = new JPanel(new BorderLayout());
+                        headerPanel.setOpaque(false);
+                        
+                        JLabel senderLabel = new JLabel(isSelfMessage ? "我" : sender);
+                        senderLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 12));
+                        
+                        JLabel timeLabel = new JLabel(time);
+                        timeLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 10));
+                        timeLabel.setForeground(Color.GRAY);
+                        
+                        headerPanel.add(senderLabel, BorderLayout.WEST);
+                        headerPanel.add(timeLabel, BorderLayout.EAST);
+                        
+                        // 组装气泡
+                        bubblePanel.add(headerPanel, BorderLayout.NORTH);
+                        bubblePanel.add(contentArea, BorderLayout.CENTER);
+                        
+                        // 限制气泡最大宽度
+                        int maxWidth = 300;
+                        Dimension prefSize = bubblePanel.getPreferredSize();
+                        if (prefSize.width > maxWidth) {
+                            prefSize.width = maxWidth;
+                            bubblePanel.setPreferredSize(prefSize);
+                        }
+                        
+                        alignPanel.add(bubblePanel);
+                        messagePanel.add(alignPanel, BorderLayout.CENTER);
+                        
+                        // 添加到聊天区域
+                        chatArea.add(messagePanel);
+                        
+                        System.out.println("群聊面板添加了新消息气泡：" + content);
+                    }
+                    
+                    // 更新UI并滚动到底部
+                    chatArea.revalidate();
+                    chatArea.repaint();
+                    scrollToBottom();
+                    
+                } catch (Exception e) {
+                    System.out.println("添加消息到群聊区域时出错：" + e.getMessage());
+                    e.printStackTrace();
+                }
+            });
+        }
+    }
+    
+    /**
+     * 创建默认头像
+     * 
+     * @param text 头像文本
+     * @param size 头像大小
+     * @return 头像图标
+     */
+    private ImageIcon createDefaultAvatar(String text, int size) {
+        // 创建一个圆形头像
+        BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = image.createGraphics();
+        
+        // 抗锯齿
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        // 绘制圆形背景
+        g2d.setColor(getColorFromString(text));
+        g2d.fillOval(0, 0, size, size);
+        
+        // 绘制文本 (取首字母)
+        String initial = text.substring(0, 1).toUpperCase();
+        g2d.setColor(Color.WHITE);
+        g2d.setFont(new Font("Arial", Font.BOLD, size / 2));
+        
+        FontMetrics fm = g2d.getFontMetrics();
+        int textWidth = fm.stringWidth(initial);
+        int textHeight = fm.getHeight();
+        
+        // 居中绘制文本
+        g2d.drawString(initial, (size - textWidth) / 2, (size - textHeight) / 2 + fm.getAscent());
+        
+        g2d.dispose();
+        
+        return new ImageIcon(image);
+    }
+    
+    /**
+     * 从字符串生成固定颜色
+     * 
+     * @param text 文本
+     * @return 颜色
+     */
+    private Color getColorFromString(String text) {
+        // 使用文本的哈希值生成颜色
+        int hash = text.hashCode();
+        
+        // 预定义的明亮颜色数组
+        Color[] colors = {
+            new Color(52, 152, 219),  // 蓝色
+            new Color(231, 76, 60),   // 红色
+            new Color(46, 204, 113),  // 绿色
+            new Color(155, 89, 182),  // 紫色
+            new Color(241, 196, 15),  // 黄色
+            new Color(230, 126, 34),  // 橙色
+            new Color(26, 188, 156),  // 青绿色
+            new Color(149, 165, 166)  // 灰色
+        };
+        
+        // 使用哈希值选择颜色
+        return colors[Math.abs(hash % colors.length)];
+    }
+    
+    /**
+     * 消息面板接口，定义能处理消息的面板
+     */
+    private interface MessagePanel {
+        /**
+         * 添加消息到面板
+         */
+        void appendMessage(Message message);
+        
+        /**
+         * 获取目标用户，如果是群聊则返回null
+         */
+        User getTargetUser();
+        
+        /**
+         * 获取群组，如果是私聊则返回null
+         */
+        com.chatroom.common.model.ChatGroup getChatGroup();
     }
 } 

@@ -218,12 +218,6 @@ public class ClientHandler implements Runnable {
             } else {
                 logger.warn("接收者不在线: {}", message.getReceiverId());
             }
-            
-            // 如果发送者和接收者不是同一人，则回显给发送者
-            if (!message.getSender().getUserId().equals(message.getReceiverId())) {
-                logger.info("回显消息给发送者");
-                sendMessage(message);
-            }
         }
         
         // 发送响应
