@@ -1,0 +1,10 @@
+2025-05-16 21:12:49.219 [main] INFO  com.chatroom.server.ChatServer - 聊天服务器已启动，监听端口: 9999
+2025-05-16 21:13:05.079 [main] INFO  com.chatroom.server.ChatServer - 新客户端连接: /127.0.0.1:9492
+2025-05-16 21:13:05.081 [Thread-2] INFO  com.chatroom.client.ChatClient - 已连接到服务器: localhost:9999
+2025-05-16 21:13:05.089 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 用户登录成功: nomanda
+2025-05-16 21:13:05.091 [pool-1-thread-1] ERROR c.c.server.handler.ClientHandler - 处理请求时出错: Cannot invoke "com.chatroom.common.network.RequestType.ordinal()" because "requestType" is null
+2025-05-16 21:13:25.665 [AWT-EventQueue-0] INFO  com.chatroom.client.ChatClient - 已断开与服务器的连接
+2025-05-16 21:13:25.665 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 客户端断开连接: /127.0.0.1:9492
+2025-05-16 21:13:25.665 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 消息处理器已停止
+2025-05-16 21:13:25.666 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 用户注销: nomanda
+2025-05-16 21:13:25.666 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 客户端连接已关闭: /127.0.0.1:9492
