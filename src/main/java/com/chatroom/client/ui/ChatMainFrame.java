@@ -17,6 +17,11 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -784,12 +789,17 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
             JButton sendButton = new JButton("发送");
             sendButton.addActionListener(e -> sendMessage());
             
+            // 文件发送按钮
+            JButton fileButton = new JButton("发送文件");
+            fileButton.addActionListener(e -> sendFile());
+            
             // 输入面板
             JPanel inputPanel = new JPanel(new BorderLayout());
             inputPanel.add(inputScrollPane, BorderLayout.CENTER);
             
             // 按钮面板
             JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            buttonPanel.add(fileButton); // 添加文件按钮
             buttonPanel.add(sendButton);
             inputPanel.add(buttonPanel, BorderLayout.SOUTH);
             
@@ -815,6 +825,7 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
                     // 系统消息面板
                     inputArea.setEnabled(false);
                     sendButton.setEnabled(false);
+                    fileButton.setEnabled(false); // 禁用文件按钮
                     
                     // 添加系统面板说明
                     addSystemMessage("这是系统消息面板，将显示系统通知和公告。");
@@ -892,6 +903,139 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         }
         
         /**
+         * 发送文件
+         */
+        private void sendFile() {
+            // 检查目标用户是否为空
+            if (targetUser == null) {
+                JOptionPane.showMessageDialog(this, "无法发送文件：目标用户不存在", "发送失败", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            if (client == null || client.getCurrentUser() == null) {
+                JOptionPane.showMessageDialog(this, "无法发送文件：客户端未连接或未登录", "发送失败", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // 打开文件选择器
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("选择要发送的文件");
+            
+            if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                try {
+                    // 获取选择的文件
+                    File file = fileChooser.getSelectedFile();
+                    
+                    // 检查文件大小限制 (10MB)
+                    if (file.length() > 10 * 1024 * 1024) {
+                        JOptionPane.showMessageDialog(this, 
+                            "文件过大，请选择小于10MB的文件", 
+                            "文件过大", 
+                            JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                    
+                    // 读取文件数据
+                    byte[] fileData = readFileData(file);
+                    
+                    // 根据文件类型创建不同的消息
+                    Message message;
+                    String fileName = file.getName().toLowerCase();
+                    // 私聊永远是false
+                    boolean isGroupMessage = false;
+                    
+                    if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg") || 
+                        fileName.endsWith(".png") || fileName.endsWith(".gif") || 
+                        fileName.endsWith(".bmp")) {
+                        // 图片消息
+                        message = Message.createImageMessage(
+                                client.getCurrentUser(),
+                                targetUser.getUserId(),
+                                file.getName(),
+                                fileData,
+                                isGroupMessage
+                        );
+                        addSystemMessage("正在发送图片：" + file.getName() + " (" + formatFileSize(file.length()) + ")");
+                    } else if (fileName.endsWith(".mp4") || fileName.endsWith(".avi") || 
+                               fileName.endsWith(".mov") || fileName.endsWith(".wmv") || 
+                               fileName.endsWith(".flv") || fileName.endsWith(".mkv")) {
+                        // 视频消息
+                        message = Message.createVideoMessage(
+                                client.getCurrentUser(),
+                                targetUser.getUserId(),
+                                file.getName(),
+                                fileData,
+                                isGroupMessage
+                        );
+                        addSystemMessage("正在发送视频：" + file.getName() + " (" + formatFileSize(file.length()) + ")");
+                    } else {
+                        // 普通文件消息
+                        message = Message.createFileMessage(
+                                client.getCurrentUser(),
+                                targetUser.getUserId(),
+                                file.getName(),
+                                fileData,
+                                isGroupMessage
+                        );
+                        addSystemMessage("正在发送文件：" + file.getName() + " (" + formatFileSize(file.length()) + ")");
+                    }
+                    
+                    // 发送消息
+                    boolean sent = client.sendMessage(message);
+                    
+                    if (sent) {
+                        addSystemMessage("文件发送成功：" + file.getName());
+                    } else {
+                        addSystemMessage("文件发送失败：" + file.getName());
+                        JOptionPane.showMessageDialog(this, 
+                            "发送文件失败，请检查网络连接", 
+                            "发送失败", 
+                            JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(this, 
+                        "读取文件失败：" + e.getMessage(), 
+                        "读取失败", 
+                        JOptionPane.ERROR_MESSAGE);
+                    e.printStackTrace();
+                }
+            }
+        }
+        
+        /**
+         * 读取文件数据
+         */
+        private byte[] readFileData(File file) throws IOException {
+            try (FileInputStream fis = new FileInputStream(file);
+                 ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+                
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = fis.read(buffer)) != -1) {
+                    baos.write(buffer, 0, bytesRead);
+                }
+                
+                return baos.toByteArray();
+            }
+        }
+        
+        /**
+         * 格式化文件大小
+         */
+        private String formatFileSize(long size) {
+            final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
+            int unitIndex = 0;
+            double fileSize = size;
+            
+            while (fileSize > 1024 && unitIndex < units.length - 1) {
+                fileSize /= 1024;
+                unitIndex++;
+            }
+            
+            return String.format("%.2f %s", fileSize, units[unitIndex]);
+        }
+        
+        /**
          * 添加消息到聊天区域
          */
         @Override
@@ -910,10 +1054,19 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
                     if (message.getType() == MessageType.SYSTEM) {
                         // 系统消息居中显示
                         addSystemMessage(content);
+                    } else if (message.getType() == MessageType.FILE) {
+                        // 文件消息特殊处理
+                        handleFileMessage(message, time, sender);
+                    } else if (message.getType() == MessageType.IMAGE) {
+                        // 图片消息直接显示
+                        handleImageMessage(message, time, sender);
+                    } else if (message.getType() == MessageType.VIDEO) {
+                        // 视频消息处理
+                        handleVideoMessage(message, time, sender);
                     } else {
                         // 判断是否是自己发送的消息
                         boolean isSelfMessage = message.getSender() != null && client.getCurrentUser() != null && 
-                                              message.getSender().getUserId().equals(client.getCurrentUser().getUserId());
+                                               message.getSender().getUserId().equals(client.getCurrentUser().getUserId());
                         
                         // 创建消息面板
                         JPanel messagePanel = new JPanel();
@@ -972,7 +1125,7 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
                         // 添加到聊天区域
                         chatArea.add(messagePanel);
                         
-                        System.out.println("群聊面板添加了新消息气泡：" + content);
+                        System.out.println("添加了新消息气泡：" + content);
                     }
                     
                     // 更新UI并滚动到底部
@@ -981,10 +1134,352 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
                     scrollToBottom();
                     
                 } catch (Exception e) {
-                    System.out.println("添加消息到群聊区域时出错：" + e.getMessage());
+                    System.out.println("添加消息到聊天区域时出错：" + e.getMessage());
                     e.printStackTrace();
                 }
             });
+        }
+        
+        /**
+         * 处理文件消息
+         */
+        private void handleFileMessage(Message message, String time, String sender) {
+            boolean isSelfMessage = message.getSender() != null && client.getCurrentUser() != null && 
+                                  message.getSender().getUserId().equals(client.getCurrentUser().getUserId());
+            
+            // 创建消息面板
+            JPanel messagePanel = new JPanel();
+            messagePanel.setLayout(new BorderLayout());
+            messagePanel.setBackground(Color.WHITE);
+            
+            // 设置对齐方式
+            JPanel alignPanel = new JPanel();
+            alignPanel.setLayout(new FlowLayout(isSelfMessage ? FlowLayout.RIGHT : FlowLayout.LEFT));
+            alignPanel.setBackground(Color.WHITE);
+            
+            // 创建文件面板
+            JPanel filePanel = new JPanel();
+            filePanel.setLayout(new BorderLayout(5, 5));
+            filePanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(5, 10, 5, 10),
+                BorderFactory.createLineBorder(new Color(200, 200, 200))
+            ));
+            filePanel.setBackground(Color.WHITE);
+            
+            // 文件图标
+            JLabel fileIcon = new JLabel();
+            fileIcon.setIcon(UIManager.getIcon("FileView.fileIcon"));
+            if (fileIcon.getIcon() == null) {
+                // 如果系统图标不可用，显示文本代替
+                fileIcon.setText("📄");
+                fileIcon.setFont(new Font("Dialog", Font.PLAIN, 24));
+            }
+            fileIcon.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 10));
+            
+            // 文件信息面板
+            JPanel fileInfoPanel = new JPanel(new BorderLayout());
+            fileInfoPanel.setOpaque(false);
+            
+            // 文件名称和大小
+            JLabel fileNameLabel = new JLabel(message.getFileName());
+            fileNameLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 12));
+            
+            JLabel fileSizeLabel = new JLabel(formatFileSize(message.getFileSize()));
+            fileSizeLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 10));
+            fileSizeLabel.setForeground(Color.GRAY);
+            
+            fileInfoPanel.add(fileNameLabel, BorderLayout.NORTH);
+            fileInfoPanel.add(fileSizeLabel, BorderLayout.CENTER);
+            
+            // 下载按钮 (如果不是自己发送的文件)
+            if (!isSelfMessage) {
+                JButton downloadButton = new JButton("下载");
+                downloadButton.addActionListener(e -> saveReceivedFile(message));
+                fileInfoPanel.add(downloadButton, BorderLayout.SOUTH);
+            }
+            
+            // 发送者信息
+            JPanel senderPanel = new JPanel(new BorderLayout());
+            senderPanel.setOpaque(false);
+            
+            JLabel senderLabel = new JLabel(isSelfMessage ? "我" : sender);
+            senderLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 12));
+            
+            JLabel timeLabel = new JLabel(time);
+            timeLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 10));
+            timeLabel.setForeground(Color.GRAY);
+            
+            senderPanel.add(senderLabel, BorderLayout.WEST);
+            senderPanel.add(timeLabel, BorderLayout.EAST);
+            
+            // 组装文件面板
+            filePanel.add(senderPanel, BorderLayout.NORTH);
+            filePanel.add(fileIcon, BorderLayout.WEST);
+            filePanel.add(fileInfoPanel, BorderLayout.CENTER);
+            
+            // 添加到对齐面板
+            alignPanel.add(filePanel);
+            messagePanel.add(alignPanel, BorderLayout.CENTER);
+            
+            // 添加到聊天区域
+            chatArea.add(messagePanel);
+            
+            System.out.println("添加了文件消息：" + message.getFileName());
+        }
+        
+        /**
+         * 保存接收到的文件
+         */
+        private void saveReceivedFile(Message message) {
+            if (message.getFileData() == null || message.getFileData().length == 0) {
+                JOptionPane.showMessageDialog(this, 
+                    "文件数据为空，无法保存", 
+                    "保存失败", 
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // 打开文件保存对话框
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("保存文件");
+            fileChooser.setSelectedFile(new File(message.getFileName()));
+            
+            if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                try {
+                    File file = fileChooser.getSelectedFile();
+                    
+                    // 写入文件数据
+                    try (FileOutputStream fos = new FileOutputStream(file)) {
+                        fos.write(message.getFileData());
+                    }
+                    
+                    addSystemMessage("文件保存成功：" + file.getName());
+                    
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(this, 
+                        "保存文件失败：" + e.getMessage(), 
+                        "保存失败", 
+                        JOptionPane.ERROR_MESSAGE);
+                    e.printStackTrace();
+                }
+            }
+        }
+        
+        /**
+         * 处理图片消息
+         */
+        private void handleImageMessage(Message message, String time, String sender) {
+            boolean isSelfMessage = message.getSender() != null && client.getCurrentUser() != null && 
+                                  message.getSender().getUserId().equals(client.getCurrentUser().getUserId());
+            
+            // 创建消息面板
+            JPanel messagePanel = new JPanel();
+            messagePanel.setLayout(new BorderLayout());
+            messagePanel.setBackground(Color.WHITE);
+            
+            // 设置对齐方式
+            JPanel alignPanel = new JPanel();
+            alignPanel.setLayout(new FlowLayout(isSelfMessage ? FlowLayout.RIGHT : FlowLayout.LEFT));
+            alignPanel.setBackground(Color.WHITE);
+            
+            // 创建图片面板
+            JPanel imagePanel = new JPanel();
+            imagePanel.setLayout(new BorderLayout(5, 5));
+            imagePanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(5, 10, 5, 10),
+                BorderFactory.createLineBorder(new Color(200, 200, 200))
+            ));
+            imagePanel.setBackground(Color.WHITE);
+            
+            // 发送者信息
+            JPanel senderPanel = new JPanel(new BorderLayout());
+            senderPanel.setOpaque(false);
+            
+            JLabel senderLabel = new JLabel(isSelfMessage ? "我" : sender);
+            senderLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 12));
+            
+            JLabel timeLabel = new JLabel(time);
+            timeLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 10));
+            timeLabel.setForeground(Color.GRAY);
+            
+            senderPanel.add(senderLabel, BorderLayout.WEST);
+            senderPanel.add(timeLabel, BorderLayout.EAST);
+            
+            // 创建图片标签
+            try {
+                ImageIcon originalIcon = new ImageIcon(message.getFileData());
+                // 限制图片最大尺寸为 300x300，保持宽高比
+                int maxWidth = 300;
+                int maxHeight = 300;
+                int width = originalIcon.getIconWidth();
+                int height = originalIcon.getIconHeight();
+                
+                if (width > maxWidth || height > maxHeight) {
+                    double ratio = Math.min((double)maxWidth / width, (double)maxHeight / height);
+                    width = (int)(width * ratio);
+                    height = (int)(height * ratio);
+                }
+                
+                Image scaledImage = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+                ImageIcon scaledIcon = new ImageIcon(scaledImage);
+                
+                JLabel imageLabel = new JLabel(scaledIcon);
+                imageLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                
+                JPanel infoPanel = new JPanel(new BorderLayout());
+                infoPanel.setOpaque(false);
+                
+                JLabel sizeLabel = new JLabel(formatFileSize(message.getFileSize()));
+                sizeLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 10));
+                sizeLabel.setForeground(Color.GRAY);
+                infoPanel.add(sizeLabel, BorderLayout.NORTH);
+                
+                // 添加保存按钮
+                if (!isSelfMessage) {
+                    JButton saveButton = new JButton("保存图片");
+                    saveButton.addActionListener(e -> saveReceivedFile(message));
+                    infoPanel.add(saveButton, BorderLayout.SOUTH);
+                }
+                
+                // 组装图片面板
+                imagePanel.add(senderPanel, BorderLayout.NORTH);
+                imagePanel.add(imageLabel, BorderLayout.CENTER);
+                imagePanel.add(infoPanel, BorderLayout.SOUTH);
+                
+            } catch (Exception e) {
+                // 如果图片无法显示，显示错误信息
+                JLabel errorLabel = new JLabel("图片加载失败");
+                errorLabel.setForeground(Color.RED);
+                imagePanel.add(senderPanel, BorderLayout.NORTH);
+                imagePanel.add(errorLabel, BorderLayout.CENTER);
+                
+                System.out.println("图片加载失败: " + e.getMessage());
+                e.printStackTrace();
+            }
+            
+            // 添加到对齐面板
+            alignPanel.add(imagePanel);
+            messagePanel.add(alignPanel, BorderLayout.CENTER);
+            
+            // 添加到聊天区域
+            chatArea.add(messagePanel);
+            
+            System.out.println("添加了图片消息：" + message.getFileName());
+        }
+        
+        /**
+         * 处理视频消息
+         */
+        private void handleVideoMessage(Message message, String time, String sender) {
+            boolean isSelfMessage = message.getSender() != null && client.getCurrentUser() != null && 
+                                  message.getSender().getUserId().equals(client.getCurrentUser().getUserId());
+            
+            // 创建消息面板
+            JPanel messagePanel = new JPanel();
+            messagePanel.setLayout(new BorderLayout());
+            messagePanel.setBackground(Color.WHITE);
+            
+            // 设置对齐方式
+            JPanel alignPanel = new JPanel();
+            alignPanel.setLayout(new FlowLayout(isSelfMessage ? FlowLayout.RIGHT : FlowLayout.LEFT));
+            alignPanel.setBackground(Color.WHITE);
+            
+            // 创建视频面板
+            JPanel videoPanel = new JPanel();
+            videoPanel.setLayout(new BorderLayout(5, 5));
+            videoPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(5, 10, 5, 10),
+                BorderFactory.createLineBorder(new Color(200, 200, 200))
+            ));
+            videoPanel.setBackground(Color.WHITE);
+            
+            // 视频图标
+            JLabel videoIcon = new JLabel();
+            // 使用文本代替图标
+            videoIcon.setText("▶");
+            videoIcon.setFont(new Font("Dialog", Font.BOLD, 24));
+            videoIcon.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 10));
+            
+            // 视频信息面板
+            JPanel videoInfoPanel = new JPanel(new BorderLayout());
+            videoInfoPanel.setOpaque(false);
+            
+            // 视频名称和大小
+            JLabel videoNameLabel = new JLabel(message.getFileName());
+            videoNameLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 12));
+            
+            JLabel videoSizeLabel = new JLabel(formatFileSize(message.getFileSize()));
+            videoSizeLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 10));
+            videoSizeLabel.setForeground(Color.GRAY);
+            
+            JButton playButton = new JButton("播放");
+            playButton.addActionListener(e -> playVideo(message));
+            
+            videoInfoPanel.add(videoNameLabel, BorderLayout.NORTH);
+            videoInfoPanel.add(videoSizeLabel, BorderLayout.CENTER);
+            videoInfoPanel.add(playButton, BorderLayout.SOUTH);
+            
+            // 发送者信息
+            JPanel senderPanel = new JPanel(new BorderLayout());
+            senderPanel.setOpaque(false);
+            
+            JLabel senderLabel = new JLabel(isSelfMessage ? "我" : sender);
+            senderLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 12));
+            
+            JLabel timeLabel = new JLabel(time);
+            timeLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 10));
+            timeLabel.setForeground(Color.GRAY);
+            
+            senderPanel.add(senderLabel, BorderLayout.WEST);
+            senderPanel.add(timeLabel, BorderLayout.EAST);
+            
+            // 组装视频面板
+            videoPanel.add(senderPanel, BorderLayout.NORTH);
+            videoPanel.add(videoIcon, BorderLayout.WEST);
+            videoPanel.add(videoInfoPanel, BorderLayout.CENTER);
+            
+            // 添加到对齐面板
+            alignPanel.add(videoPanel);
+            messagePanel.add(alignPanel, BorderLayout.CENTER);
+            
+            // 添加到聊天区域
+            chatArea.add(messagePanel);
+            
+            System.out.println("添加了视频消息：" + message.getFileName());
+        }
+        
+        /**
+         * 播放视频
+         */
+        private void playVideo(Message message) {
+            if (message.getFileData() == null || message.getFileData().length == 0) {
+                JOptionPane.showMessageDialog(this, 
+                    "视频数据为空，无法播放", 
+                    "播放失败", 
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            try {
+                // 创建临时文件
+                File tempFile = File.createTempFile("video_", "_" + message.getFileName());
+                tempFile.deleteOnExit();
+                
+                // 写入视频数据
+                try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+                    fos.write(message.getFileData());
+                }
+                
+                // 使用系统默认程序打开视频文件
+                Desktop.getDesktop().open(tempFile);
+                
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, 
+                    "播放视频失败：" + e.getMessage(), 
+                    "播放失败", 
+                    JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
         }
         
         /**
@@ -1093,6 +1588,10 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
             JButton sendButton = new JButton("发送");
             sendButton.addActionListener(e -> sendMessage());
             
+            // 文件发送按钮
+            JButton fileButton = new JButton("发送文件");
+            fileButton.addActionListener(e -> sendFile());
+            
             // 成员列表按钮
             JButton membersButton = new JButton("成员列表");
             membersButton.addActionListener(e -> showMemberList());
@@ -1104,6 +1603,7 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
             // 按钮面板
             JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
             buttonPanel.add(membersButton);
+            buttonPanel.add(fileButton);
             buttonPanel.add(sendButton);
             inputPanel.add(buttonPanel, BorderLayout.SOUTH);
             
@@ -1211,6 +1711,139 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         }
         
         /**
+         * 发送文件
+         */
+        private void sendFile() {
+            // 检查群组是否有效
+            if (chatGroup == null) {
+                JOptionPane.showMessageDialog(this, "无法发送文件：群组不存在", "发送失败", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            if (client == null || client.getCurrentUser() == null) {
+                JOptionPane.showMessageDialog(this, "无法发送文件：客户端未连接或未登录", "发送失败", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // 打开文件选择器
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("选择要发送的文件");
+            
+            if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                try {
+                    // 获取选择的文件
+                    File file = fileChooser.getSelectedFile();
+                    
+                    // 检查文件大小限制 (10MB)
+                    if (file.length() > 10 * 1024 * 1024) {
+                        JOptionPane.showMessageDialog(this, 
+                            "文件过大，请选择小于10MB的文件", 
+                            "文件过大", 
+                            JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                    
+                    // 读取文件数据
+                    byte[] fileData = readFileData(file);
+                    
+                    // 根据文件类型创建不同的消息
+                    Message message;
+                    String fileName = file.getName().toLowerCase();
+                    // 群聊永远是true
+                    boolean isGroupMessage = true;
+                    
+                    if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg") || 
+                        fileName.endsWith(".png") || fileName.endsWith(".gif") || 
+                        fileName.endsWith(".bmp")) {
+                        // 图片消息
+                        message = Message.createImageMessage(
+                                client.getCurrentUser(),
+                                chatGroup.getGroupId(),
+                                file.getName(),
+                                fileData,
+                                isGroupMessage
+                        );
+                        addSystemMessage("正在发送图片：" + file.getName() + " (" + formatFileSize(file.length()) + ")");
+                    } else if (fileName.endsWith(".mp4") || fileName.endsWith(".avi") || 
+                               fileName.endsWith(".mov") || fileName.endsWith(".wmv") || 
+                               fileName.endsWith(".flv") || fileName.endsWith(".mkv")) {
+                        // 视频消息
+                        message = Message.createVideoMessage(
+                                client.getCurrentUser(),
+                                chatGroup.getGroupId(),
+                                file.getName(),
+                                fileData,
+                                isGroupMessage
+                        );
+                        addSystemMessage("正在发送视频：" + file.getName() + " (" + formatFileSize(file.length()) + ")");
+                    } else {
+                        // 普通文件消息
+                        message = Message.createFileMessage(
+                                client.getCurrentUser(),
+                                chatGroup.getGroupId(),
+                                file.getName(),
+                                fileData,
+                                isGroupMessage
+                        );
+                        addSystemMessage("正在发送文件：" + file.getName() + " (" + formatFileSize(file.length()) + ")");
+                    }
+                    
+                    // 发送消息
+                    boolean sent = client.sendMessage(message);
+                    
+                    if (sent) {
+                        addSystemMessage("文件发送成功：" + file.getName());
+                    } else {
+                        addSystemMessage("文件发送失败：" + file.getName());
+                        JOptionPane.showMessageDialog(this, 
+                            "发送文件失败，请检查网络连接", 
+                            "发送失败", 
+                            JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(this, 
+                        "读取文件失败：" + e.getMessage(), 
+                        "读取失败", 
+                        JOptionPane.ERROR_MESSAGE);
+                    e.printStackTrace();
+                }
+            }
+        }
+        
+        /**
+         * 读取文件数据
+         */
+        private byte[] readFileData(File file) throws IOException {
+            try (FileInputStream fis = new FileInputStream(file);
+                 ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+                
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = fis.read(buffer)) != -1) {
+                    baos.write(buffer, 0, bytesRead);
+                }
+                
+                return baos.toByteArray();
+            }
+        }
+        
+        /**
+         * 格式化文件大小
+         */
+        private String formatFileSize(long size) {
+            final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
+            int unitIndex = 0;
+            double fileSize = size;
+            
+            while (fileSize > 1024 && unitIndex < units.length - 1) {
+                fileSize /= 1024;
+                unitIndex++;
+            }
+            
+            return String.format("%.2f %s", fileSize, units[unitIndex]);
+        }
+        
+        /**
          * 显示成员列表
          */
         private void showMemberList() {
@@ -1282,10 +1915,19 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
                     if (message.getType() == MessageType.SYSTEM) {
                         // 系统消息居中显示
                         addSystemMessage(content);
+                    } else if (message.getType() == MessageType.FILE) {
+                        // 文件消息特殊处理
+                        handleFileMessage(message, time, sender);
+                    } else if (message.getType() == MessageType.IMAGE) {
+                        // 图片消息直接显示
+                        handleImageMessage(message, time, sender);
+                    } else if (message.getType() == MessageType.VIDEO) {
+                        // 视频消息处理
+                        handleVideoMessage(message, time, sender);
                     } else {
                         // 判断是否是自己发送的消息
                         boolean isSelfMessage = message.getSender() != null && client.getCurrentUser() != null && 
-                                              message.getSender().getUserId().equals(client.getCurrentUser().getUserId());
+                                               message.getSender().getUserId().equals(client.getCurrentUser().getUserId());
                         
                         // 创建消息面板
                         JPanel messagePanel = new JPanel();
@@ -1357,6 +1999,348 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
                     e.printStackTrace();
                 }
             });
+        }
+        
+        /**
+         * 处理文件消息
+         */
+        private void handleFileMessage(Message message, String time, String sender) {
+            boolean isSelfMessage = message.getSender() != null && client.getCurrentUser() != null && 
+                                  message.getSender().getUserId().equals(client.getCurrentUser().getUserId());
+            
+            // 创建消息面板
+            JPanel messagePanel = new JPanel();
+            messagePanel.setLayout(new BorderLayout());
+            messagePanel.setBackground(Color.WHITE);
+            
+            // 设置对齐方式
+            JPanel alignPanel = new JPanel();
+            alignPanel.setLayout(new FlowLayout(isSelfMessage ? FlowLayout.RIGHT : FlowLayout.LEFT));
+            alignPanel.setBackground(Color.WHITE);
+            
+            // 创建文件面板
+            JPanel filePanel = new JPanel();
+            filePanel.setLayout(new BorderLayout(5, 5));
+            filePanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(5, 10, 5, 10),
+                BorderFactory.createLineBorder(new Color(200, 200, 200))
+            ));
+            filePanel.setBackground(Color.WHITE);
+            
+            // 文件图标
+            JLabel fileIcon = new JLabel();
+            fileIcon.setIcon(UIManager.getIcon("FileView.fileIcon"));
+            if (fileIcon.getIcon() == null) {
+                // 如果系统图标不可用，显示文本代替
+                fileIcon.setText("📄");
+                fileIcon.setFont(new Font("Dialog", Font.PLAIN, 24));
+            }
+            fileIcon.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 10));
+            
+            // 文件信息面板
+            JPanel fileInfoPanel = new JPanel(new BorderLayout());
+            fileInfoPanel.setOpaque(false);
+            
+            // 文件名称和大小
+            JLabel fileNameLabel = new JLabel(message.getFileName());
+            fileNameLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 12));
+            
+            JLabel fileSizeLabel = new JLabel(formatFileSize(message.getFileSize()));
+            fileSizeLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 10));
+            fileSizeLabel.setForeground(Color.GRAY);
+            
+            fileInfoPanel.add(fileNameLabel, BorderLayout.NORTH);
+            fileInfoPanel.add(fileSizeLabel, BorderLayout.CENTER);
+            
+            // 下载按钮 (如果不是自己发送的文件)
+            if (!isSelfMessage) {
+                JButton downloadButton = new JButton("下载");
+                downloadButton.addActionListener(e -> saveReceivedFile(message));
+                fileInfoPanel.add(downloadButton, BorderLayout.SOUTH);
+            }
+            
+            // 发送者信息
+            JPanel senderPanel = new JPanel(new BorderLayout());
+            senderPanel.setOpaque(false);
+            
+            JLabel senderLabel = new JLabel(isSelfMessage ? "我" : sender);
+            senderLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 12));
+            
+            JLabel timeLabel = new JLabel(time);
+            timeLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 10));
+            timeLabel.setForeground(Color.GRAY);
+            
+            senderPanel.add(senderLabel, BorderLayout.WEST);
+            senderPanel.add(timeLabel, BorderLayout.EAST);
+            
+            // 组装文件面板
+            filePanel.add(senderPanel, BorderLayout.NORTH);
+            filePanel.add(fileIcon, BorderLayout.WEST);
+            filePanel.add(fileInfoPanel, BorderLayout.CENTER);
+            
+            // 添加到对齐面板
+            alignPanel.add(filePanel);
+            messagePanel.add(alignPanel, BorderLayout.CENTER);
+            
+            // 添加到聊天区域
+            chatArea.add(messagePanel);
+            
+            System.out.println("添加了群聊文件消息：" + message.getFileName());
+        }
+        
+        /**
+         * 保存接收到的文件
+         */
+        private void saveReceivedFile(Message message) {
+            if (message.getFileData() == null || message.getFileData().length == 0) {
+                JOptionPane.showMessageDialog(this, 
+                    "文件数据为空，无法保存", 
+                    "保存失败", 
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // 打开文件保存对话框
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("保存文件");
+            fileChooser.setSelectedFile(new File(message.getFileName()));
+            
+            if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                try {
+                    File file = fileChooser.getSelectedFile();
+                    
+                    // 写入文件数据
+                    try (FileOutputStream fos = new FileOutputStream(file)) {
+                        fos.write(message.getFileData());
+                    }
+                    
+                    addSystemMessage("文件保存成功：" + file.getName());
+                    
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(this, 
+                        "保存文件失败：" + e.getMessage(), 
+                        "保存失败", 
+                        JOptionPane.ERROR_MESSAGE);
+                    e.printStackTrace();
+                }
+            }
+        }
+        
+        /**
+         * 处理图片消息
+         */
+        private void handleImageMessage(Message message, String time, String sender) {
+            boolean isSelfMessage = message.getSender() != null && client.getCurrentUser() != null && 
+                                  message.getSender().getUserId().equals(client.getCurrentUser().getUserId());
+            
+            // 创建消息面板
+            JPanel messagePanel = new JPanel();
+            messagePanel.setLayout(new BorderLayout());
+            messagePanel.setBackground(Color.WHITE);
+            
+            // 设置对齐方式
+            JPanel alignPanel = new JPanel();
+            alignPanel.setLayout(new FlowLayout(isSelfMessage ? FlowLayout.RIGHT : FlowLayout.LEFT));
+            alignPanel.setBackground(Color.WHITE);
+            
+            // 创建图片面板
+            JPanel imagePanel = new JPanel();
+            imagePanel.setLayout(new BorderLayout(5, 5));
+            imagePanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(5, 10, 5, 10),
+                BorderFactory.createLineBorder(new Color(200, 200, 200))
+            ));
+            imagePanel.setBackground(Color.WHITE);
+            
+            // 发送者信息
+            JPanel senderPanel = new JPanel(new BorderLayout());
+            senderPanel.setOpaque(false);
+            
+            JLabel senderLabel = new JLabel(isSelfMessage ? "我" : sender);
+            senderLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 12));
+            
+            JLabel timeLabel = new JLabel(time);
+            timeLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 10));
+            timeLabel.setForeground(Color.GRAY);
+            
+            senderPanel.add(senderLabel, BorderLayout.WEST);
+            senderPanel.add(timeLabel, BorderLayout.EAST);
+            
+            // 创建图片标签
+            try {
+                ImageIcon originalIcon = new ImageIcon(message.getFileData());
+                // 限制图片最大尺寸为 300x300，保持宽高比
+                int maxWidth = 300;
+                int maxHeight = 300;
+                int width = originalIcon.getIconWidth();
+                int height = originalIcon.getIconHeight();
+                
+                if (width > maxWidth || height > maxHeight) {
+                    double ratio = Math.min((double)maxWidth / width, (double)maxHeight / height);
+                    width = (int)(width * ratio);
+                    height = (int)(height * ratio);
+                }
+                
+                Image scaledImage = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+                ImageIcon scaledIcon = new ImageIcon(scaledImage);
+                
+                JLabel imageLabel = new JLabel(scaledIcon);
+                imageLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                
+                JPanel infoPanel = new JPanel(new BorderLayout());
+                infoPanel.setOpaque(false);
+                
+                JLabel sizeLabel = new JLabel(formatFileSize(message.getFileSize()));
+                sizeLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 10));
+                sizeLabel.setForeground(Color.GRAY);
+                infoPanel.add(sizeLabel, BorderLayout.NORTH);
+                
+                // 添加保存按钮
+                if (!isSelfMessage) {
+                    JButton saveButton = new JButton("保存图片");
+                    saveButton.addActionListener(e -> saveReceivedFile(message));
+                    infoPanel.add(saveButton, BorderLayout.SOUTH);
+                }
+                
+                // 组装图片面板
+                imagePanel.add(senderPanel, BorderLayout.NORTH);
+                imagePanel.add(imageLabel, BorderLayout.CENTER);
+                imagePanel.add(infoPanel, BorderLayout.SOUTH);
+                
+            } catch (Exception e) {
+                // 如果图片无法显示，显示错误信息
+                JLabel errorLabel = new JLabel("图片加载失败");
+                errorLabel.setForeground(Color.RED);
+                imagePanel.add(senderPanel, BorderLayout.NORTH);
+                imagePanel.add(errorLabel, BorderLayout.CENTER);
+                
+                System.out.println("图片加载失败: " + e.getMessage());
+                e.printStackTrace();
+            }
+            
+            // 添加到对齐面板
+            alignPanel.add(imagePanel);
+            messagePanel.add(alignPanel, BorderLayout.CENTER);
+            
+            // 添加到聊天区域
+            chatArea.add(messagePanel);
+            
+            System.out.println("添加了图片消息：" + message.getFileName());
+        }
+        
+        /**
+         * 处理视频消息
+         */
+        private void handleVideoMessage(Message message, String time, String sender) {
+            boolean isSelfMessage = message.getSender() != null && client.getCurrentUser() != null && 
+                                  message.getSender().getUserId().equals(client.getCurrentUser().getUserId());
+            
+            // 创建消息面板
+            JPanel messagePanel = new JPanel();
+            messagePanel.setLayout(new BorderLayout());
+            messagePanel.setBackground(Color.WHITE);
+            
+            // 设置对齐方式
+            JPanel alignPanel = new JPanel();
+            alignPanel.setLayout(new FlowLayout(isSelfMessage ? FlowLayout.RIGHT : FlowLayout.LEFT));
+            alignPanel.setBackground(Color.WHITE);
+            
+            // 创建视频面板
+            JPanel videoPanel = new JPanel();
+            videoPanel.setLayout(new BorderLayout(5, 5));
+            videoPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(5, 10, 5, 10),
+                BorderFactory.createLineBorder(new Color(200, 200, 200))
+            ));
+            videoPanel.setBackground(Color.WHITE);
+            
+            // 视频图标
+            JLabel videoIcon = new JLabel();
+            // 使用文本代替图标
+            videoIcon.setText("▶");
+            videoIcon.setFont(new Font("Dialog", Font.BOLD, 24));
+            videoIcon.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 10));
+            
+            // 视频信息面板
+            JPanel videoInfoPanel = new JPanel(new BorderLayout());
+            videoInfoPanel.setOpaque(false);
+            
+            // 视频名称和大小
+            JLabel videoNameLabel = new JLabel(message.getFileName());
+            videoNameLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 12));
+            
+            JLabel videoSizeLabel = new JLabel(formatFileSize(message.getFileSize()));
+            videoSizeLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 10));
+            videoSizeLabel.setForeground(Color.GRAY);
+            
+            JButton playButton = new JButton("播放");
+            playButton.addActionListener(e -> playVideo(message));
+            
+            videoInfoPanel.add(videoNameLabel, BorderLayout.NORTH);
+            videoInfoPanel.add(videoSizeLabel, BorderLayout.CENTER);
+            videoInfoPanel.add(playButton, BorderLayout.SOUTH);
+            
+            // 发送者信息
+            JPanel senderPanel = new JPanel(new BorderLayout());
+            senderPanel.setOpaque(false);
+            
+            JLabel senderLabel = new JLabel(isSelfMessage ? "我" : sender);
+            senderLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 12));
+            
+            JLabel timeLabel = new JLabel(time);
+            timeLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 10));
+            timeLabel.setForeground(Color.GRAY);
+            
+            senderPanel.add(senderLabel, BorderLayout.WEST);
+            senderPanel.add(timeLabel, BorderLayout.EAST);
+            
+            // 组装视频面板
+            videoPanel.add(senderPanel, BorderLayout.NORTH);
+            videoPanel.add(videoIcon, BorderLayout.WEST);
+            videoPanel.add(videoInfoPanel, BorderLayout.CENTER);
+            
+            // 添加到对齐面板
+            alignPanel.add(videoPanel);
+            messagePanel.add(alignPanel, BorderLayout.CENTER);
+            
+            // 添加到聊天区域
+            chatArea.add(messagePanel);
+            
+            System.out.println("添加了视频消息：" + message.getFileName());
+        }
+        
+        /**
+         * 播放视频
+         */
+        private void playVideo(Message message) {
+            if (message.getFileData() == null || message.getFileData().length == 0) {
+                JOptionPane.showMessageDialog(this, 
+                    "视频数据为空，无法播放", 
+                    "播放失败", 
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            try {
+                // 创建临时文件
+                File tempFile = File.createTempFile("video_", "_" + message.getFileName());
+                tempFile.deleteOnExit();
+                
+                // 写入视频数据
+                try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+                    fos.write(message.getFileData());
+                }
+                
+                // 使用系统默认程序打开视频文件
+                Desktop.getDesktop().open(tempFile);
+                
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, 
+                    "播放视频失败：" + e.getMessage(), 
+                    "播放失败", 
+                    JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
         }
     }
     

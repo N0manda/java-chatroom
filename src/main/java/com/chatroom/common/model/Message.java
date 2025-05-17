@@ -46,6 +46,26 @@ public class Message implements Serializable {
     private Date timestamp;
     
     /**
+     * 文件名
+     */
+    private String fileName;
+    
+    /**
+     * 文件大小
+     */
+    private long fileSize;
+    
+    /**
+     * 文件数据
+     */
+    private byte[] fileData;
+    
+    /**
+     * 文件传输进度(0-100)
+     */
+    private int transferProgress;
+    
+    /**
      * 默认构造函数
      */
     public Message() {
@@ -102,6 +122,84 @@ public class Message implements Serializable {
         message.setReceiverId(receiverId);
         message.setGroupMessage(isGroupMessage);
         message.setTimestamp(new Date());
+        return message;
+    }
+    
+    /**
+     * 创建一个文件消息
+     * 
+     * @param sender 发送者
+     * @param receiverId 接收者ID
+     * @param fileName 文件名
+     * @param fileData 文件数据
+     * @param isGroupMessage 是否是群消息
+     * @return 文件消息对象
+     */
+    public static Message createFileMessage(User sender, String receiverId, String fileName, byte[] fileData, boolean isGroupMessage) {
+        Message message = new Message();
+        message.setMessageId(UUID.randomUUID().toString());
+        message.setType(MessageType.FILE);
+        message.setContent("发送文件：" + fileName);
+        message.setSender(sender);
+        message.setReceiverId(receiverId);
+        message.setGroupMessage(isGroupMessage);
+        message.setTimestamp(new Date());
+        message.setFileName(fileName);
+        message.setFileSize(fileData.length);
+        message.setFileData(fileData);
+        message.setTransferProgress(0);
+        return message;
+    }
+    
+    /**
+     * 创建一个图片消息
+     * 
+     * @param sender 发送者
+     * @param receiverId 接收者ID
+     * @param fileName 图片文件名
+     * @param fileData 图片数据
+     * @param isGroupMessage 是否是群消息
+     * @return 图片消息对象
+     */
+    public static Message createImageMessage(User sender, String receiverId, String fileName, byte[] fileData, boolean isGroupMessage) {
+        Message message = new Message();
+        message.setMessageId(UUID.randomUUID().toString());
+        message.setType(MessageType.IMAGE);
+        message.setContent("发送图片：" + fileName);
+        message.setSender(sender);
+        message.setReceiverId(receiverId);
+        message.setGroupMessage(isGroupMessage);
+        message.setTimestamp(new Date());
+        message.setFileName(fileName);
+        message.setFileSize(fileData.length);
+        message.setFileData(fileData);
+        message.setTransferProgress(0);
+        return message;
+    }
+    
+    /**
+     * 创建一个视频消息
+     * 
+     * @param sender 发送者
+     * @param receiverId 接收者ID
+     * @param fileName 视频文件名
+     * @param fileData 视频数据
+     * @param isGroupMessage 是否是群消息
+     * @return 视频消息对象
+     */
+    public static Message createVideoMessage(User sender, String receiverId, String fileName, byte[] fileData, boolean isGroupMessage) {
+        Message message = new Message();
+        message.setMessageId(UUID.randomUUID().toString());
+        message.setType(MessageType.VIDEO);
+        message.setContent("发送视频：" + fileName);
+        message.setSender(sender);
+        message.setReceiverId(receiverId);
+        message.setGroupMessage(isGroupMessage);
+        message.setTimestamp(new Date());
+        message.setFileName(fileName);
+        message.setFileSize(fileData.length);
+        message.setFileData(fileData);
+        message.setTransferProgress(0);
         return message;
     }
     
@@ -201,5 +299,61 @@ public class Message implements Serializable {
      */
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
+    }
+    
+    /**
+     * 获取文件名
+     */
+    public String getFileName() {
+        return fileName;
+    }
+    
+    /**
+     * 设置文件名
+     */
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+    
+    /**
+     * 获取文件大小
+     */
+    public long getFileSize() {
+        return fileSize;
+    }
+    
+    /**
+     * 设置文件大小
+     */
+    public void setFileSize(long fileSize) {
+        this.fileSize = fileSize;
+    }
+    
+    /**
+     * 获取文件数据
+     */
+    public byte[] getFileData() {
+        return fileData;
+    }
+    
+    /**
+     * 设置文件数据
+     */
+    public void setFileData(byte[] fileData) {
+        this.fileData = fileData;
+    }
+    
+    /**
+     * 获取传输进度
+     */
+    public int getTransferProgress() {
+        return transferProgress;
+    }
+    
+    /**
+     * 设置传输进度
+     */
+    public void setTransferProgress(int transferProgress) {
+        this.transferProgress = transferProgress;
     }
 } 

@@ -22,6 +22,11 @@ public enum MessageType implements Serializable {
     FILE,
     
     /**
+     * 视频消息
+     */
+    VIDEO,
+    
+    /**
      * 语音消息
      */
     VOICE,

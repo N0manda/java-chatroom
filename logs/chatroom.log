@@ -1815,3 +1815,298 @@ java.net.SocketException: 你的主机中的软件中止了一个已建立的连
 	at java.base/java.lang.Thread.run(Thread.java:1575)
 2025-05-17 21:35:22.657 [pool-1-thread-2] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
 2025-05-17 21:35:22.657 [pool-1-thread-2] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
+2025-05-17 21:54:11.208 [main] INFO  c.chatroom.server.ChatServerLauncher - 使用图形界面启动服务器
+2025-05-17 21:54:11.530 [AWT-EventQueue-0] INFO  c.c.server.config.ServerConfig - 从配置文件加载服务器配置: bindAddress=10.29.183.159, port=9999, autoSelectPort=true
+2025-05-17 21:54:12.534 [main] INFO  c.chatroom.server.ChatServerLauncher - 使用图形界面启动服务器
+2025-05-17 21:54:12.851 [AWT-EventQueue-0] INFO  c.c.server.config.ServerConfig - 从配置文件加载服务器配置: bindAddress=10.29.183.159, port=9999, autoSelectPort=true
+2025-05-17 21:54:26.706 [AWT-EventQueue-0] INFO  c.c.server.config.ServerConfig - 服务器配置已保存
+2025-05-17 21:54:26.710 [AWT-EventQueue-0] INFO  c.c.server.ui.ServerConfigFrame - 配置已保存: 绑定地址=10.29.183.159, 端口=9999, 自动选择端口=true
+2025-05-17 21:54:26.713 [AWT-EventQueue-0] INFO  c.c.server.ui.ServerConfigFrame - 正在启动服务器...
+2025-05-17 21:54:26.716 [Thread-2] INFO  com.chatroom.server.ChatServer - 已创建公共聊天室: 公共聊天室
+2025-05-17 21:54:26.717 [Thread-2] INFO  c.c.server.ui.ServerConfigFrame - 服务器已启动，监听地址: 10.29.183.159:9999
+2025-05-17 21:54:26.717 [Thread-2] INFO  com.chatroom.server.ChatServer - 聊天服务器已启动，监听地址: 10.29.183.159:9999
+2025-05-17 21:54:32.710 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已加载 2 个历史连接记录
+2025-05-17 21:54:34.068 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已加载 2 个历史连接记录
+2025-05-17 21:54:35.261 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 尝试登录: 用户=1, 服务器=10.29.183.159:9999
+2025-05-17 21:54:35.262 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已保存 2 个历史连接记录
+2025-05-17 21:54:35.264 [Thread-2] INFO  com.chatroom.client.ui.LoginFrame - 创建客户端实例
+2025-05-17 21:54:35.264 [Thread-2] INFO  com.chatroom.client.ui.LoginFrame - 尝试连接到服务器 10.29.183.159:9999
+2025-05-17 21:54:35.265 [Thread-2] INFO  com.chatroom.server.ChatServer - 新客户端连接: /10.29.183.159:4410
+2025-05-17 21:54:35.266 [Thread-2] INFO  com.chatroom.client.ChatClient - 已连接到服务器: 10.29.183.159:9999
+2025-05-17 21:54:35.267 [Thread-2] INFO  com.chatroom.client.ui.LoginFrame - 成功连接到服务器，注册响应监听器
+2025-05-17 21:54:35.267 [Thread-2] INFO  com.chatroom.client.ui.LoginFrame - 发送登录请求: 用户名=1
+2025-05-17 21:54:35.269 [Thread-2] INFO  com.chatroom.client.ui.LoginFrame - 登录请求已发送，等待服务器响应
+2025-05-17 21:54:35.271 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 处理登录请求: ChatRequest{requestId='fdf72533-9730-46f4-af49-ee81da34faed', type=LOGIN, sender=null, timestamp=1747490075268}
+2025-05-17 21:54:35.274 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 用户尝试登录: 1
+2025-05-17 21:54:35.275 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 已创建用户对象: com.chatroom.common.model.User@5ad84f26
+2025-05-17 21:54:35.275 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 调用服务器处理登录逻辑
+2025-05-17 21:54:35.277 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 用户 1 已自动加入公共聊天室
+2025-05-17 21:54:35.279 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 登录响应: success=true, message=登录成功
+2025-05-17 21:54:35.281 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 已发送登录响应
+2025-05-17 21:54:35.282 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到服务器响应: 类型=GENERIC_RESULT, 成功=true, 消息=登录成功
+2025-05-17 21:54:35.283 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 处理登录响应: 成功=true, 消息=登录成功
+2025-05-17 21:54:35.283 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 登录响应包含 2 个用户对象
+2025-05-17 21:54:35.283 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 设置当前用户: 1
+2025-05-17 21:54:35.283 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 发送获取用户列表请求
+2025-05-17 21:54:35.283 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 通知 1 个响应监听器
+2025-05-17 21:54:35.283 [pool-1-thread-1] INFO  com.chatroom.client.ui.LoginFrame - 收到响应: 类型=GENERIC_RESULT, 成功=true, 消息=登录成功
+2025-05-17 21:54:35.284 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 成功通知了 1 个响应监听器
+2025-05-17 21:54:35.284 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 登录成功，准备打开主界面
+2025-05-17 21:54:35.284 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 收到公共聊天室: 公共聊天室
+2025-05-17 21:54:35.285 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到服务器响应: 类型=USER_LIST, 成功=true, 消息=获取用户列表成功
+2025-05-17 21:54:35.285 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 通知 0 个响应监听器
+2025-05-17 21:54:35.285 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 成功通知了 0 个响应监听器
+2025-05-17 21:54:35.378 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 正在刷新用户列表...
+2025-05-17 21:54:35.379 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 打开公共聊天室: 公共聊天室
+2025-05-17 21:54:35.379 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到服务器响应: 类型=USER_LIST, 成功=true, 消息=获取用户列表成功
+2025-05-17 21:54:35.379 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 通知 1 个响应监听器
+2025-05-17 21:54:35.379 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到用户列表响应：ChatResponse{responseId='de25129f-9171-42c2-9708-f2b3e7278465', requestId='816ba86c-cb61-4aa0-a3e1-7fa4e0881677', type=USER_LIST, success=true, message='获取用户列表成功', timestamp=1747490075379}
+2025-05-17 21:54:35.382 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 成功通知了 1 个响应监听器
+2025-05-17 21:54:35.434 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表不为空，共 1 个用户
+2025-05-17 21:54:35.435 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表已更新，共 0 个用户
+2025-05-17 21:54:39.655 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 尝试登录: 用户=2, 服务器=10.29.183.159:9999
+2025-05-17 21:54:39.657 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已保存 2 个历史连接记录
+2025-05-17 21:54:39.659 [Thread-2] INFO  com.chatroom.client.ui.LoginFrame - 创建客户端实例
+2025-05-17 21:54:39.659 [Thread-2] INFO  com.chatroom.client.ui.LoginFrame - 尝试连接到服务器 10.29.183.159:9999
+2025-05-17 21:54:39.659 [Thread-2] INFO  com.chatroom.server.ChatServer - 新客户端连接: /10.29.183.159:4415
+2025-05-17 21:54:39.660 [Thread-2] INFO  com.chatroom.client.ChatClient - 已连接到服务器: 10.29.183.159:9999
+2025-05-17 21:54:39.661 [Thread-2] INFO  com.chatroom.client.ui.LoginFrame - 成功连接到服务器，注册响应监听器
+2025-05-17 21:54:39.661 [Thread-2] INFO  com.chatroom.client.ui.LoginFrame - 发送登录请求: 用户名=2
+2025-05-17 21:54:39.663 [Thread-2] INFO  com.chatroom.client.ui.LoginFrame - 登录请求已发送，等待服务器响应
+2025-05-17 21:54:39.663 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 处理登录请求: ChatRequest{requestId='694b28c9-8d7f-4df0-aad0-8c1333b53874', type=LOGIN, sender=null, timestamp=1747490079662}
+2025-05-17 21:54:39.663 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 用户尝试登录: 2
+2025-05-17 21:54:39.663 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 已创建用户对象: com.chatroom.common.model.User@5231d0c2
+2025-05-17 21:54:39.664 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 调用服务器处理登录逻辑
+2025-05-17 21:54:39.665 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 用户 2 已自动加入公共聊天室
+2025-05-17 21:54:39.665 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=系统, 接收者=public_chat_room, 内容=欢迎 2 加入公共聊天室！, 是否群消息=true
+2025-05-17 21:54:39.665 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=系统, 接收者=null, 内容=2 已加入聊天室, 是否群消息=false
+2025-05-17 21:54:39.665 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 登录响应: success=true, message=登录成功
+2025-05-17 21:54:39.666 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 已发送登录响应
+2025-05-17 21:54:39.670 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到服务器响应: 类型=GENERIC_RESULT, 成功=true, 消息=登录成功
+2025-05-17 21:54:39.670 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 处理登录响应: 成功=true, 消息=登录成功
+2025-05-17 21:54:39.670 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 登录响应包含 2 个用户对象
+2025-05-17 21:54:39.671 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 设置当前用户: 2
+2025-05-17 21:54:39.671 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 发送获取用户列表请求
+2025-05-17 21:54:39.671 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 通知 1 个响应监听器
+2025-05-17 21:54:39.671 [pool-1-thread-1] INFO  com.chatroom.client.ui.LoginFrame - 收到响应: 类型=GENERIC_RESULT, 成功=true, 消息=登录成功
+2025-05-17 21:54:39.672 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 成功通知了 1 个响应监听器
+2025-05-17 21:54:39.672 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 登录成功，准备打开主界面
+2025-05-17 21:54:39.672 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 收到公共聊天室: 公共聊天室
+2025-05-17 21:54:39.672 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到服务器响应: 类型=USER_LIST, 成功=true, 消息=获取用户列表成功
+2025-05-17 21:54:39.672 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 通知 0 个响应监听器
+2025-05-17 21:54:39.672 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 成功通知了 0 个响应监听器
+2025-05-17 21:54:39.751 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 正在刷新用户列表...
+2025-05-17 21:54:39.753 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 打开公共聊天室: 公共聊天室
+2025-05-17 21:54:39.753 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到服务器响应: 类型=USER_LIST, 成功=true, 消息=获取用户列表成功
+2025-05-17 21:54:39.753 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 通知 1 个响应监听器
+2025-05-17 21:54:39.753 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到用户列表响应：ChatResponse{responseId='097a012c-85f5-40e8-9ab5-f36ffba3a935', requestId='816b24c0-8f13-4756-af3a-423ec812b094', type=USER_LIST, success=true, message='获取用户列表成功', timestamp=1747490079753}
+2025-05-17 21:54:39.757 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 成功通知了 1 个响应监听器
+2025-05-17 21:54:39.872 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表不为空，共 2 个用户
+2025-05-17 21:54:39.874 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表已更新，共 1 个用户
+2025-05-17 21:54:45.271 [Thread-3] WARN  com.chatroom.client.ui.LoginFrame - 登录响应超时
+2025-05-17 21:54:49.664 [Thread-3] WARN  com.chatroom.client.ui.LoginFrame - 登录响应超时
+2025-05-17 21:55:25.072 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 处理发送消息请求: 发送者=2, 接收者=public_chat_room, 内容=发送文件：屏幕截图 2023-10-12 225537.png
+2025-05-17 21:55:25.073 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 发送群组消息: groupId=public_chat_room
+2025-05-17 21:55:25.073 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public_chat_room, 内容=发送文件：屏幕截图 2023-10-12 225537.png, 是否群消息=true
+2025-05-17 21:55:25.074 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public_chat_room, 内容=发送文件：屏幕截图 2023-10-12 225537.png, 是否群消息=true
+2025-05-17 21:55:25.075 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到服务器响应: 类型=MESSAGE_RESULT, 成功=true, 消息=消息发送成功
+2025-05-17 21:55:25.076 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 通知 0 个响应监听器
+2025-05-17 21:55:25.076 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 成功通知了 0 个响应监听器
+2025-05-17 21:55:30.862 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 尝试打开与用户 1 的聊天窗口
+2025-05-17 21:55:30.867 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 已打开与用户 1 的新聊天窗口
+2025-05-17 21:56:49.680 [AWT-EventQueue-0] INFO  com.chatroom.client.ChatClient - 已断开与服务器的连接
+2025-05-17 21:56:49.681 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 消息处理器已停止
+2025-05-17 21:56:49.681 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=系统, 接收者=null, 内容=1 已离开聊天室, 是否群消息=false
+2025-05-17 21:56:49.683 [pool-1-thread-1] ERROR c.c.server.handler.ClientHandler - 发送响应时出错: 你的主机中的软件中止了一个已建立的连接。
+java.net.SocketException: 你的主机中的软件中止了一个已建立的连接。
+	at java.base/sun.nio.ch.SocketDispatcher.write0(Native Method)
+	at java.base/sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:54)
+	at java.base/sun.nio.ch.NioSocketImpl.tryWrite(NioSocketImpl.java:394)
+	at java.base/sun.nio.ch.NioSocketImpl.implWrite(NioSocketImpl.java:410)
+	at java.base/sun.nio.ch.NioSocketImpl.write(NioSocketImpl.java:440)
+	at java.base/sun.nio.ch.NioSocketImpl$2.write(NioSocketImpl.java:819)
+	at java.base/java.net.Socket$SocketOutputStream.implWrite(Socket.java:1231)
+	at java.base/java.net.Socket$SocketOutputStream.write(Socket.java:1218)
+	at java.base/java.io.ObjectOutputStream$BlockDataOutputStream.drain(ObjectOutputStream.java:1900)
+	at java.base/java.io.ObjectOutputStream$BlockDataOutputStream.setBlockDataMode(ObjectOutputStream.java:1809)
+	at java.base/java.io.ObjectOutputStream.writeFatalException(ObjectOutputStream.java:1619)
+	at java.base/java.io.ObjectOutputStream.writeObject(ObjectOutputStream.java:362)
+	at com.chatroom.server.handler.ClientHandler.sendResponse(ClientHandler.java:308)
+	at com.chatroom.server.handler.ClientHandler.handleLogout(ClientHandler.java:185)
+	at com.chatroom.server.handler.ClientHandler.handleRequest(ClientHandler.java:111)
+	at com.chatroom.server.handler.ClientHandler.run(ClientHandler.java:76)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2025-05-17 21:56:49.685 [pool-1-thread-1] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
+2025-05-17 21:56:49.685 [pool-1-thread-1] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
+2025-05-17 21:56:51.324 [AWT-EventQueue-0] INFO  com.chatroom.client.ChatClient - 已断开与服务器的连接
+2025-05-17 21:56:51.324 [pool-1-thread-2] ERROR c.c.server.handler.ClientHandler - 发送响应时出错: 你的主机中的软件中止了一个已建立的连接。
+java.net.SocketException: 你的主机中的软件中止了一个已建立的连接。
+	at java.base/sun.nio.ch.SocketDispatcher.write0(Native Method)
+	at java.base/sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:54)
+	at java.base/sun.nio.ch.NioSocketImpl.tryWrite(NioSocketImpl.java:394)
+	at java.base/sun.nio.ch.NioSocketImpl.implWrite(NioSocketImpl.java:410)
+	at java.base/sun.nio.ch.NioSocketImpl.write(NioSocketImpl.java:440)
+	at java.base/sun.nio.ch.NioSocketImpl$2.write(NioSocketImpl.java:819)
+	at java.base/java.net.Socket$SocketOutputStream.implWrite(Socket.java:1231)
+	at java.base/java.net.Socket$SocketOutputStream.write(Socket.java:1218)
+	at java.base/java.io.ObjectOutputStream$BlockDataOutputStream.drain(ObjectOutputStream.java:1900)
+	at java.base/java.io.ObjectOutputStream$BlockDataOutputStream.setBlockDataMode(ObjectOutputStream.java:1809)
+	at java.base/java.io.ObjectOutputStream.writeFatalException(ObjectOutputStream.java:1619)
+	at java.base/java.io.ObjectOutputStream.writeObject(ObjectOutputStream.java:362)
+	at com.chatroom.server.handler.ClientHandler.sendResponse(ClientHandler.java:308)
+	at com.chatroom.server.handler.ClientHandler.handleLogout(ClientHandler.java:185)
+	at com.chatroom.server.handler.ClientHandler.handleRequest(ClientHandler.java:111)
+	at com.chatroom.server.handler.ClientHandler.run(ClientHandler.java:76)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2025-05-17 21:56:51.325 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 消息处理器已停止
+2025-05-17 21:56:51.325 [pool-1-thread-2] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
+2025-05-17 21:56:51.325 [pool-1-thread-2] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
+2025-05-17 22:02:56.943 [AWT-EventQueue-0] INFO  c.c.server.config.ServerConfig - 从配置文件加载服务器配置: bindAddress=10.29.183.159, port=9999, autoSelectPort=true
+2025-05-17 22:03:01.107 [AWT-EventQueue-0] INFO  c.c.server.config.ServerConfig - 服务器配置已保存
+2025-05-17 22:03:01.109 [AWT-EventQueue-0] INFO  c.c.server.ui.ServerConfigFrame - 配置已保存: 绑定地址=10.29.183.159, 端口=9999, 自动选择端口=true
+2025-05-17 22:03:01.111 [AWT-EventQueue-0] INFO  c.c.server.ui.ServerConfigFrame - 正在启动服务器...
+2025-05-17 22:03:01.114 [Thread-2] INFO  com.chatroom.server.ChatServer - 已创建公共聊天室: 公共聊天室
+2025-05-17 22:03:01.114 [Thread-2] INFO  c.c.server.ui.ServerConfigFrame - 服务器已启动，监听地址: 10.29.183.159:9999
+2025-05-17 22:03:01.114 [Thread-2] INFO  com.chatroom.server.ChatServer - 聊天服务器已启动，监听地址: 10.29.183.159:9999
+2025-05-17 22:03:06.166 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已加载 2 个历史连接记录
+2025-05-17 22:03:07.504 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已加载 2 个历史连接记录
+2025-05-17 22:03:09.934 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 尝试登录: 用户=1, 服务器=10.29.183.159:9999
+2025-05-17 22:03:09.935 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已保存 2 个历史连接记录
+2025-05-17 22:03:09.937 [Thread-2] INFO  com.chatroom.client.ui.LoginFrame - 创建客户端实例
+2025-05-17 22:03:09.937 [Thread-2] INFO  com.chatroom.client.ui.LoginFrame - 尝试连接到服务器 10.29.183.159:9999
+2025-05-17 22:03:09.937 [Thread-2] INFO  com.chatroom.server.ChatServer - 新客户端连接: /10.29.183.159:10052
+2025-05-17 22:03:09.939 [Thread-2] INFO  com.chatroom.client.ChatClient - 已连接到服务器: 10.29.183.159:9999
+2025-05-17 22:03:09.939 [Thread-2] INFO  com.chatroom.client.ui.LoginFrame - 成功连接到服务器，注册响应监听器
+2025-05-17 22:03:09.939 [Thread-2] INFO  com.chatroom.client.ui.LoginFrame - 发送登录请求: 用户名=1
+2025-05-17 22:03:09.941 [Thread-2] INFO  com.chatroom.client.ui.LoginFrame - 登录请求已发送，等待服务器响应
+2025-05-17 22:03:09.943 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 处理登录请求: ChatRequest{requestId='44ee807c-9b52-439e-9602-24f07f8b7fc1', type=LOGIN, sender=null, timestamp=1747490589940}
+2025-05-17 22:03:09.947 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 用户尝试登录: 1
+2025-05-17 22:03:09.947 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 已创建用户对象: com.chatroom.common.model.User@6eba2e66
+2025-05-17 22:03:09.947 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 调用服务器处理登录逻辑
+2025-05-17 22:03:09.949 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 用户 1 已自动加入公共聊天室
+2025-05-17 22:03:09.951 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 登录响应: success=true, message=登录成功
+2025-05-17 22:03:09.954 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 已发送登录响应
+2025-05-17 22:03:09.954 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到服务器响应: 类型=GENERIC_RESULT, 成功=true, 消息=登录成功
+2025-05-17 22:03:09.955 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 处理登录响应: 成功=true, 消息=登录成功
+2025-05-17 22:03:09.955 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 登录响应包含 2 个用户对象
+2025-05-17 22:03:09.955 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 设置当前用户: 1
+2025-05-17 22:03:09.955 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 发送获取用户列表请求
+2025-05-17 22:03:09.955 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 通知 1 个响应监听器
+2025-05-17 22:03:09.955 [pool-1-thread-1] INFO  com.chatroom.client.ui.LoginFrame - 收到响应: 类型=GENERIC_RESULT, 成功=true, 消息=登录成功
+2025-05-17 22:03:09.956 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 成功通知了 1 个响应监听器
+2025-05-17 22:03:09.956 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 登录成功，准备打开主界面
+2025-05-17 22:03:09.956 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 收到公共聊天室: 公共聊天室
+2025-05-17 22:03:09.957 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到服务器响应: 类型=USER_LIST, 成功=true, 消息=获取用户列表成功
+2025-05-17 22:03:09.957 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 通知 0 个响应监听器
+2025-05-17 22:03:09.957 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 成功通知了 0 个响应监听器
+2025-05-17 22:03:10.023 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 正在刷新用户列表...
+2025-05-17 22:03:10.023 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 打开公共聊天室: 公共聊天室
+2025-05-17 22:03:10.024 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到服务器响应: 类型=USER_LIST, 成功=true, 消息=获取用户列表成功
+2025-05-17 22:03:10.024 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 通知 1 个响应监听器
+2025-05-17 22:03:10.024 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到用户列表响应：ChatResponse{responseId='2febe328-bbfc-49d2-ae36-8a541cccfdc8', requestId='7ffe69b5-56b3-470f-b040-947d0b3ca732', type=USER_LIST, success=true, message='获取用户列表成功', timestamp=1747490590023}
+2025-05-17 22:03:10.027 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 成功通知了 1 个响应监听器
+2025-05-17 22:03:10.082 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表不为空，共 1 个用户
+2025-05-17 22:03:10.084 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表已更新，共 0 个用户
+2025-05-17 22:03:12.647 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 尝试登录: 用户=2, 服务器=10.29.183.159:9999
+2025-05-17 22:03:12.649 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已保存 2 个历史连接记录
+2025-05-17 22:03:12.650 [Thread-2] INFO  com.chatroom.client.ui.LoginFrame - 创建客户端实例
+2025-05-17 22:03:12.651 [Thread-2] INFO  com.chatroom.client.ui.LoginFrame - 尝试连接到服务器 10.29.183.159:9999
+2025-05-17 22:03:12.651 [Thread-2] INFO  com.chatroom.server.ChatServer - 新客户端连接: /10.29.183.159:10054
+2025-05-17 22:03:12.652 [Thread-2] INFO  com.chatroom.client.ChatClient - 已连接到服务器: 10.29.183.159:9999
+2025-05-17 22:03:12.652 [Thread-2] INFO  com.chatroom.client.ui.LoginFrame - 成功连接到服务器，注册响应监听器
+2025-05-17 22:03:12.652 [Thread-2] INFO  com.chatroom.client.ui.LoginFrame - 发送登录请求: 用户名=2
+2025-05-17 22:03:12.655 [Thread-2] INFO  com.chatroom.client.ui.LoginFrame - 登录请求已发送，等待服务器响应
+2025-05-17 22:03:12.655 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 处理登录请求: ChatRequest{requestId='a1e0b312-4024-48e7-9616-d4d92365190b', type=LOGIN, sender=null, timestamp=1747490592654}
+2025-05-17 22:03:12.655 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 用户尝试登录: 2
+2025-05-17 22:03:12.655 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 已创建用户对象: com.chatroom.common.model.User@26f43be2
+2025-05-17 22:03:12.656 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 调用服务器处理登录逻辑
+2025-05-17 22:03:12.656 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 用户 2 已自动加入公共聊天室
+2025-05-17 22:03:12.657 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=系统, 接收者=public_chat_room, 内容=欢迎 2 加入公共聊天室！, 是否群消息=true
+2025-05-17 22:03:12.658 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 登录响应: success=true, message=登录成功
+2025-05-17 22:03:12.659 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=系统, 接收者=null, 内容=2 已加入聊天室, 是否群消息=false
+2025-05-17 22:03:12.659 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 已发送登录响应
+2025-05-17 22:03:12.662 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到服务器响应: 类型=GENERIC_RESULT, 成功=true, 消息=登录成功
+2025-05-17 22:03:12.662 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 处理登录响应: 成功=true, 消息=登录成功
+2025-05-17 22:03:12.662 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 登录响应包含 2 个用户对象
+2025-05-17 22:03:12.662 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 设置当前用户: 2
+2025-05-17 22:03:12.662 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 发送获取用户列表请求
+2025-05-17 22:03:12.662 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 通知 1 个响应监听器
+2025-05-17 22:03:12.662 [pool-1-thread-1] INFO  com.chatroom.client.ui.LoginFrame - 收到响应: 类型=GENERIC_RESULT, 成功=true, 消息=登录成功
+2025-05-17 22:03:12.663 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 登录成功，准备打开主界面
+2025-05-17 22:03:12.663 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 成功通知了 1 个响应监听器
+2025-05-17 22:03:12.663 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 收到公共聊天室: 公共聊天室
+2025-05-17 22:03:12.663 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到服务器响应: 类型=USER_LIST, 成功=true, 消息=获取用户列表成功
+2025-05-17 22:03:12.663 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 通知 0 个响应监听器
+2025-05-17 22:03:12.663 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 成功通知了 0 个响应监听器
+2025-05-17 22:03:12.730 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 正在刷新用户列表...
+2025-05-17 22:03:12.731 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 打开公共聊天室: 公共聊天室
+2025-05-17 22:03:12.731 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到服务器响应: 类型=USER_LIST, 成功=true, 消息=获取用户列表成功
+2025-05-17 22:03:12.731 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 通知 1 个响应监听器
+2025-05-17 22:03:12.731 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到用户列表响应：ChatResponse{responseId='cc987047-38c8-4f29-bf99-66caa5c96678', requestId='0ae3d826-d112-47dd-a47a-0f67a22c43c1', type=USER_LIST, success=true, message='获取用户列表成功', timestamp=1747490592731}
+2025-05-17 22:03:12.740 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 成功通知了 1 个响应监听器
+2025-05-17 22:03:12.816 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表不为空，共 2 个用户
+2025-05-17 22:03:12.817 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表已更新，共 1 个用户
+2025-05-17 22:03:19.948 [Thread-3] WARN  com.chatroom.client.ui.LoginFrame - 登录响应超时
+2025-05-17 22:03:22.666 [Thread-3] WARN  com.chatroom.client.ui.LoginFrame - 登录响应超时
+2025-05-17 22:03:26.852 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 处理发送消息请求: 发送者=2, 接收者=public_chat_room, 内容=发送图片：屏幕截图 2024-05-11 174116.png
+2025-05-17 22:03:26.852 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public_chat_room, 内容=发送图片：屏幕截图 2024-05-11 174116.png, 是否群消息=true
+2025-05-17 22:03:26.853 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 发送群组消息: groupId=public_chat_room
+2025-05-17 22:03:26.854 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public_chat_room, 内容=发送图片：屏幕截图 2024-05-11 174116.png, 是否群消息=true
+2025-05-17 22:03:26.855 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到服务器响应: 类型=MESSAGE_RESULT, 成功=true, 消息=消息发送成功
+2025-05-17 22:03:26.855 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 通知 0 个响应监听器
+2025-05-17 22:03:26.855 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 成功通知了 0 个响应监听器
+2025-05-17 22:03:33.003 [AWT-EventQueue-0] INFO  com.chatroom.client.ChatClient - 已断开与服务器的连接
+2025-05-17 22:03:33.003 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=系统, 接收者=null, 内容=1 已离开聊天室, 是否群消息=false
+2025-05-17 22:03:33.004 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 消息处理器已停止
+2025-05-17 22:03:33.005 [pool-1-thread-1] ERROR c.c.server.handler.ClientHandler - 发送响应时出错: 你的主机中的软件中止了一个已建立的连接。
+java.net.SocketException: 你的主机中的软件中止了一个已建立的连接。
+	at java.base/sun.nio.ch.SocketDispatcher.write0(Native Method)
+	at java.base/sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:54)
+	at java.base/sun.nio.ch.NioSocketImpl.tryWrite(NioSocketImpl.java:394)
+	at java.base/sun.nio.ch.NioSocketImpl.implWrite(NioSocketImpl.java:410)
+	at java.base/sun.nio.ch.NioSocketImpl.write(NioSocketImpl.java:440)
+	at java.base/sun.nio.ch.NioSocketImpl$2.write(NioSocketImpl.java:819)
+	at java.base/java.net.Socket$SocketOutputStream.implWrite(Socket.java:1231)
+	at java.base/java.net.Socket$SocketOutputStream.write(Socket.java:1218)
+	at java.base/java.io.ObjectOutputStream$BlockDataOutputStream.drain(ObjectOutputStream.java:1900)
+	at java.base/java.io.ObjectOutputStream$BlockDataOutputStream.setBlockDataMode(ObjectOutputStream.java:1809)
+	at java.base/java.io.ObjectOutputStream.writeFatalException(ObjectOutputStream.java:1619)
+	at java.base/java.io.ObjectOutputStream.writeObject(ObjectOutputStream.java:362)
+	at com.chatroom.server.handler.ClientHandler.sendResponse(ClientHandler.java:308)
+	at com.chatroom.server.handler.ClientHandler.handleLogout(ClientHandler.java:185)
+	at com.chatroom.server.handler.ClientHandler.handleRequest(ClientHandler.java:111)
+	at com.chatroom.server.handler.ClientHandler.run(ClientHandler.java:76)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2025-05-17 22:03:33.007 [pool-1-thread-1] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
+2025-05-17 22:03:33.007 [pool-1-thread-1] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
+2025-05-17 22:03:34.400 [AWT-EventQueue-0] INFO  com.chatroom.client.ChatClient - 已断开与服务器的连接
+2025-05-17 22:03:34.400 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 消息处理器已停止
+2025-05-17 22:03:34.400 [pool-1-thread-2] ERROR c.c.server.handler.ClientHandler - 发送响应时出错: 你的主机中的软件中止了一个已建立的连接。
+java.net.SocketException: 你的主机中的软件中止了一个已建立的连接。
+	at java.base/sun.nio.ch.SocketDispatcher.write0(Native Method)
+	at java.base/sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:54)
+	at java.base/sun.nio.ch.NioSocketImpl.tryWrite(NioSocketImpl.java:394)
+	at java.base/sun.nio.ch.NioSocketImpl.implWrite(NioSocketImpl.java:410)
+	at java.base/sun.nio.ch.NioSocketImpl.write(NioSocketImpl.java:440)
+	at java.base/sun.nio.ch.NioSocketImpl$2.write(NioSocketImpl.java:819)
+	at java.base/java.net.Socket$SocketOutputStream.implWrite(Socket.java:1231)
+	at java.base/java.net.Socket$SocketOutputStream.write(Socket.java:1218)
+	at java.base/java.io.ObjectOutputStream$BlockDataOutputStream.drain(ObjectOutputStream.java:1900)
+	at java.base/java.io.ObjectOutputStream$BlockDataOutputStream.setBlockDataMode(ObjectOutputStream.java:1809)
+	at java.base/java.io.ObjectOutputStream.writeFatalException(ObjectOutputStream.java:1619)
+	at java.base/java.io.ObjectOutputStream.writeObject(ObjectOutputStream.java:362)
+	at com.chatroom.server.handler.ClientHandler.sendResponse(ClientHandler.java:308)
+	at com.chatroom.server.handler.ClientHandler.handleLogout(ClientHandler.java:185)
+	at com.chatroom.server.handler.ClientHandler.handleRequest(ClientHandler.java:111)
+	at com.chatroom.server.handler.ClientHandler.run(ClientHandler.java:76)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2025-05-17 22:03:34.401 [pool-1-thread-2] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
+2025-05-17 22:03:34.401 [pool-1-thread-2] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
