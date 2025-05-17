@@ -1,6 +1,8 @@
 package com.chatroom.server.handler;
 
+import com.chatroom.common.model.ChatGroup;
 import com.chatroom.common.model.Message;
+import com.chatroom.common.model.MessageType;
 import com.chatroom.common.model.User;
 import com.chatroom.common.network.ChatRequest;
 import com.chatroom.common.network.ChatResponse;
@@ -229,21 +231,29 @@ public class ClientHandler implements Runnable {
     }
     
     /**
-     * 处理创建群组请求
-     * 
-     * @param request 请求对象
-     */
-    private void handleCreateGroup(ChatRequest request) {
-        // 暂不实现
-    }
-    
-    /**
      * 处理加入群组请求
      * 
      * @param request 请求对象
      */
     private void handleJoinGroup(ChatRequest request) {
-        // 暂不实现
+        String groupId = (String) request.getData();
+        ChatGroup group = server.getChatGroups().get(groupId);
+        
+        if (group != null && user != null) {
+            group.addMember(user.getUserId());
+            
+            // 通知群组内其他成员
+            String notificationContent = user.getUsername() + " 加入了群组 " + group.getGroupName();
+            Message notification = Message.createSystemMessage(notificationContent, groupId, true);
+            server.broadcastToGroup(notification, groupId);
+            
+            // 发送控制消息通知用户状态变更（非重要变更）
+            sendUserStatusControlMessage(user.getUsername() + " 加入群组: " + group.getGroupName(), false);
+            
+            sendResponse(ChatResponse.createSuccessResponse(request, "加入群组成功", group));
+        } else {
+            sendResponse(ChatResponse.createErrorResponse(request, "群组不存在或用户未登录", null));
+        }
     }
     
     /**
@@ -252,7 +262,47 @@ public class ClientHandler implements Runnable {
      * @param request 请求对象
      */
     private void handleLeaveGroup(ChatRequest request) {
-        // 暂不实现
+        String groupId = (String) request.getData();
+        ChatGroup group = server.getChatGroups().get(groupId);
+        
+        if (group != null && user != null) {
+            group.removeMember(user.getUserId());
+            
+            // 通知群组内其他成员
+            String notificationContent = user.getUsername() + " 离开了群组 " + group.getGroupName();
+            Message notification = Message.createSystemMessage(notificationContent, groupId, true);
+            server.broadcastToGroup(notification, groupId);
+            
+            // 发送控制消息通知用户状态变更（非重要变更）
+            sendUserStatusControlMessage(user.getUsername() + " 离开群组: " + group.getGroupName(), false);
+            
+            sendResponse(ChatResponse.createSuccessResponse(request, "离开群组成功", null));
+        } else {
+            sendResponse(ChatResponse.createErrorResponse(request, "群组不存在或用户未登录", null));
+        }
+    }
+    
+    /**
+     * 处理创建群组请求
+     * 
+     * @param request 请求对象
+     */
+    private void handleCreateGroup(ChatRequest request) {
+        String groupName = (String) request.getData();
+        
+        if (user != null) {
+            ChatGroup group = ChatGroup.createGroup(groupName, user);
+            group.addMember(user.getUserId());
+            
+            server.getChatGroups().put(group.getGroupId(), group);
+            
+            // 发送控制消息通知用户状态变更（非重要变更）
+            sendUserStatusControlMessage("新群组创建: " + groupName + " (创建者: " + user.getUsername() + ")", false);
+            
+            sendResponse(ChatResponse.createSuccessResponse(request, "创建群组成功", group));
+        } else {
+            sendResponse(ChatResponse.createErrorResponse(request, "用户未登录", null));
+        }
     }
     
     /**
@@ -366,5 +416,28 @@ public class ClientHandler implements Runnable {
      */
     public User getUser() {
         return user;
+    }
+    
+    /**
+     * 发送用户状态控制消息
+     * 
+     * @param content 消息内容
+     * @param isImportant 是否是重要状态变更
+     */
+    private void sendUserStatusControlMessage(String content, boolean isImportant) {
+        Message statusMessage = new Message();
+        statusMessage.setMessageId(java.util.UUID.randomUUID().toString());
+        statusMessage.setType(MessageType.CONTROL);
+        
+        // 为重要的状态变更添加特殊标记
+        if (isImportant) {
+            content = "[STATUS_CHANGE]" + content;
+        }
+        
+        statusMessage.setContent(content);
+        statusMessage.setTimestamp(new java.util.Date());
+        
+        logger.info("发送用户状态控制消息: {}", content);
+        server.broadcastMessage(statusMessage);
     }
 } 

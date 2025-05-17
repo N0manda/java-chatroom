@@ -2,6 +2,7 @@ package com.chatroom.server;
 
 import com.chatroom.common.model.ChatGroup;
 import com.chatroom.common.model.Message;
+import com.chatroom.common.model.MessageType;
 import com.chatroom.common.model.User;
 import com.chatroom.common.network.ChatRequest;
 import com.chatroom.common.network.ChatResponse;
@@ -207,6 +208,29 @@ public class ChatServer {
     }
     
     /**
+     * 广播用户状态变更消息
+     * 
+     * @param content 消息内容
+     * @param isImportant 是否是重要状态变更（登录/注销）
+     */
+    private void broadcastUserStatusChange(String content, boolean isImportant) {
+        Message statusMessage = new Message();
+        statusMessage.setMessageId(java.util.UUID.randomUUID().toString());
+        statusMessage.setType(MessageType.CONTROL);
+        
+        // 为重要的状态变更（登录/注销）添加特殊标记
+        if (isImportant) {
+            content = "[STATUS_CHANGE]" + content;
+        }
+        
+        statusMessage.setContent(content);
+        statusMessage.setTimestamp(new java.util.Date());
+        
+        logger.info("广播用户状态变更: {}", content);
+        broadcastMessage(statusMessage);
+    }
+    
+    /**
      * 处理用户登录
      * 
      * @param user 用户对象
@@ -251,6 +275,9 @@ public class ChatServer {
         Message notification = Message.createSystemMessage(notificationContent, null, false);
         broadcastMessage(notification);
         
+        // 发送用户状态变更控制消息（标记为重要状态变更）
+        broadcastUserStatusChange("用户上线: " + user.getUsername(), true);
+        
         return ChatResponse.createSuccessResponse(null, "登录成功", data);
     }
     
@@ -268,6 +295,17 @@ public class ChatServer {
                 String notificationContent = user.getUsername() + " 已离开聊天室";
                 Message notification = Message.createSystemMessage(notificationContent, null, false);
                 broadcastMessage(notification);
+                
+                // 发送用户状态变更控制消息（标记为重要状态变更）
+                broadcastUserStatusChange("用户离线: " + user.getUsername(), true);
+                
+                // 从所有群组中移除该用户
+                for (ChatGroup group : chatGroups.values()) {
+                    if (group.getMemberIds().contains(userId)) {
+                        group.removeMember(userId);
+                        logger.info("用户 {} 已从群组 {} 中移除", user.getUsername(), group.getGroupName());
+                    }
+                }
             }
         }
     }

@@ -70,6 +70,26 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
             });
     
     /**
+     * 用户列表刷新定时器
+     */
+    private javax.swing.Timer userListRefreshTimer;
+    
+    /**
+     * 状态标签更新定时器
+     */
+    private javax.swing.Timer statusLabelUpdateTimer;
+    
+    /**
+     * 用户列表刷新间隔（毫秒）
+     */
+    private static final int USER_LIST_REFRESH_INTERVAL = 30000; // 30秒
+    
+    /**
+     * 上次用户列表刷新时间
+     */
+    private long lastUserListRefreshTime = 0;
+    
+    /**
      * 当前聊天室对象
      */
     private com.chatroom.common.model.ChatGroup publicChatRoom;
@@ -179,14 +199,17 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         JScrollPane userListScrollPane = new JScrollPane(userList);
         userListScrollPane.setBorder(BorderFactory.createEmptyBorder());
         
-        // 刷新按钮
-        JButton refreshButton = new JButton("刷新用户列表");
-        refreshButton.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        refreshButton.addActionListener(e -> refreshUserList());
+        // 添加用户状态标签
+        statusLabel = new JLabel();
+        updateStatusLabel();
+        statusLabel.setFont(new Font("Microsoft YaHei", Font.ITALIC, 10));
+        statusLabel.setForeground(Color.GRAY);
+        statusLabel.setHorizontalAlignment(JLabel.CENTER);
+        statusLabel.setBorder(BorderFactory.createEmptyBorder(8, 5, 8, 5));
         
         userListPanel.add(titleLabel, BorderLayout.NORTH);
         userListPanel.add(userListScrollPane, BorderLayout.CENTER);
-        userListPanel.add(refreshButton, BorderLayout.SOUTH);
+        userListPanel.add(statusLabel, BorderLayout.SOUTH);
         
         // 添加到左侧面板
         leftPanel.add(userInfoPanel, BorderLayout.NORTH);
@@ -220,6 +243,25 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
     }
     
     /**
+     * 更新状态标签
+     */
+    private void updateStatusLabel() {
+        String lastUpdateText = "";
+        if (lastUserListRefreshTime > 0) {
+            long timeSinceLastUpdate = System.currentTimeMillis() - lastUserListRefreshTime;
+            if (timeSinceLastUpdate < 60000) {
+                // 不到一分钟显示秒数
+                lastUpdateText = String.format("距上次更新: %d秒", timeSinceLastUpdate / 1000);
+            } else {
+                // 超过一分钟显示分钟数
+                lastUpdateText = String.format("距上次更新: %d分钟", timeSinceLastUpdate / 60000);
+            }
+        }
+        
+        statusLabel.setText(String.format("<html><center>用户列表自动刷新中<br>用户登录/退出将立即更新<br><font color='#888888'>%s</font></center></html>", lastUpdateText));
+    }
+    
+    /**
      * 设置监听器
      */
     private void setupListeners() {
@@ -250,6 +292,48 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         
         // 注册消息监听器
         client.getMessageHandler().addMessageListener(this);
+        
+        // 启动用户列表自动刷新
+        startUserListAutoRefresh();
+        
+        // 启动状态标签定时更新
+        startStatusLabelUpdate();
+    }
+    
+    /**
+     * 启动状态标签定时更新
+     */
+    private void startStatusLabelUpdate() {
+        statusLabelUpdateTimer = new javax.swing.Timer(1000, e -> {
+            updateStatusLabel();
+        });
+        statusLabelUpdateTimer.setRepeats(true);
+        statusLabelUpdateTimer.start();
+    }
+    
+    /**
+     * 停止状态标签定时更新
+     */
+    private void stopStatusLabelUpdate() {
+        if (statusLabelUpdateTimer != null && statusLabelUpdateTimer.isRunning()) {
+            statusLabelUpdateTimer.stop();
+        }
+    }
+    
+    @Override
+    public void dispose() {
+        // 停止自动刷新定时器
+        stopUserListAutoRefresh();
+        
+        // 停止状态标签定时更新
+        stopStatusLabelUpdate();
+        
+        // 注销消息监听器
+        if (client != null && client.getMessageHandler() != null) {
+            client.getMessageHandler().removeMessageListener(this);
+        }
+        
+        super.dispose();
     }
     
     /**
@@ -354,6 +438,10 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
      */
     private void refreshUserList() {
         logger.info("正在刷新用户列表...");
+        
+        // 更新最后刷新时间
+        lastUserListRefreshTime = System.currentTimeMillis();
+        updateStatusLabel();
         
         // 检查当前用户是否存在
         if (client.getCurrentUser() == null) {
@@ -661,6 +749,44 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
                 }
             }
         });
+        
+        // 添加对用户状态变更消息的处理
+        if (message.getType() == MessageType.CONTROL) {
+            String content = message.getContent();
+            if (content != null) {
+                logger.info("收到控制消息: {}", content);
+                
+                // 检测是否是带特殊标记的重要状态变更消息
+                if (content.startsWith("[STATUS_CHANGE]")) {
+                    // 移除特殊标记
+                    content = content.substring("[STATUS_CHANGE]".length());
+                    logger.info("检测到重要状态变更: {}, 立即刷新用户列表", content);
+                    
+                    // 在UI线程中立即执行刷新
+                    SwingUtilities.invokeLater(this::refreshUserList);
+                }
+                // 检测是否是其他类型的用户状态变更
+                else if (content.contains("用户上线") || content.contains("用户离线") ||
+                         content.startsWith("用户") && (content.contains("加入") || content.contains("退出"))) {
+                    // 普通用户状态变更，也立即刷新
+                    logger.info("检测到用户状态变更: {}, 刷新用户列表", content);
+                    
+                    // 在UI线程中执行刷新
+                    SwingUtilities.invokeLater(this::refreshUserList);
+                } 
+                // 其他状态变更消息，如群组操作等，按照延迟逻辑处理
+                else if (content.contains("加入群组") || content.contains("离开群组") || 
+                         content.contains("新群组创建")) {
+                    // 在UI线程中延迟执行，避免频繁刷新
+                    SwingUtilities.invokeLater(() -> {
+                        // 如果距离上次刷新已经超过5秒，才执行刷新
+                        if (System.currentTimeMillis() - lastUserListRefreshTime >= 5000) {
+                            refreshUserList();
+                        }
+                    });
+                }
+            }
+        }
     }
     
     /**
@@ -2424,5 +2550,36 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
          * 获取群组，如果是私聊则返回null
          */
         com.chatroom.common.model.ChatGroup getChatGroup();
+    }
+    
+    /**
+     * 启动用户列表自动刷新定时器
+     */
+    private void startUserListAutoRefresh() {
+        // 初始立即刷新一次
+        refreshUserList();
+        
+        // 创建并启动定时器
+        userListRefreshTimer = new javax.swing.Timer(USER_LIST_REFRESH_INTERVAL, e -> {
+            // 如果距离上次刷新超过了设定的间隔时间，则刷新
+            if (System.currentTimeMillis() - lastUserListRefreshTime >= USER_LIST_REFRESH_INTERVAL) {
+                logger.debug("定时刷新用户列表");
+                refreshUserList();
+            }
+        });
+        userListRefreshTimer.setRepeats(true);
+        userListRefreshTimer.start();
+        
+        logger.info("用户列表自动刷新已启动，间隔: {}秒", USER_LIST_REFRESH_INTERVAL / 1000);
+    }
+    
+    /**
+     * 停止用户列表自动刷新
+     */
+    private void stopUserListAutoRefresh() {
+        if (userListRefreshTimer != null && userListRefreshTimer.isRunning()) {
+            userListRefreshTimer.stop();
+            logger.info("用户列表自动刷新已停止");
+        }
     }
 } 
