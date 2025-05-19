@@ -10,6 +10,7 @@ import com.chatroom.common.network.RequestType;
 import com.chatroom.common.network.ResponseType;
 import com.chatroom.server.config.UserCredentials;
 import com.chatroom.server.handler.ClientHandler;
+import com.chatroom.server.service.MessageStoreService;
 import com.chatroom.server.ui.ServerConfigFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -63,6 +65,16 @@ public class ChatServer {
     private final Map<String, ChatGroup> chatGroups;
     
     /**
+     * 消息存储服务
+     */
+    private final MessageStoreService messageStoreService;
+    
+    /**
+     * 默认历史消息加载条数
+     */
+    private static final int DEFAULT_HISTORY_MESSAGE_LIMIT = 50;
+    
+    /**
      * 构造方法 - 只指定端口
      * 
      * @param port 服务器端口
@@ -83,6 +95,7 @@ public class ChatServer {
         this.executorService = Executors.newCachedThreadPool();
         this.onlineUsers = new ConcurrentHashMap<>();
         this.chatGroups = new ConcurrentHashMap<>();
+        this.messageStoreService = MessageStoreService.getInstance();
         
         // 创建默认的公共聊天室
         createPublicChatRoom();
@@ -184,6 +197,11 @@ public class ChatServer {
      * @param groupId 群组ID
      */
     public void broadcastToGroup(Message message, String groupId) {
+        // 保存消息到历史记录
+        if (message.getType() != MessageType.CONTROL) {
+            messageStoreService.storeGroupMessage(groupId, message);
+        }
+        
         ChatGroup group = chatGroups.get(groupId);
         if (group != null) {
             for (String userId : group.getMemberIds()) {
@@ -202,6 +220,11 @@ public class ChatServer {
      * @param receiverId 接收者ID
      */
     public void sendPrivateMessage(Message message, String receiverId) {
+        // 保存消息到历史记录
+        if (message.getType() != MessageType.CONTROL && message.getSender() != null) {
+            messageStoreService.storePrivateMessage(message.getSender().getUserId(), receiverId, message);
+        }
+        
         ClientHandler handler = onlineUsers.get(receiverId);
         if (handler != null) {
             handler.sendMessage(message);
@@ -250,57 +273,60 @@ public class ChatServer {
         for (ClientHandler existingHandler : onlineUsers.values()) {
             User existingUser = existingHandler.getUser();
             if (existingUser != null && existingUser.getUsername().equals(username)) {
-                // 用户已在线（此处逻辑保留，已在ClientHandler中实现更全面的检查）
+                logger.warn("用户 {} 登录失败: 该用户名已在线", username);
                 return ChatResponse.createErrorResponse(
-                        ResponseType.LOGIN_RESULT, 
-                        "用户名已存在", 
-                        null);
+                        ResponseType.LOGIN_RESULT,
+                        "登录失败：该用户名已经在线，请使用其他用户名",
+                        null
+                );
             }
         }
         
-        // 检查用户是否在凭据文件中，如果不在则可以自动注册（向下兼容）
-        // 或者检查用户凭据是否正确
-        boolean userExists = credentials.userExists(username);
-        boolean credentialsValid = userExists && credentials.validateCredentials(username, password);
-        
-        // 如果用户不存在且系统允许自动注册，则添加用户
-        if (!userExists) {
-            // 添加新用户到凭据文件
-            credentials.addUser(username, password);
-            credentials.saveCredentials();
-            logger.info("已添加新用户: {}", username);
-            credentialsValid = true;
-        }
-        
-        // 验证失败
-        if (!credentialsValid) {
+        // 这里简单处理，实际应用中应该做更复杂的验证
+        if (username != null && !username.trim().isEmpty()) {
+            // 生成随机用户ID
+            String userId = java.util.UUID.randomUUID().toString();
+            
+            // 设置用户属性
+            user.setUserId(userId);
+            
+            // 将用户添加到在线用户列表
+            onlineUsers.put(userId, handler);
+            
+            // 将用户添加到公共聊天室
+            ChatGroup publicChatRoom = getPublicChatRoom();
+            if (publicChatRoom != null) {
+                publicChatRoom.addMember(userId);
+                logger.info("用户 {} (ID: {}) 加入公共聊天室", username, userId);
+            }
+            
+            logger.info("用户 {} (ID: {}) 登录成功", username, userId);
+            
+            // 广播用户登录消息
+            broadcastUserStatusChange(username + " 已登录", true);
+            
+            // 发送欢迎消息
+            Message welcomeMessage = Message.createSystemMessage(
+                    "欢迎 " + username + " 加入聊天室！",
+                    publicChatRoom.getGroupId(),
+                    true
+            );
+            broadcastToGroup(welcomeMessage, publicChatRoom.getGroupId());
+            
+            // 发送成功响应
+            return ChatResponse.createSuccessResponse(
+                    null,
+                    "登录成功",
+                    new Object[]{user, getPublicChatRoom()}
+            );
+        } else {
+            logger.warn("用户登录失败: 无效的用户名");
             return ChatResponse.createErrorResponse(
-                    ResponseType.LOGIN_RESULT, 
-                    "用户名或密码错误", 
-                    null);
+                    ResponseType.LOGIN_RESULT,
+                    "登录失败：无效的用户名",
+                    null
+            );
         }
-        
-        // 登录成功
-        onlineUsers.put(user.getUserId(), handler);
-        
-        // 广播用户登录消息
-        broadcastUserStatusChange(username + " 已登录", true);
-        
-        // 获取公共聊天室
-        ChatGroup publicChatRoom = getPublicChatRoom();
-        
-        // 将用户添加到公共聊天室
-        if (publicChatRoom != null) {
-            publicChatRoom.addMember(user.getUserId());
-            logger.info("已将用户 {} 添加到公共聊天室", username);
-        }
-        
-        // 返回成功响应和公共聊天室信息
-        return ChatResponse.createSuccessResponse(
-                null,
-                "登录成功",
-                new Object[]{user, publicChatRoom}
-        );
     }
     
     /**
@@ -309,25 +335,22 @@ public class ChatServer {
      * @param userId 用户ID
      */
     public synchronized void handleLogout(String userId) {
-        ClientHandler handler = onlineUsers.remove(userId);
+        ClientHandler handler = onlineUsers.get(userId);
         if (handler != null) {
             User user = handler.getUser();
             if (user != null) {
-                // 通知其他用户此用户已离开
-                String notificationContent = user.getUsername() + " 已离开聊天室";
-                Message notification = Message.createSystemMessage(notificationContent, null, false);
-                broadcastMessage(notification);
-                
-                // 发送用户状态变更控制消息（标记为重要状态变更）
-                broadcastUserStatusChange("用户离线: " + user.getUsername(), true);
-                
-                // 从所有群组中移除该用户
+                // 从所有群组中移除用户
                 for (ChatGroup group : chatGroups.values()) {
-                    if (group.getMemberIds().contains(userId)) {
-                        group.removeMember(userId);
-                        logger.info("用户 {} 已从群组 {} 中移除", user.getUsername(), group.getGroupName());
-                    }
+                    group.removeMember(userId);
                 }
+                
+                // 从在线用户列表中移除
+                onlineUsers.remove(userId);
+                
+                logger.info("用户 {} (ID: {}) 已注销", user.getUsername(), userId);
+                
+                // 广播用户注销消息
+                broadcastUserStatusChange(user.getUsername() + " 已离线", true);
             }
         }
     }
@@ -335,36 +358,38 @@ public class ChatServer {
     /**
      * 获取在线用户列表
      * 
-     * @return 在线用户列表响应
+     * @return 用户列表响应
      */
     public ChatResponse getUserList() {
-        return ChatResponse.createSuccessResponse(null, "获取用户列表成功", getUsersFromHandlers());
+        User[] users = getUsersFromHandlers();
+        return ChatResponse.createSuccessResponse(null, "获取用户列表成功", users);
     }
     
     /**
-     * 从处理器中获取所有用户
+     * 从处理器中获取用户数组
      * 
-     * @return 用户列表
+     * @return 在线用户数组
      */
     private User[] getUsersFromHandlers() {
         return onlineUsers.values().stream()
                 .map(ClientHandler::getUser)
+                .filter(user -> user != null)
                 .toArray(User[]::new);
     }
     
     /**
-     * 获取在线用户Map
+     * 获取在线用户映射
      * 
-     * @return 在线用户Map
+     * @return 在线用户映射
      */
     public Map<String, ClientHandler> getOnlineUsers() {
         return onlineUsers;
     }
     
     /**
-     * 获取聊天群组Map
+     * 获取聊天群组映射
      * 
-     * @return 聊天群组Map
+     * @return 聊天群组映射
      */
     public Map<String, ChatGroup> getChatGroups() {
         return chatGroups;
@@ -389,46 +414,67 @@ public class ChatServer {
     }
     
     /**
-     * 程序入口
+     * 获取历史消息
+     * 
+     * @param request 请求对象
+     * @return 响应对象
+     */
+    public ChatResponse getHistoryMessages(ChatRequest request) {
+        if (request == null || request.getData() == null) {
+            return ChatResponse.createErrorResponse(
+                    ResponseType.MESSAGE_RESULT,
+                    "获取历史消息失败：无效的请求参数",
+                    null
+            );
+        }
+        
+        try {
+            Map<String, Object> params = (Map<String, Object>) request.getData();
+            String targetId = (String) params.get("targetId");
+            boolean isGroup = (boolean) params.get("isGroup");
+            int limit = params.containsKey("limit") ? (int) params.get("limit") : DEFAULT_HISTORY_MESSAGE_LIMIT;
+            
+            List<Message> historyMessages;
+            if (isGroup) {
+                // 获取群组历史消息
+                historyMessages = messageStoreService.getGroupMessages(targetId, limit);
+                logger.info("获取群组 {} 的历史消息, 共 {} 条", targetId, historyMessages.size());
+            } else {
+                // 获取私聊历史消息
+                String userId = request.getSender() != null ? request.getSender().getUserId() : null;
+                if (userId == null) {
+                    return ChatResponse.createErrorResponse(
+                            ResponseType.MESSAGE_RESULT,
+                            "获取历史消息失败：无效的发送者",
+                            null
+                    );
+                }
+                historyMessages = messageStoreService.getPrivateMessages(userId, targetId, limit);
+                logger.info("获取用户 {} 和 {} 之间的历史消息, 共 {} 条", userId, targetId, historyMessages.size());
+            }
+            
+            return ChatResponse.createSuccessResponse(
+                    request,
+                    "获取历史消息成功",
+                    historyMessages
+            );
+        } catch (Exception e) {
+            logger.error("获取历史消息时出错: {}", e.getMessage());
+            return ChatResponse.createErrorResponse(
+                    ResponseType.MESSAGE_RESULT,
+                    "获取历史消息失败：" + e.getMessage(),
+                    null
+            );
+        }
+    }
+    
+    /**
+     * 主方法
      * 
      * @param args 命令行参数
      */
     public static void main(String[] args) {
-        // 如果有命令行参数，则使用命令行启动模式
-        if (args.length > 0) {
-            String bindAddress = "0.0.0.0";
-            int port = 9999;
-            
-            // 解析参数
-            for (int i = 0; i < args.length; i++) {
-                if ("-h".equals(args[i]) || "--host".equals(args[i])) {
-                    if (i + 1 < args.length) {
-                        bindAddress = args[++i];
-                    }
-                } else if ("-p".equals(args[i]) || "--port".equals(args[i])) {
-                    if (i + 1 < args.length) {
-                        try {
-                            port = Integer.parseInt(args[++i]);
-                        } catch (NumberFormatException e) {
-                            logger.warn("无效的端口参数: {}，使用默认端口: {}", args[i], port);
-                        }
-                    }
-                }
-            }
-            
-            // 创建并启动服务器
-            ChatServer server = new ChatServer(bindAddress, port);
-            server.start();
-        } else {
-            // 没有命令行参数，启动图形配置界面
-            javax.swing.SwingUtilities.invokeLater(() -> {
-                try {
-                    javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
-                } catch (Exception e) {
-                    logger.error("设置界面外观失败", e);
-                }
-                new ServerConfigFrame().setVisible(true);
-            });
-        }
+        // 显示服务器配置界面
+        ServerConfigFrame.showServerConfigFrame();
     }
 } 

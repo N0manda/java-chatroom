@@ -33,6 +33,22 @@ public class ServerConfigFrame extends JFrame {
     private ChatServer server;
     
     /**
+     * 显示服务器配置界面
+     */
+    public static void showServerConfigFrame() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            logger.error("设置界面外观失败", e);
+        }
+        
+        SwingUtilities.invokeLater(() -> {
+            ServerConfigFrame frame = new ServerConfigFrame();
+            frame.setVisible(true);
+        });
+    }
+    
+    /**
      * 构造方法
      */
     public ServerConfigFrame() {
@@ -288,20 +304,5 @@ public class ServerConfigFrame extends JFrame {
             logArea.setCaretPosition(logArea.getDocument().getLength());
         });
         logger.info(message);
-    }
-    
-    /**
-     * 主函数
-     */
-    public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            logger.error("设置界面外观失败", e);
-        }
-        
-        SwingUtilities.invokeLater(() -> {
-            new ServerConfigFrame().setVisible(true);
-        });
     }
 } 

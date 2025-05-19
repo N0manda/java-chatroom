@@ -114,26 +114,35 @@ public class MessageHandler implements Runnable {
             logger.info("处理登录响应: 成功={}, 消息={}", response.isSuccess(), response.getMessage());
             
             if (response.isSuccess()) {
-                // 提取用户对象
-                Object[] users = (Object[]) response.getData();
-                if (users != null && users.length > 0) {
-                    logger.info("登录响应包含 {} 个用户对象", users.length);
-                    
-                    for (Object user : users) {
-                        if (user instanceof com.chatroom.common.model.User) {
-                            com.chatroom.common.model.User currentUser = (com.chatroom.common.model.User) user;
-                            logger.info("设置当前用户: {}", currentUser.getUsername());
-                            client.setCurrentUser(currentUser);
-                            
-                            // 登录成功后，自动获取用户列表
-                            logger.info("发送获取用户列表请求");
-                            client.sendRequest(new ChatRequest(RequestType.GET_USERS, currentUser, null));
-                            
-                            break;
-                        } else {
-                            logger.warn("用户对象类型错误: {}", user.getClass().getName());
-                        }
+                // 设置当前用户
+                Object data = response.getData();
+                if (data instanceof Object[]) {
+                    Object[] dataArray = (Object[]) data;
+                    if (dataArray.length > 0 && dataArray[0] instanceof com.chatroom.common.model.User) {
+                        com.chatroom.common.model.User currentUser = (com.chatroom.common.model.User) dataArray[0];
+                        logger.info("设置当前用户: {}", currentUser.getUsername());
+                        client.setCurrentUser(currentUser);
+                        
+                        // 登录成功后，自动获取用户列表
+                        logger.info("发送获取用户列表请求");
+                        client.sendRequest(new ChatRequest(RequestType.GET_USERS, currentUser, null));
+                        
+                        // 获取公共聊天室的历史消息
+                        logger.info("请求公共聊天室历史消息");
+                        client.requestHistoryMessages("public_chat_room", true);
                     }
+                } else if (data instanceof com.chatroom.common.model.User) {
+                    com.chatroom.common.model.User currentUser = (com.chatroom.common.model.User) data;
+                    logger.info("设置当前用户: {}", currentUser.getUsername());
+                    client.setCurrentUser(currentUser);
+                    
+                    // 登录成功后，自动获取用户列表
+                    logger.info("发送获取用户列表请求");
+                    client.sendRequest(new ChatRequest(RequestType.GET_USERS, currentUser, null));
+                    
+                    // 获取公共聊天室的历史消息
+                    logger.info("请求公共聊天室历史消息");
+                    client.requestHistoryMessages("public_chat_room", true);
                 } else {
                     logger.warn("登录响应不包含用户对象，尝试从请求中获取用户名");
                     // 如果服务器没有返回用户对象，我们可以从登录请求中获取用户名
@@ -145,6 +154,22 @@ public class MessageHandler implements Runnable {
                     com.chatroom.common.model.User tempUser = com.chatroom.common.model.User.createUser(username);
                     logger.info("创建临时用户: {}", tempUser.getUsername());
                     client.setCurrentUser(tempUser);
+                }
+            }
+        }
+        // 处理历史消息响应
+        else if (response.getType() == ResponseType.MESSAGE_RESULT && response.isSuccess()) {
+            logger.info("处理历史消息响应");
+            
+            if (response.getData() instanceof List) {
+                List<?> messages = (List<?>) response.getData();
+                logger.info("接收到历史消息: {} 条", messages.size());
+                
+                // 将历史消息发送到UI
+                for (Object msg : messages) {
+                    if (msg instanceof Message) {
+                        handleMessage((Message) msg);
+                    }
                 }
             }
         }

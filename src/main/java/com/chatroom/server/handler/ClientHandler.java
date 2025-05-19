@@ -133,6 +133,9 @@ public class ClientHandler implements Runnable {
                 case HEARTBEAT:
                     handleHeartbeat(request);
                     break;
+                case GET_HISTORY_MESSAGES:
+                    handleGetHistoryMessages(request);
+                    break;
                 default:
                     logger.warn("未知请求类型: {}", request.getType());
                     break;
@@ -141,6 +144,31 @@ public class ClientHandler implements Runnable {
             logger.error("处理请求时出错: {}", e.getMessage());
             sendResponse(ChatResponse.createErrorResponse(request, "处理请求时出错: " + e.getMessage()));
         }
+    }
+    
+    /**
+     * 处理获取历史消息请求
+     * 
+     * @param request 请求对象
+     */
+    private void handleGetHistoryMessages(ChatRequest request) {
+        logger.info("处理获取历史消息请求: {}", request);
+        
+        // 验证当前用户是否已登录
+        if (user == null) {
+            sendResponse(ChatResponse.createErrorResponse(
+                    request,
+                    "您尚未登录，无法获取历史消息",
+                    null
+            ));
+            return;
+        }
+        
+        // 调用服务器的获取历史消息方法
+        ChatResponse response = server.getHistoryMessages(request);
+        
+        // 发送响应
+        sendResponse(response);
     }
     
     /**

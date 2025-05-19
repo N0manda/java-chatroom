@@ -5,6 +5,7 @@ import com.chatroom.common.model.Message;
 import com.chatroom.common.model.User;
 import com.chatroom.common.network.ChatRequest;
 import com.chatroom.common.network.ChatResponse;
+import com.chatroom.common.network.RequestType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +14,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -161,7 +164,7 @@ public class ChatClient {
      */
     public boolean sendMessage(Message message) {
         ChatRequest request = new ChatRequest(
-                com.chatroom.common.network.RequestType.SEND_MESSAGE,
+                RequestType.SEND_MESSAGE,
                 currentUser,
                 message
         );
@@ -191,7 +194,7 @@ public class ChatClient {
     public boolean login(String username, String password) {
         // 创建登录请求对象，包含用户名和密码
         ChatRequest request = new ChatRequest(
-                com.chatroom.common.network.RequestType.LOGIN,
+                RequestType.LOGIN,
                 null,
                 new String[]{username, password}
         );
@@ -222,6 +225,47 @@ public class ChatClient {
             disconnect();
         }
         return result;
+    }
+    
+    /**
+     * 请求历史消息
+     * 
+     * @param targetId 目标ID（用户ID或群组ID）
+     * @param isGroup 是否是群组
+     * @param limit 消息数量限制，负数表示不限制
+     * @return 是否发送请求成功
+     */
+    public boolean requestHistoryMessages(String targetId, boolean isGroup, int limit) {
+        if (currentUser == null) return false;
+        
+        Map<String, Object> params = new HashMap<>();
+        params.put("targetId", targetId);
+        params.put("isGroup", isGroup);
+        if (limit > 0) {
+            params.put("limit", limit);
+        }
+        
+        ChatRequest request = new ChatRequest(
+                RequestType.GET_HISTORY_MESSAGES,
+                currentUser,
+                params
+        );
+        
+        logger.info("请求{}历史消息: targetId={}, limit={}",
+                isGroup ? "群组" : "私聊", targetId, limit > 0 ? limit : "不限制");
+        
+        return sendRequest(request);
+    }
+    
+    /**
+     * 请求历史消息（默认50条）
+     * 
+     * @param targetId 目标ID（用户ID或群组ID）
+     * @param isGroup 是否是群组
+     * @return 是否发送请求成功
+     */
+    public boolean requestHistoryMessages(String targetId, boolean isGroup) {
+        return requestHistoryMessages(targetId, isGroup, 50);
     }
     
     /**
@@ -288,13 +332,14 @@ public class ChatClient {
     }
     
     /**
-     * 程序入口
+     * 主方法
      * 
      * @param args 命令行参数
      */
     public static void main(String[] args) {
-        // 将程序入口点移到LoginFrame.java中，由LoginFrame负责启动界面
-        // 并创建ChatClient实例
-        com.chatroom.client.ui.LoginFrame.main(args);
+        SwingUtilities.invokeLater(() -> {
+            LoginFrame loginFrame = new LoginFrame();
+            loginFrame.setVisible(true);
+        });
     }
 } 

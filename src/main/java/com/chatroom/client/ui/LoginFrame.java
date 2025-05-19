@@ -329,7 +329,14 @@ public class LoginFrame extends JFrame implements com.chatroom.client.MessageHan
                     // 获取响应数据（用户和公共聊天室）
                     Object[] data = (Object[]) response.getData();
                     if (data != null && data.length > 0) {
-                        // 如果存在公共聊天室，将其传递给主窗口
+                        // 获取用户对象
+                        com.chatroom.common.model.User user = null;
+                        if (data[0] instanceof com.chatroom.common.model.User) {
+                            user = (com.chatroom.common.model.User) data[0];
+                            logger.info("登录用户: {}", user.getUsername());
+                        }
+                        
+                        // 获取公共聊天室
                         com.chatroom.common.model.ChatGroup publicChatRoom = null;
                         if (data.length > 1 && data[1] instanceof com.chatroom.common.model.ChatGroup) {
                             publicChatRoom = (com.chatroom.common.model.ChatGroup) data[1];
@@ -339,7 +346,8 @@ public class LoginFrame extends JFrame implements com.chatroom.client.MessageHan
                         // 打开主聊天窗口，传递公共聊天室
                         openChatMainFrame(publicChatRoom);
                     } else {
-                        // 如果没有收到数据，仍然打开主窗口
+                        logger.warn("响应数据为空");
+                        // 仍然打开主窗口
                         openChatMainFrame(null);
                     }
                 } else {
