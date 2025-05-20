@@ -63,7 +63,7 @@ public class User implements Serializable {
      */
     public static User createUser(String username, String password) {
         User user = new User();
-        user.setUserId(UUID.randomUUID().toString());
+        user.setUserId(generateUserIdFromUsername(username));
         user.setUsername(username);
         user.setPasswordHash(hashPassword(password));
         user.setStatus(UserStatus.ONLINE);
@@ -124,6 +124,33 @@ public class User implements Serializable {
         } catch (NoSuchAlgorithmException e) {
             // 如果SHA-256不可用，直接返回密码（不安全，但至少可以运行）
             return password;
+        }
+    }
+    
+    /**
+     * 从用户名生成固定的用户ID
+     * 
+     * @param username 用户名
+     * @return 用户ID
+     */
+    private static String generateUserIdFromUsername(String username) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(username.getBytes(StandardCharsets.UTF_8));
+            
+            // 转换为十六进制字符串
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            // 如果SHA-256不可用，使用简单的字符串处理
+            return username.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
         }
     }
     

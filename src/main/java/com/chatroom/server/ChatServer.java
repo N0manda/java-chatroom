@@ -242,11 +242,11 @@ public class ChatServer {
         for (ClientHandler existingHandler : onlineUsers.values()) {
             User existingUser = existingHandler.getUser();
             if (existingUser != null && existingUser.getUsername().equals(username)) {
-                // 用户已在线
-                return ChatResponse.createErrorResponse(
-                        ResponseType.LOGIN_RESULT, 
-                        "用户名已存在", 
-                        null);
+                // 用户已在线，踢掉旧连接
+                logger.info("用户 {} 已在其他位置登录，踢掉旧连接", username);
+                existingHandler.disconnect("您的账号在其他地方登录，此连接已断开");
+                onlineUsers.remove(existingUser.getUserId());
+                break;
             }
         }
         
@@ -394,10 +394,11 @@ public class ChatServer {
                 messages = messageStoreService.getGroupMessages(targetId, 50); // 获取最近50条消息
             } else {
                 logger.info("获取私聊历史消息: targetId={}", targetId);
+                // 使用当前用户的ID和targetId获取消息
                 messages = messageStoreService.getPrivateMessages(
-                    request.getSender().getUserId(), 
-                    targetId,
-                    50 // 获取最近50条消息
+                    handler.getUser().getUserId(),  // 使用当前用户的ID
+                    targetId,                       // 使用目标用户的ID
+                    50                             // 获取最近50条消息
                 );
             }
             
@@ -406,7 +407,7 @@ public class ChatServer {
             // 发送响应
             ChatResponse response = new ChatResponse(
                 request.getRequestId(),
-                ResponseType.HISTORY_MESSAGES,
+                ResponseType.HISTORY_MESSAGES,  // 使用正确的响应类型
                 true,
                 "获取历史消息成功",
                 messages

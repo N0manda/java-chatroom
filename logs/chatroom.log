@@ -8765,3 +8765,725 @@ java.net.SocketException: 你的主机中的软件中止了一个已建立的连
 2025-05-20 10:31:47.893 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 消息处理器已停止
 2025-05-20 10:31:47.893 [pool-1-thread-1] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
 2025-05-20 10:31:47.893 [pool-1-thread-1] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
+2025-05-20 10:37:14.027 [AWT-EventQueue-0] INFO  c.c.server.config.ServerConfig - 从配置文件加载服务器配置: bindAddress=10.29.183.159, port=9999, autoSelectPort=true
+2025-05-20 10:37:15.031 [AWT-EventQueue-0] INFO  c.c.server.config.ServerConfig - 服务器配置已保存
+2025-05-20 10:37:15.033 [AWT-EventQueue-0] INFO  c.c.server.config.UserCredentials - 已加载 3 个用户凭据
+2025-05-20 10:37:15.033 [AWT-EventQueue-0] INFO  c.chatroom.server.ChatServerLauncher - 已初始化用户凭据管理器
+2025-05-20 10:37:15.035 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始加载历史消息...
+2025-05-20 10:37:15.035 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 群组消息目录存在: D:\java-chatroom\message_store\groups
+2025-05-20 10:37:15.036 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现群组消息文件: public.dat
+2025-05-20 10:37:15.036 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\groups\public.dat
+2025-05-20 10:37:15.040 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 5 条
+2025-05-20 10:37:15.040 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载群组 public 的 5 条历史消息
+2025-05-20 10:37:15.040 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现群组消息文件: public_chat_room.dat
+2025-05-20 10:37:15.041 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\groups\public_chat_room.dat
+2025-05-20 10:37:15.046 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 33 条
+2025-05-20 10:37:15.046 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载群组 public_chat_room 的 33 条历史消息
+2025-05-20 10:37:15.046 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 私聊消息目录存在: D:\java-chatroom\message_store\private
+2025-05-20 10:37:15.046 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 0e53f82d-5fd7-47e9-8677-b05c9aa2e35d_521c718d-0f03-46f8-9732-9a6c8b57fa9a.dat
+2025-05-20 10:37:15.046 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\0e53f82d-5fd7-47e9-8677-b05c9aa2e35d_521c718d-0f03-46f8-9732-9a6c8b57fa9a.dat
+2025-05-20 10:37:15.048 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 3 条
+2025-05-20 10:37:15.049 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=0e53f82d-5fd7-47e9-8677-b05c9aa2e35d_521c718d-0f03-46f8-9732-9a6c8b57fa9a, new=0e53f82d-5fd7-47e9-8677-b05c9aa2e35d_521c718d-0f03-46f8-9732-9a6c8b57fa9a, userId1=521c718d-0f03-46f8-9732-9a6c8b57fa9a, userId2=0e53f82d-5fd7-47e9-8677-b05c9aa2e35d
+2025-05-20 10:37:15.049 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 0e53f82d-5fd7-47e9-8677-b05c9aa2e35d_521c718d-0f03-46f8-9732-9a6c8b57fa9a 的 3 条历史消息
+2025-05-20 10:37:15.049 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 1304ab0a-3af7-47ad-aadb-3eca30a27620_69b86457-6017-4f0c-bb67-a9a1f39af319.dat
+2025-05-20 10:37:15.049 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\1304ab0a-3af7-47ad-aadb-3eca30a27620_69b86457-6017-4f0c-bb67-a9a1f39af319.dat
+2025-05-20 10:37:15.050 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 2 条
+2025-05-20 10:37:15.051 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=1304ab0a-3af7-47ad-aadb-3eca30a27620_69b86457-6017-4f0c-bb67-a9a1f39af319, new=1304ab0a-3af7-47ad-aadb-3eca30a27620_69b86457-6017-4f0c-bb67-a9a1f39af319, userId1=1304ab0a-3af7-47ad-aadb-3eca30a27620, userId2=69b86457-6017-4f0c-bb67-a9a1f39af319
+2025-05-20 10:37:15.051 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 1304ab0a-3af7-47ad-aadb-3eca30a27620_69b86457-6017-4f0c-bb67-a9a1f39af319 的 2 条历史消息
+2025-05-20 10:37:15.051 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 28baa273-96a7-4bdb-9e09-31c7a50f0285_5d9a7898-7b7b-4f4a-973b-47b54389bf08.dat
+2025-05-20 10:37:15.051 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\28baa273-96a7-4bdb-9e09-31c7a50f0285_5d9a7898-7b7b-4f4a-973b-47b54389bf08.dat
+2025-05-20 10:37:15.053 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 4 条
+2025-05-20 10:37:15.053 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=28baa273-96a7-4bdb-9e09-31c7a50f0285_5d9a7898-7b7b-4f4a-973b-47b54389bf08, new=28baa273-96a7-4bdb-9e09-31c7a50f0285_5d9a7898-7b7b-4f4a-973b-47b54389bf08, userId1=28baa273-96a7-4bdb-9e09-31c7a50f0285, userId2=5d9a7898-7b7b-4f4a-973b-47b54389bf08
+2025-05-20 10:37:15.053 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 28baa273-96a7-4bdb-9e09-31c7a50f0285_5d9a7898-7b7b-4f4a-973b-47b54389bf08 的 4 条历史消息
+2025-05-20 10:37:15.053 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 2fbfb16f-ee5c-44f8-bd92-df51cc4e1617_b4cef39b-1188-4a45-af59-43e4c9c1da09.dat
+2025-05-20 10:37:15.053 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\2fbfb16f-ee5c-44f8-bd92-df51cc4e1617_b4cef39b-1188-4a45-af59-43e4c9c1da09.dat
+2025-05-20 10:37:15.054 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 1 条
+2025-05-20 10:37:15.054 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=2fbfb16f-ee5c-44f8-bd92-df51cc4e1617_b4cef39b-1188-4a45-af59-43e4c9c1da09, new=2fbfb16f-ee5c-44f8-bd92-df51cc4e1617_b4cef39b-1188-4a45-af59-43e4c9c1da09, userId1=b4cef39b-1188-4a45-af59-43e4c9c1da09, userId2=2fbfb16f-ee5c-44f8-bd92-df51cc4e1617
+2025-05-20 10:37:15.054 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 2fbfb16f-ee5c-44f8-bd92-df51cc4e1617_b4cef39b-1188-4a45-af59-43e4c9c1da09 的 1 条历史消息
+2025-05-20 10:37:15.054 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 3ba4d281-eb67-4770-b203-7ba5e50f92dc_c1865caa-6d9a-44c1-8e4b-bd08bcd8029b.dat
+2025-05-20 10:37:15.054 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\3ba4d281-eb67-4770-b203-7ba5e50f92dc_c1865caa-6d9a-44c1-8e4b-bd08bcd8029b.dat
+2025-05-20 10:37:15.058 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 4 条
+2025-05-20 10:37:15.058 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=3ba4d281-eb67-4770-b203-7ba5e50f92dc_c1865caa-6d9a-44c1-8e4b-bd08bcd8029b, new=3ba4d281-eb67-4770-b203-7ba5e50f92dc_c1865caa-6d9a-44c1-8e4b-bd08bcd8029b, userId1=3ba4d281-eb67-4770-b203-7ba5e50f92dc, userId2=c1865caa-6d9a-44c1-8e4b-bd08bcd8029b
+2025-05-20 10:37:15.058 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 3ba4d281-eb67-4770-b203-7ba5e50f92dc_c1865caa-6d9a-44c1-8e4b-bd08bcd8029b 的 4 条历史消息
+2025-05-20 10:37:15.058 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b_d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35.dat
+2025-05-20 10:37:15.058 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b_d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35.dat
+2025-05-20 10:37:15.060 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 2 条
+2025-05-20 10:37:15.060 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b_d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35, new=6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b_d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35, userId1=d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35, userId2=6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b
+2025-05-20 10:37:15.060 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b_d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35 的 2 条历史消息
+2025-05-20 10:37:15.060 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 6e700396-edde-4b85-9b9b-8d30c3b8ed52_8f0c93e8-e594-41bc-b7b3-27cad6165393.dat
+2025-05-20 10:37:15.060 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\6e700396-edde-4b85-9b9b-8d30c3b8ed52_8f0c93e8-e594-41bc-b7b3-27cad6165393.dat
+2025-05-20 10:37:15.061 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 3 条
+2025-05-20 10:37:15.061 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=6e700396-edde-4b85-9b9b-8d30c3b8ed52_8f0c93e8-e594-41bc-b7b3-27cad6165393, new=6e700396-edde-4b85-9b9b-8d30c3b8ed52_8f0c93e8-e594-41bc-b7b3-27cad6165393, userId1=8f0c93e8-e594-41bc-b7b3-27cad6165393, userId2=6e700396-edde-4b85-9b9b-8d30c3b8ed52
+2025-05-20 10:37:15.061 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 6e700396-edde-4b85-9b9b-8d30c3b8ed52_8f0c93e8-e594-41bc-b7b3-27cad6165393 的 3 条历史消息
+2025-05-20 10:37:15.061 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 80706aa6-6683-4fbf-bee5-20bdc153e675_9c89d8eb-2d02-4ee0-8a88-d2fb9dd05684.dat
+2025-05-20 10:37:15.061 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\80706aa6-6683-4fbf-bee5-20bdc153e675_9c89d8eb-2d02-4ee0-8a88-d2fb9dd05684.dat
+2025-05-20 10:37:15.063 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 2 条
+2025-05-20 10:37:15.063 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=80706aa6-6683-4fbf-bee5-20bdc153e675_9c89d8eb-2d02-4ee0-8a88-d2fb9dd05684, new=80706aa6-6683-4fbf-bee5-20bdc153e675_9c89d8eb-2d02-4ee0-8a88-d2fb9dd05684, userId1=80706aa6-6683-4fbf-bee5-20bdc153e675, userId2=9c89d8eb-2d02-4ee0-8a88-d2fb9dd05684
+2025-05-20 10:37:15.063 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 80706aa6-6683-4fbf-bee5-20bdc153e675_9c89d8eb-2d02-4ee0-8a88-d2fb9dd05684 的 2 条历史消息
+2025-05-20 10:37:15.063 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 83bfa283-d9d8-40f5-b6f9-341b391150af_c9fd85dd-eb31-458f-ab7c-e8c188e281a0.dat
+2025-05-20 10:37:15.063 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\83bfa283-d9d8-40f5-b6f9-341b391150af_c9fd85dd-eb31-458f-ab7c-e8c188e281a0.dat
+2025-05-20 10:37:15.066 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 5 条
+2025-05-20 10:37:15.066 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=83bfa283-d9d8-40f5-b6f9-341b391150af_c9fd85dd-eb31-458f-ab7c-e8c188e281a0, new=83bfa283-d9d8-40f5-b6f9-341b391150af_c9fd85dd-eb31-458f-ab7c-e8c188e281a0, userId1=83bfa283-d9d8-40f5-b6f9-341b391150af, userId2=c9fd85dd-eb31-458f-ab7c-e8c188e281a0
+2025-05-20 10:37:15.066 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 83bfa283-d9d8-40f5-b6f9-341b391150af_c9fd85dd-eb31-458f-ab7c-e8c188e281a0 的 5 条历史消息
+2025-05-20 10:37:15.066 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 历史消息加载完成，群组消息数: 2, 私聊消息数: 9
+2025-05-20 10:37:15.066 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 消息存储服务初始化完成，存储路径: D:\java-chatroom\message_store
+2025-05-20 10:37:15.067 [AWT-EventQueue-0] INFO  c.chatroom.server.ChatServerLauncher - 服务器已启动: 10.29.183.159:9999
+2025-05-20 10:37:15.068 [ForkJoinPool.commonPool-worker-1] INFO  com.chatroom.server.ChatServer - 聊天服务器已启动，监听地址: 10.29.183.159:9999
+2025-05-20 10:37:15.070 [AWT-EventQueue-0] INFO  c.c.server.ui.ServerConfigFrame - 服务器已启动，监听地址: 10.29.183.159:9999
+2025-05-20 10:37:18.795 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已加载 2 个历史连接记录
+2025-05-20 10:37:20.074 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已加载 2 个历史连接记录
+2025-05-20 10:37:21.280 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 尝试登录: 用户=1, 服务器=10.29.183.159:9999
+2025-05-20 10:37:21.282 [ForkJoinPool.commonPool-worker-1] INFO  com.chatroom.server.ChatServer - 新客户端连接: /10.29.183.159:13110
+2025-05-20 10:37:21.283 [AWT-EventQueue-0] INFO  com.chatroom.client.ChatClient - 已连接到服务器: 10.29.183.159:9999
+2025-05-20 10:37:21.284 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已保存 2 个历史连接记录
+2025-05-20 10:37:21.287 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 处理登录请求: ChatRequest{requestId='9412c071-c0b8-47d5-8c37-e4511540a40d', type=LOGIN, sender=null, timestamp=1747708641284}
+2025-05-20 10:37:21.290 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 用户尝试登录: 1，使用密码认证
+2025-05-20 10:37:21.290 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 已创建用户对象: com.chatroom.common.model.User@2150dfc3
+2025-05-20 10:37:21.290 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 调用服务器处理登录逻辑
+2025-05-20 10:37:21.291 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 广播用户状态变更: [STATUS_CHANGE]1 已登录
+2025-05-20 10:37:21.294 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 已将用户 1 添加到公共聊天室
+2025-05-20 10:37:21.295 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 登录响应: success=true, message=登录成功
+2025-05-20 10:37:21.296 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 已发送登录响应
+2025-05-20 10:37:21.298 [pool-1-thread-1] INFO  com.chatroom.client.ui.LoginFrame - 收到响应: 类型=LOGIN_RESULT, 成功=true, 消息=登录成功
+2025-05-20 10:37:21.299 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 登录成功，准备打开主界面
+2025-05-20 10:37:21.299 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已设置当前用户: 1
+2025-05-20 10:37:21.299 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 收到公共聊天室: 公共聊天室
+2025-05-20 10:37:21.412 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 正在刷新用户列表...
+2025-05-20 10:37:21.416 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表自动刷新已启动，间隔: 30秒
+2025-05-20 10:37:21.416 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 正在刷新用户列表...
+2025-05-20 10:37:21.416 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 打开公共聊天室: 公共聊天室
+2025-05-20 10:37:21.419 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到用户列表响应：ChatResponse{responseId='908c0ddf-7416-4139-b031-cf32222f92f7', requestId='bd08258e-208f-4883-ab9e-ac459bb94d6b', type=USER_LIST, success=true, message='获取用户列表成功', timestamp=1747708641419}
+2025-05-20 10:37:21.423 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到用户列表响应：ChatResponse{responseId='908c0ddf-7416-4139-b031-cf32222f92f7', requestId='bd08258e-208f-4883-ab9e-ac459bb94d6b', type=USER_LIST, success=true, message='获取用户列表成功', timestamp=1747708641419}
+2025-05-20 10:37:21.424 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 开始加载历史消息: isGroupChat=true, target=公共聊天室
+2025-05-20 10:37:21.428 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 处理获取历史消息请求: sender=1
+2025-05-20 10:37:21.428 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 获取群聊历史消息: groupId=public
+2025-05-20 10:37:21.428 [pool-1-thread-1] INFO  c.c.s.service.MessageStoreService - 开始获取群组消息: groupId=public, limit=50
+2025-05-20 10:37:21.428 [pool-1-thread-1] INFO  c.c.s.service.MessageStoreService - 当前缓存中的群组消息: [public, public_chat_room]
+2025-05-20 10:37:21.428 [pool-1-thread-1] INFO  c.c.s.service.MessageStoreService - 从缓存中获取到群组 public 的 5 条消息
+2025-05-20 10:37:21.428 [pool-1-thread-1] INFO  c.c.s.service.MessageStoreService - 返回群组 public 的全部 5 条消息
+2025-05-20 10:37:21.428 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 获取到历史消息: 5 条
+2025-05-20 10:37:21.430 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到历史消息: 5 条
+2025-05-20 10:37:21.431 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到历史消息: 5 条
+2025-05-20 10:37:21.432 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public, 内容=1111, 是否群消息=true
+2025-05-20 10:37:21.432 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=1, 接收者=public, 内容=22222, 是否群消息=true
+2025-05-20 10:37:21.432 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public, 内容=1111, 是否群消息=true
+2025-05-20 10:37:21.433 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public, 内容=1111, 是否群消息=true
+2025-05-20 10:37:21.433 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=1, 接收者=public, 内容=11111, 是否群消息=true
+2025-05-20 10:37:21.497 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表不为空，共 1 个用户
+2025-05-20 10:37:21.500 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表已更新，共 0 个用户
+2025-05-20 10:37:21.500 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表不为空，共 1 个用户
+2025-05-20 10:37:21.500 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表已更新，共 0 个用户
+2025-05-20 10:37:24.998 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 尝试登录: 用户=1, 服务器=10.29.183.159:9999
+2025-05-20 10:37:25.001 [ForkJoinPool.commonPool-worker-1] INFO  com.chatroom.server.ChatServer - 新客户端连接: /10.29.183.159:13117
+2025-05-20 10:37:25.002 [AWT-EventQueue-0] INFO  com.chatroom.client.ChatClient - 已连接到服务器: 10.29.183.159:9999
+2025-05-20 10:37:25.003 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已保存 2 个历史连接记录
+2025-05-20 10:37:25.005 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 处理登录请求: ChatRequest{requestId='d69df071-9448-4173-b0fc-ac82fde84fbc', type=LOGIN, sender=null, timestamp=1747708645004}
+2025-05-20 10:37:25.005 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 用户尝试登录: 1，使用密码认证
+2025-05-20 10:37:25.005 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 已创建用户对象: com.chatroom.common.model.User@25463832
+2025-05-20 10:37:25.005 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 用户密码验证通过，踢掉旧连接: 1
+2025-05-20 10:37:25.005 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 客户端连接已关闭: /10.29.183.159:13110
+2025-05-20 10:37:25.005 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 调用服务器处理登录逻辑
+2025-05-20 10:37:25.005 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=系统, 接收者=null, 内容=您的账号在其他地方登录，此连接已断开, 是否群消息=false
+2025-05-20 10:37:25.005 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 广播用户状态变更: [STATUS_CHANGE]1 已登录
+2025-05-20 10:37:25.005 [pool-1-thread-1] WARN  com.chatroom.client.MessageHandler - 服务器已关闭连接
+2025-05-20 10:37:25.006 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 消息处理器已停止
+2025-05-20 10:37:25.006 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 已将用户 1 添加到公共聊天室
+2025-05-20 10:37:25.006 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 客户端断开连接: /10.29.183.159:13110
+2025-05-20 10:37:25.006 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 登录响应: success=true, message=登录成功
+2025-05-20 10:37:25.007 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 广播用户状态变更: [STATUS_CHANGE]用户离线: 1
+2025-05-20 10:37:25.007 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 已发送登录响应
+2025-05-20 10:37:25.007 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 用户 1 已从群组 公共聊天室 中移除
+2025-05-20 10:37:25.007 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 客户端连接已关闭: /10.29.183.159:13110
+2025-05-20 10:37:25.012 [pool-1-thread-1] INFO  com.chatroom.client.ui.LoginFrame - 收到响应: 类型=LOGIN_RESULT, 成功=true, 消息=登录成功
+2025-05-20 10:37:25.012 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 登录成功，准备打开主界面
+2025-05-20 10:37:25.012 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已设置当前用户: 1
+2025-05-20 10:37:25.012 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 收到公共聊天室: 公共聊天室
+2025-05-20 10:37:25.072 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 正在刷新用户列表...
+2025-05-20 10:37:25.073 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表自动刷新已启动，间隔: 30秒
+2025-05-20 10:37:25.073 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 正在刷新用户列表...
+2025-05-20 10:37:25.073 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 打开公共聊天室: 公共聊天室
+2025-05-20 10:37:25.073 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到用户列表响应：ChatResponse{responseId='c8b2d98d-2f4e-4fb9-8c5e-687db2494b48', requestId='03d8e0e7-4625-4ef2-ad5d-bd460012fee3', type=USER_LIST, success=true, message='获取用户列表成功', timestamp=1747708645073}
+2025-05-20 10:37:25.078 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到用户列表响应：ChatResponse{responseId='c8b2d98d-2f4e-4fb9-8c5e-687db2494b48', requestId='03d8e0e7-4625-4ef2-ad5d-bd460012fee3', type=USER_LIST, success=true, message='获取用户列表成功', timestamp=1747708645073}
+2025-05-20 10:37:25.081 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 开始加载历史消息: isGroupChat=true, target=公共聊天室
+2025-05-20 10:37:25.081 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 处理获取历史消息请求: sender=1
+2025-05-20 10:37:25.081 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 获取群聊历史消息: groupId=public
+2025-05-20 10:37:25.081 [pool-1-thread-2] INFO  c.c.s.service.MessageStoreService - 开始获取群组消息: groupId=public, limit=50
+2025-05-20 10:37:25.082 [pool-1-thread-2] INFO  c.c.s.service.MessageStoreService - 当前缓存中的群组消息: [public, public_chat_room]
+2025-05-20 10:37:25.082 [pool-1-thread-2] INFO  c.c.s.service.MessageStoreService - 从缓存中获取到群组 public 的 5 条消息
+2025-05-20 10:37:25.082 [pool-1-thread-2] INFO  c.c.s.service.MessageStoreService - 返回群组 public 的全部 5 条消息
+2025-05-20 10:37:25.082 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 获取到历史消息: 5 条
+2025-05-20 10:37:25.083 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到历史消息: 5 条
+2025-05-20 10:37:25.084 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到历史消息: 5 条
+2025-05-20 10:37:25.084 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public, 内容=1111, 是否群消息=true
+2025-05-20 10:37:25.086 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=1, 接收者=public, 内容=22222, 是否群消息=true
+2025-05-20 10:37:25.086 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public, 内容=1111, 是否群消息=true
+2025-05-20 10:37:25.086 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public, 内容=1111, 是否群消息=true
+2025-05-20 10:37:25.086 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=1, 接收者=public, 内容=11111, 是否群消息=true
+2025-05-20 10:37:25.122 [AWT-EventQueue-0] WARN  c.chatroom.client.ui.ChatMainFrame - 服务器返回的用户列表为空
+2025-05-20 10:37:25.123 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表已更新，共 0 个用户
+2025-05-20 10:37:25.123 [AWT-EventQueue-0] WARN  c.chatroom.client.ui.ChatMainFrame - 服务器返回的用户列表为空
+2025-05-20 10:37:25.123 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表已更新，共 0 个用户
+2025-05-20 10:37:34.279 [AWT-EventQueue-0] INFO  com.chatroom.client.ChatClient - 已断开与服务器的连接
+2025-05-20 10:37:34.279 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 消息处理器已停止
+2025-05-20 10:37:34.280 [pool-1-thread-2] ERROR c.c.server.handler.ClientHandler - 发送响应时出错: 你的主机中的软件中止了一个已建立的连接。
+java.net.SocketException: 你的主机中的软件中止了一个已建立的连接。
+	at java.base/sun.nio.ch.SocketDispatcher.write0(Native Method)
+	at java.base/sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:54)
+	at java.base/sun.nio.ch.NioSocketImpl.tryWrite(NioSocketImpl.java:394)
+	at java.base/sun.nio.ch.NioSocketImpl.implWrite(NioSocketImpl.java:410)
+	at java.base/sun.nio.ch.NioSocketImpl.write(NioSocketImpl.java:440)
+	at java.base/sun.nio.ch.NioSocketImpl$2.write(NioSocketImpl.java:819)
+	at java.base/java.net.Socket$SocketOutputStream.implWrite(Socket.java:1231)
+	at java.base/java.net.Socket$SocketOutputStream.write(Socket.java:1218)
+	at java.base/java.io.ObjectOutputStream$BlockDataOutputStream.drain(ObjectOutputStream.java:1900)
+	at java.base/java.io.ObjectOutputStream$BlockDataOutputStream.setBlockDataMode(ObjectOutputStream.java:1809)
+	at java.base/java.io.ObjectOutputStream.writeFatalException(ObjectOutputStream.java:1619)
+	at java.base/java.io.ObjectOutputStream.writeObject(ObjectOutputStream.java:362)
+	at com.chatroom.server.handler.ClientHandler.sendResponse(ClientHandler.java:410)
+	at com.chatroom.server.handler.ClientHandler.handleLogout(ClientHandler.java:231)
+	at com.chatroom.server.handler.ClientHandler.handleRequest(ClientHandler.java:113)
+	at com.chatroom.server.handler.ClientHandler.run(ClientHandler.java:78)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2025-05-20 10:37:34.283 [pool-1-thread-2] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
+2025-05-20 10:37:34.283 [pool-1-thread-2] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
+2025-05-20 10:37:35.897 [AWT-EventQueue-0] ERROR com.chatroom.client.ChatClient - 发送请求失败: 你的主机中的软件中止了一个已建立的连接。
+2025-05-20 10:37:35.897 [AWT-EventQueue-0] ERROR com.chatroom.client.ChatClient - 断开连接时出错: Socket closed
+2025-05-20 10:48:14.326 [AWT-EventQueue-0] INFO  c.c.server.config.ServerConfig - 从配置文件加载服务器配置: bindAddress=10.29.183.159, port=9999, autoSelectPort=true
+2025-05-20 10:48:16.858 [AWT-EventQueue-0] INFO  c.c.server.config.ServerConfig - 服务器配置已保存
+2025-05-20 10:48:16.860 [AWT-EventQueue-0] INFO  c.c.server.config.UserCredentials - 已加载 3 个用户凭据
+2025-05-20 10:48:16.860 [AWT-EventQueue-0] INFO  c.chatroom.server.ChatServerLauncher - 已初始化用户凭据管理器
+2025-05-20 10:48:16.861 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始加载历史消息...
+2025-05-20 10:48:16.861 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 群组消息目录存在: D:\java-chatroom\message_store\groups
+2025-05-20 10:48:16.862 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现群组消息文件: public.dat
+2025-05-20 10:48:16.862 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\groups\public.dat
+2025-05-20 10:48:16.883 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 5 条
+2025-05-20 10:48:16.884 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载群组 public 的 5 条历史消息
+2025-05-20 10:48:16.884 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现群组消息文件: public_chat_room.dat
+2025-05-20 10:48:16.884 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\groups\public_chat_room.dat
+2025-05-20 10:48:16.889 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 33 条
+2025-05-20 10:48:16.889 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载群组 public_chat_room 的 33 条历史消息
+2025-05-20 10:48:16.889 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 私聊消息目录存在: D:\java-chatroom\message_store\private
+2025-05-20 10:48:16.890 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 0e53f82d-5fd7-47e9-8677-b05c9aa2e35d_521c718d-0f03-46f8-9732-9a6c8b57fa9a.dat
+2025-05-20 10:48:16.890 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\0e53f82d-5fd7-47e9-8677-b05c9aa2e35d_521c718d-0f03-46f8-9732-9a6c8b57fa9a.dat
+2025-05-20 10:48:16.892 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 3 条
+2025-05-20 10:48:16.893 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=0e53f82d-5fd7-47e9-8677-b05c9aa2e35d_521c718d-0f03-46f8-9732-9a6c8b57fa9a, new=0e53f82d-5fd7-47e9-8677-b05c9aa2e35d_521c718d-0f03-46f8-9732-9a6c8b57fa9a, userId1=521c718d-0f03-46f8-9732-9a6c8b57fa9a, userId2=0e53f82d-5fd7-47e9-8677-b05c9aa2e35d
+2025-05-20 10:48:16.893 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 0e53f82d-5fd7-47e9-8677-b05c9aa2e35d_521c718d-0f03-46f8-9732-9a6c8b57fa9a 的 3 条历史消息
+2025-05-20 10:48:16.893 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 1304ab0a-3af7-47ad-aadb-3eca30a27620_69b86457-6017-4f0c-bb67-a9a1f39af319.dat
+2025-05-20 10:48:16.893 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\1304ab0a-3af7-47ad-aadb-3eca30a27620_69b86457-6017-4f0c-bb67-a9a1f39af319.dat
+2025-05-20 10:48:16.895 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 2 条
+2025-05-20 10:48:16.895 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=1304ab0a-3af7-47ad-aadb-3eca30a27620_69b86457-6017-4f0c-bb67-a9a1f39af319, new=1304ab0a-3af7-47ad-aadb-3eca30a27620_69b86457-6017-4f0c-bb67-a9a1f39af319, userId1=1304ab0a-3af7-47ad-aadb-3eca30a27620, userId2=69b86457-6017-4f0c-bb67-a9a1f39af319
+2025-05-20 10:48:16.895 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 1304ab0a-3af7-47ad-aadb-3eca30a27620_69b86457-6017-4f0c-bb67-a9a1f39af319 的 2 条历史消息
+2025-05-20 10:48:16.895 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 28baa273-96a7-4bdb-9e09-31c7a50f0285_5d9a7898-7b7b-4f4a-973b-47b54389bf08.dat
+2025-05-20 10:48:16.895 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\28baa273-96a7-4bdb-9e09-31c7a50f0285_5d9a7898-7b7b-4f4a-973b-47b54389bf08.dat
+2025-05-20 10:48:16.899 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 4 条
+2025-05-20 10:48:16.899 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=28baa273-96a7-4bdb-9e09-31c7a50f0285_5d9a7898-7b7b-4f4a-973b-47b54389bf08, new=28baa273-96a7-4bdb-9e09-31c7a50f0285_5d9a7898-7b7b-4f4a-973b-47b54389bf08, userId1=28baa273-96a7-4bdb-9e09-31c7a50f0285, userId2=5d9a7898-7b7b-4f4a-973b-47b54389bf08
+2025-05-20 10:48:16.899 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 28baa273-96a7-4bdb-9e09-31c7a50f0285_5d9a7898-7b7b-4f4a-973b-47b54389bf08 的 4 条历史消息
+2025-05-20 10:48:16.899 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 2fbfb16f-ee5c-44f8-bd92-df51cc4e1617_b4cef39b-1188-4a45-af59-43e4c9c1da09.dat
+2025-05-20 10:48:16.899 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\2fbfb16f-ee5c-44f8-bd92-df51cc4e1617_b4cef39b-1188-4a45-af59-43e4c9c1da09.dat
+2025-05-20 10:48:16.901 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 1 条
+2025-05-20 10:48:16.901 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=2fbfb16f-ee5c-44f8-bd92-df51cc4e1617_b4cef39b-1188-4a45-af59-43e4c9c1da09, new=2fbfb16f-ee5c-44f8-bd92-df51cc4e1617_b4cef39b-1188-4a45-af59-43e4c9c1da09, userId1=b4cef39b-1188-4a45-af59-43e4c9c1da09, userId2=2fbfb16f-ee5c-44f8-bd92-df51cc4e1617
+2025-05-20 10:48:16.901 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 2fbfb16f-ee5c-44f8-bd92-df51cc4e1617_b4cef39b-1188-4a45-af59-43e4c9c1da09 的 1 条历史消息
+2025-05-20 10:48:16.901 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 3ba4d281-eb67-4770-b203-7ba5e50f92dc_c1865caa-6d9a-44c1-8e4b-bd08bcd8029b.dat
+2025-05-20 10:48:16.901 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\3ba4d281-eb67-4770-b203-7ba5e50f92dc_c1865caa-6d9a-44c1-8e4b-bd08bcd8029b.dat
+2025-05-20 10:48:16.903 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 4 条
+2025-05-20 10:48:16.903 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=3ba4d281-eb67-4770-b203-7ba5e50f92dc_c1865caa-6d9a-44c1-8e4b-bd08bcd8029b, new=3ba4d281-eb67-4770-b203-7ba5e50f92dc_c1865caa-6d9a-44c1-8e4b-bd08bcd8029b, userId1=3ba4d281-eb67-4770-b203-7ba5e50f92dc, userId2=c1865caa-6d9a-44c1-8e4b-bd08bcd8029b
+2025-05-20 10:48:16.903 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 3ba4d281-eb67-4770-b203-7ba5e50f92dc_c1865caa-6d9a-44c1-8e4b-bd08bcd8029b 的 4 条历史消息
+2025-05-20 10:48:16.903 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b_d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35.dat
+2025-05-20 10:48:16.904 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b_d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35.dat
+2025-05-20 10:48:16.906 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 2 条
+2025-05-20 10:48:16.906 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b_d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35, new=6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b_d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35, userId1=d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35, userId2=6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b
+2025-05-20 10:48:16.906 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b_d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35 的 2 条历史消息
+2025-05-20 10:48:16.906 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 6e700396-edde-4b85-9b9b-8d30c3b8ed52_8f0c93e8-e594-41bc-b7b3-27cad6165393.dat
+2025-05-20 10:48:16.906 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\6e700396-edde-4b85-9b9b-8d30c3b8ed52_8f0c93e8-e594-41bc-b7b3-27cad6165393.dat
+2025-05-20 10:48:16.908 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 3 条
+2025-05-20 10:48:16.908 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=6e700396-edde-4b85-9b9b-8d30c3b8ed52_8f0c93e8-e594-41bc-b7b3-27cad6165393, new=6e700396-edde-4b85-9b9b-8d30c3b8ed52_8f0c93e8-e594-41bc-b7b3-27cad6165393, userId1=8f0c93e8-e594-41bc-b7b3-27cad6165393, userId2=6e700396-edde-4b85-9b9b-8d30c3b8ed52
+2025-05-20 10:48:16.908 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 6e700396-edde-4b85-9b9b-8d30c3b8ed52_8f0c93e8-e594-41bc-b7b3-27cad6165393 的 3 条历史消息
+2025-05-20 10:48:16.908 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 80706aa6-6683-4fbf-bee5-20bdc153e675_9c89d8eb-2d02-4ee0-8a88-d2fb9dd05684.dat
+2025-05-20 10:48:16.908 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\80706aa6-6683-4fbf-bee5-20bdc153e675_9c89d8eb-2d02-4ee0-8a88-d2fb9dd05684.dat
+2025-05-20 10:48:16.912 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 2 条
+2025-05-20 10:48:16.912 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=80706aa6-6683-4fbf-bee5-20bdc153e675_9c89d8eb-2d02-4ee0-8a88-d2fb9dd05684, new=80706aa6-6683-4fbf-bee5-20bdc153e675_9c89d8eb-2d02-4ee0-8a88-d2fb9dd05684, userId1=80706aa6-6683-4fbf-bee5-20bdc153e675, userId2=9c89d8eb-2d02-4ee0-8a88-d2fb9dd05684
+2025-05-20 10:48:16.912 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 80706aa6-6683-4fbf-bee5-20bdc153e675_9c89d8eb-2d02-4ee0-8a88-d2fb9dd05684 的 2 条历史消息
+2025-05-20 10:48:16.912 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 83bfa283-d9d8-40f5-b6f9-341b391150af_c9fd85dd-eb31-458f-ab7c-e8c188e281a0.dat
+2025-05-20 10:48:16.912 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\83bfa283-d9d8-40f5-b6f9-341b391150af_c9fd85dd-eb31-458f-ab7c-e8c188e281a0.dat
+2025-05-20 10:48:16.916 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 5 条
+2025-05-20 10:48:16.916 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=83bfa283-d9d8-40f5-b6f9-341b391150af_c9fd85dd-eb31-458f-ab7c-e8c188e281a0, new=83bfa283-d9d8-40f5-b6f9-341b391150af_c9fd85dd-eb31-458f-ab7c-e8c188e281a0, userId1=83bfa283-d9d8-40f5-b6f9-341b391150af, userId2=c9fd85dd-eb31-458f-ab7c-e8c188e281a0
+2025-05-20 10:48:16.916 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 83bfa283-d9d8-40f5-b6f9-341b391150af_c9fd85dd-eb31-458f-ab7c-e8c188e281a0 的 5 条历史消息
+2025-05-20 10:48:16.917 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 历史消息加载完成，群组消息数: 2, 私聊消息数: 9
+2025-05-20 10:48:16.917 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 消息存储服务初始化完成，存储路径: D:\java-chatroom\message_store
+2025-05-20 10:48:16.918 [AWT-EventQueue-0] INFO  c.chatroom.server.ChatServerLauncher - 服务器已启动: 10.29.183.159:9999
+2025-05-20 10:48:16.919 [ForkJoinPool.commonPool-worker-1] INFO  com.chatroom.server.ChatServer - 聊天服务器已启动，监听地址: 10.29.183.159:9999
+2025-05-20 10:48:16.922 [AWT-EventQueue-0] INFO  c.c.server.ui.ServerConfigFrame - 服务器已启动，监听地址: 10.29.183.159:9999
+2025-05-20 10:48:20.816 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已加载 2 个历史连接记录
+2025-05-20 10:48:22.363 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已加载 2 个历史连接记录
+2025-05-20 10:48:22.881 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 尝试登录: 用户=1, 服务器=10.29.183.159:9999
+2025-05-20 10:48:22.882 [ForkJoinPool.commonPool-worker-1] INFO  com.chatroom.server.ChatServer - 新客户端连接: /10.29.183.159:5595
+2025-05-20 10:48:22.884 [AWT-EventQueue-0] INFO  com.chatroom.client.ChatClient - 已连接到服务器: 10.29.183.159:9999
+2025-05-20 10:48:22.885 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已保存 2 个历史连接记录
+2025-05-20 10:48:22.889 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 处理登录请求: ChatRequest{requestId='70a0490f-b395-46fa-897b-c8f1f67fa715', type=LOGIN, sender=null, timestamp=1747709302887}
+2025-05-20 10:48:22.892 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 用户尝试登录: 1，使用密码认证
+2025-05-20 10:48:22.892 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 已创建用户对象: com.chatroom.common.model.User@69b17dbc
+2025-05-20 10:48:22.892 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 调用服务器处理登录逻辑
+2025-05-20 10:48:22.893 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 广播用户状态变更: [STATUS_CHANGE]1 已登录
+2025-05-20 10:48:22.894 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 已将用户 1 添加到公共聊天室
+2025-05-20 10:48:22.895 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 登录响应: success=true, message=登录成功
+2025-05-20 10:48:22.896 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 已发送登录响应
+2025-05-20 10:48:22.899 [pool-1-thread-1] INFO  com.chatroom.client.ui.LoginFrame - 收到响应: 类型=LOGIN_RESULT, 成功=true, 消息=登录成功
+2025-05-20 10:48:22.900 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 登录成功，准备打开主界面
+2025-05-20 10:48:22.900 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已设置当前用户: 1
+2025-05-20 10:48:22.900 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 收到公共聊天室: 公共聊天室
+2025-05-20 10:48:22.997 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 正在刷新用户列表...
+2025-05-20 10:48:22.998 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表自动刷新已启动，间隔: 30秒
+2025-05-20 10:48:22.998 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 正在刷新用户列表...
+2025-05-20 10:48:22.999 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 打开公共聊天室: 公共聊天室
+2025-05-20 10:48:23.001 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到用户列表响应：ChatResponse{responseId='be72bb91-dbb8-49d3-af76-0956dfaa4171', requestId='bff01f16-9669-4461-a4ea-e73a0c83693a', type=USER_LIST, success=true, message='获取用户列表成功', timestamp=1747709303000}
+2025-05-20 10:48:23.005 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到用户列表响应：ChatResponse{responseId='be72bb91-dbb8-49d3-af76-0956dfaa4171', requestId='bff01f16-9669-4461-a4ea-e73a0c83693a', type=USER_LIST, success=true, message='获取用户列表成功', timestamp=1747709303000}
+2025-05-20 10:48:23.007 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 开始加载历史消息: isGroupChat=true, target=公共聊天室
+2025-05-20 10:48:23.008 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 处理获取历史消息请求: sender=1
+2025-05-20 10:48:23.009 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 获取群聊历史消息: groupId=public
+2025-05-20 10:48:23.009 [pool-1-thread-1] INFO  c.c.s.service.MessageStoreService - 开始获取群组消息: groupId=public, limit=50
+2025-05-20 10:48:23.009 [pool-1-thread-1] INFO  c.c.s.service.MessageStoreService - 当前缓存中的群组消息: [public, public_chat_room]
+2025-05-20 10:48:23.009 [pool-1-thread-1] INFO  c.c.s.service.MessageStoreService - 从缓存中获取到群组 public 的 5 条消息
+2025-05-20 10:48:23.009 [pool-1-thread-1] INFO  c.c.s.service.MessageStoreService - 返回群组 public 的全部 5 条消息
+2025-05-20 10:48:23.009 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 获取到历史消息: 5 条
+2025-05-20 10:48:23.011 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到历史消息: 5 条
+2025-05-20 10:48:23.013 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到历史消息: 5 条
+2025-05-20 10:48:23.014 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public, 内容=1111, 是否群消息=true
+2025-05-20 10:48:23.014 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=1, 接收者=public, 内容=22222, 是否群消息=true
+2025-05-20 10:48:23.014 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public, 内容=1111, 是否群消息=true
+2025-05-20 10:48:23.014 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public, 内容=1111, 是否群消息=true
+2025-05-20 10:48:23.015 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=1, 接收者=public, 内容=11111, 是否群消息=true
+2025-05-20 10:48:23.064 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表不为空，共 1 个用户
+2025-05-20 10:48:23.065 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表已更新，共 0 个用户
+2025-05-20 10:48:23.065 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表不为空，共 1 个用户
+2025-05-20 10:48:23.065 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表已更新，共 0 个用户
+2025-05-20 10:48:27.075 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 尝试登录: 用户=2, 服务器=10.29.183.159:9999
+2025-05-20 10:48:27.076 [ForkJoinPool.commonPool-worker-1] INFO  com.chatroom.server.ChatServer - 新客户端连接: /10.29.183.159:5599
+2025-05-20 10:48:27.077 [AWT-EventQueue-0] INFO  com.chatroom.client.ChatClient - 已连接到服务器: 10.29.183.159:9999
+2025-05-20 10:48:27.078 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已保存 2 个历史连接记录
+2025-05-20 10:48:27.081 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 处理登录请求: ChatRequest{requestId='158ef8e5-465d-48ba-bc42-5fcd8609189b', type=LOGIN, sender=null, timestamp=1747709307080}
+2025-05-20 10:48:27.081 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 用户尝试登录: 2，使用密码认证
+2025-05-20 10:48:27.081 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 已创建用户对象: com.chatroom.common.model.User@680a4c49
+2025-05-20 10:48:27.081 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 调用服务器处理登录逻辑
+2025-05-20 10:48:27.081 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 广播用户状态变更: [STATUS_CHANGE]2 已登录
+2025-05-20 10:48:27.082 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 已将用户 2 添加到公共聊天室
+2025-05-20 10:48:27.082 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 登录响应: success=true, message=登录成功
+2025-05-20 10:48:27.082 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=系统, 接收者=null, 内容=[STATUS_CHANGE]2 已登录, 是否群消息=false
+2025-05-20 10:48:27.083 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 已发送登录响应
+2025-05-20 10:48:27.083 [AWT-EventQueue-0] WARN  c.chatroom.client.ui.ChatMainFrame - 无法确定目标用户，消息将显示在系统消息面板
+2025-05-20 10:48:27.083 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到控制消息: [STATUS_CHANGE]2 已登录
+2025-05-20 10:48:27.083 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 检测到重要状态变更: 2 已登录, 立即刷新用户列表
+2025-05-20 10:48:27.083 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 正在刷新用户列表...
+2025-05-20 10:48:27.085 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到用户列表响应：ChatResponse{responseId='a5145439-8840-4683-95af-5b5abcc044e4', requestId='993b3bdb-827f-4cc0-a5ac-40c0df2bc84d', type=USER_LIST, success=true, message='获取用户列表成功', timestamp=1747709307084}
+2025-05-20 10:48:27.087 [pool-1-thread-1] INFO  com.chatroom.client.ui.LoginFrame - 收到响应: 类型=LOGIN_RESULT, 成功=true, 消息=登录成功
+2025-05-20 10:48:27.088 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 登录成功，准备打开主界面
+2025-05-20 10:48:27.089 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已设置当前用户: 2
+2025-05-20 10:48:27.089 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 收到公共聊天室: 公共聊天室
+2025-05-20 10:48:27.119 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表不为空，共 2 个用户
+2025-05-20 10:48:27.119 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表已更新，共 1 个用户
+2025-05-20 10:48:27.153 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 正在刷新用户列表...
+2025-05-20 10:48:27.154 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表自动刷新已启动，间隔: 30秒
+2025-05-20 10:48:27.155 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 正在刷新用户列表...
+2025-05-20 10:48:27.155 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 打开公共聊天室: 公共聊天室
+2025-05-20 10:48:27.155 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到用户列表响应：ChatResponse{responseId='7a0a7b0f-6949-494b-b7a3-656ca9901988', requestId='3de2b32d-d0eb-4e64-a5cb-df10e781afe9', type=USER_LIST, success=true, message='获取用户列表成功', timestamp=1747709307154}
+2025-05-20 10:48:27.158 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到用户列表响应：ChatResponse{responseId='7a0a7b0f-6949-494b-b7a3-656ca9901988', requestId='3de2b32d-d0eb-4e64-a5cb-df10e781afe9', type=USER_LIST, success=true, message='获取用户列表成功', timestamp=1747709307154}
+2025-05-20 10:48:27.160 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 开始加载历史消息: isGroupChat=true, target=公共聊天室
+2025-05-20 10:48:27.160 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 处理获取历史消息请求: sender=2
+2025-05-20 10:48:27.162 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 获取群聊历史消息: groupId=public
+2025-05-20 10:48:27.162 [pool-1-thread-2] INFO  c.c.s.service.MessageStoreService - 开始获取群组消息: groupId=public, limit=50
+2025-05-20 10:48:27.162 [pool-1-thread-2] INFO  c.c.s.service.MessageStoreService - 当前缓存中的群组消息: [public, public_chat_room]
+2025-05-20 10:48:27.162 [pool-1-thread-2] INFO  c.c.s.service.MessageStoreService - 从缓存中获取到群组 public 的 5 条消息
+2025-05-20 10:48:27.162 [pool-1-thread-2] INFO  c.c.s.service.MessageStoreService - 返回群组 public 的全部 5 条消息
+2025-05-20 10:48:27.162 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 获取到历史消息: 5 条
+2025-05-20 10:48:27.164 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到历史消息: 5 条
+2025-05-20 10:48:27.165 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到历史消息: 5 条
+2025-05-20 10:48:27.165 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public, 内容=1111, 是否群消息=true
+2025-05-20 10:48:27.165 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=1, 接收者=public, 内容=22222, 是否群消息=true
+2025-05-20 10:48:27.165 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public, 内容=1111, 是否群消息=true
+2025-05-20 10:48:27.165 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public, 内容=1111, 是否群消息=true
+2025-05-20 10:48:27.165 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=1, 接收者=public, 内容=11111, 是否群消息=true
+2025-05-20 10:48:27.234 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表不为空，共 2 个用户
+2025-05-20 10:48:27.235 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表已更新，共 1 个用户
+2025-05-20 10:48:27.235 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表不为空，共 2 个用户
+2025-05-20 10:48:27.236 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表已更新，共 1 个用户
+2025-05-20 10:48:28.289 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 尝试打开与用户 1 的聊天窗口
+2025-05-20 10:48:28.296 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 开始加载历史消息: isGroupChat=false, target=1
+2025-05-20 10:48:28.297 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 已打开与用户 1 的新聊天窗口
+2025-05-20 10:48:28.297 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 处理获取历史消息请求: sender=2
+2025-05-20 10:48:28.297 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 获取私聊历史消息: targetId=6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b
+2025-05-20 10:48:28.297 [pool-1-thread-2] INFO  c.c.s.service.MessageStoreService - 开始获取私聊消息: userId1=d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35, userId2=6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b, sessionKey1=6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b_d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35, sessionKey2=6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b_d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35, limit=50
+2025-05-20 10:48:28.297 [pool-1-thread-2] INFO  c.c.s.service.MessageStoreService - 当前缓存中的私聊消息: [28baa273-96a7-4bdb-9e09-31c7a50f0285_5d9a7898-7b7b-4f4a-973b-47b54389bf08, 6e700396-edde-4b85-9b9b-8d30c3b8ed52_8f0c93e8-e594-41bc-b7b3-27cad6165393, 80706aa6-6683-4fbf-bee5-20bdc153e675_9c89d8eb-2d02-4ee0-8a88-d2fb9dd05684, 6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b_d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35, 3ba4d281-eb67-4770-b203-7ba5e50f92dc_c1865caa-6d9a-44c1-8e4b-bd08bcd8029b, 83bfa283-d9d8-40f5-b6f9-341b391150af_c9fd85dd-eb31-458f-ab7c-e8c188e281a0, 0e53f82d-5fd7-47e9-8677-b05c9aa2e35d_521c718d-0f03-46f8-9732-9a6c8b57fa9a, 2fbfb16f-ee5c-44f8-bd92-df51cc4e1617_b4cef39b-1188-4a45-af59-43e4c9c1da09, 1304ab0a-3af7-47ad-aadb-3eca30a27620_69b86457-6017-4f0c-bb67-a9a1f39af319]
+2025-05-20 10:48:28.297 [pool-1-thread-2] INFO  c.c.s.service.MessageStoreService - 从缓存中获取到会话 6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b_d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35 的 2 条消息
+2025-05-20 10:48:28.297 [pool-1-thread-2] INFO  c.c.s.service.MessageStoreService - 返回会话的全部 2 条消息
+2025-05-20 10:48:28.297 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 获取到历史消息: 2 条
+2025-05-20 10:48:28.298 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到历史消息: 2 条
+2025-05-20 10:48:28.298 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到历史消息: 2 条
+2025-05-20 10:48:28.298 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b, 内容=1111, 是否群消息=false
+2025-05-20 10:48:28.298 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=1, 接收者=d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35, 内容=22222, 是否群消息=false
+2025-05-20 10:48:30.816 [AWT-EventQueue-0] INFO  com.chatroom.client.ChatClient - 已断开与服务器的连接
+2025-05-20 10:48:30.817 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 广播用户状态变更: [STATUS_CHANGE]用户离线: 2
+2025-05-20 10:48:30.817 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=系统, 接收者=null, 内容=2 已离开聊天室, 是否群消息=false
+2025-05-20 10:48:30.817 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 消息处理器已停止
+2025-05-20 10:48:30.817 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 用户 2 已从群组 公共聊天室 中移除
+2025-05-20 10:48:30.818 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=系统, 接收者=null, 内容=[STATUS_CHANGE]用户离线: 2, 是否群消息=false
+2025-05-20 10:48:30.818 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到控制消息: [STATUS_CHANGE]用户离线: 2
+2025-05-20 10:48:30.818 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 检测到重要状态变更: 用户离线: 2, 立即刷新用户列表
+2025-05-20 10:48:30.818 [AWT-EventQueue-0] WARN  c.chatroom.client.ui.ChatMainFrame - 无法确定目标用户，消息将显示在系统消息面板
+2025-05-20 10:48:30.818 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 正在刷新用户列表...
+2025-05-20 10:48:30.819 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到用户列表响应：ChatResponse{responseId='0c430c3b-9de0-4012-ae64-2a82ed522454', requestId='16335fda-d74d-4912-82bf-dfddc94f899b', type=USER_LIST, success=true, message='获取用户列表成功', timestamp=1747709310819}
+2025-05-20 10:48:30.820 [pool-1-thread-2] ERROR c.c.server.handler.ClientHandler - 发送响应时出错: 你的主机中的软件中止了一个已建立的连接。
+java.net.SocketException: 你的主机中的软件中止了一个已建立的连接。
+	at java.base/sun.nio.ch.SocketDispatcher.write0(Native Method)
+	at java.base/sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:54)
+	at java.base/sun.nio.ch.NioSocketImpl.tryWrite(NioSocketImpl.java:394)
+	at java.base/sun.nio.ch.NioSocketImpl.implWrite(NioSocketImpl.java:410)
+	at java.base/sun.nio.ch.NioSocketImpl.write(NioSocketImpl.java:440)
+	at java.base/sun.nio.ch.NioSocketImpl$2.write(NioSocketImpl.java:819)
+	at java.base/java.net.Socket$SocketOutputStream.implWrite(Socket.java:1231)
+	at java.base/java.net.Socket$SocketOutputStream.write(Socket.java:1218)
+	at java.base/java.io.ObjectOutputStream$BlockDataOutputStream.drain(ObjectOutputStream.java:1900)
+	at java.base/java.io.ObjectOutputStream$BlockDataOutputStream.setBlockDataMode(ObjectOutputStream.java:1809)
+	at java.base/java.io.ObjectOutputStream.writeFatalException(ObjectOutputStream.java:1619)
+	at java.base/java.io.ObjectOutputStream.writeObject(ObjectOutputStream.java:362)
+	at com.chatroom.server.handler.ClientHandler.sendResponse(ClientHandler.java:410)
+	at com.chatroom.server.handler.ClientHandler.handleLogout(ClientHandler.java:231)
+	at com.chatroom.server.handler.ClientHandler.handleRequest(ClientHandler.java:113)
+	at com.chatroom.server.handler.ClientHandler.run(ClientHandler.java:78)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2025-05-20 10:48:30.823 [pool-1-thread-2] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
+2025-05-20 10:48:30.823 [pool-1-thread-2] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
+2025-05-20 10:48:30.842 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表不为空，共 1 个用户
+2025-05-20 10:48:30.843 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表已更新，共 0 个用户
+2025-05-20 10:48:31.972 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 广播用户状态变更: [STATUS_CHANGE]用户离线: 1
+2025-05-20 10:48:31.972 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 用户 1 已从群组 公共聊天室 中移除
+2025-05-20 10:48:31.972 [AWT-EventQueue-0] INFO  com.chatroom.client.ChatClient - 已断开与服务器的连接
+2025-05-20 10:48:31.972 [pool-1-thread-1] ERROR c.c.server.handler.ClientHandler - 发送响应时出错: 你的主机中的软件中止了一个已建立的连接。
+java.net.SocketException: 你的主机中的软件中止了一个已建立的连接。
+	at java.base/sun.nio.ch.SocketDispatcher.write0(Native Method)
+	at java.base/sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:54)
+	at java.base/sun.nio.ch.NioSocketImpl.tryWrite(NioSocketImpl.java:394)
+	at java.base/sun.nio.ch.NioSocketImpl.implWrite(NioSocketImpl.java:410)
+	at java.base/sun.nio.ch.NioSocketImpl.write(NioSocketImpl.java:440)
+	at java.base/sun.nio.ch.NioSocketImpl$2.write(NioSocketImpl.java:819)
+	at java.base/java.net.Socket$SocketOutputStream.implWrite(Socket.java:1231)
+	at java.base/java.net.Socket$SocketOutputStream.write(Socket.java:1218)
+	at java.base/java.io.ObjectOutputStream$BlockDataOutputStream.drain(ObjectOutputStream.java:1900)
+	at java.base/java.io.ObjectOutputStream$BlockDataOutputStream.setBlockDataMode(ObjectOutputStream.java:1809)
+	at java.base/java.io.ObjectOutputStream.writeFatalException(ObjectOutputStream.java:1619)
+	at java.base/java.io.ObjectOutputStream.writeObject(ObjectOutputStream.java:362)
+	at com.chatroom.server.handler.ClientHandler.sendResponse(ClientHandler.java:410)
+	at com.chatroom.server.handler.ClientHandler.handleLogout(ClientHandler.java:231)
+	at com.chatroom.server.handler.ClientHandler.handleRequest(ClientHandler.java:113)
+	at com.chatroom.server.handler.ClientHandler.run(ClientHandler.java:78)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2025-05-20 10:48:31.972 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 消息处理器已停止
+2025-05-20 10:48:31.972 [pool-1-thread-1] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
+2025-05-20 10:48:31.973 [pool-1-thread-1] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
+2025-05-20 10:49:03.652 [AWT-EventQueue-0] INFO  c.c.server.config.ServerConfig - 从配置文件加载服务器配置: bindAddress=10.29.183.159, port=9999, autoSelectPort=true
+2025-05-20 10:49:04.504 [AWT-EventQueue-0] INFO  c.c.server.config.ServerConfig - 服务器配置已保存
+2025-05-20 10:49:04.505 [AWT-EventQueue-0] INFO  c.c.server.config.UserCredentials - 已加载 3 个用户凭据
+2025-05-20 10:49:04.505 [AWT-EventQueue-0] INFO  c.chatroom.server.ChatServerLauncher - 已初始化用户凭据管理器
+2025-05-20 10:49:04.505 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始加载历史消息...
+2025-05-20 10:49:04.505 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 群组消息目录存在: D:\java-chatroom\message_store\groups
+2025-05-20 10:49:04.506 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现群组消息文件: public.dat
+2025-05-20 10:49:04.506 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\groups\public.dat
+2025-05-20 10:49:04.510 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 5 条
+2025-05-20 10:49:04.510 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载群组 public 的 5 条历史消息
+2025-05-20 10:49:04.510 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现群组消息文件: public_chat_room.dat
+2025-05-20 10:49:04.510 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\groups\public_chat_room.dat
+2025-05-20 10:49:04.514 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 33 条
+2025-05-20 10:49:04.514 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载群组 public_chat_room 的 33 条历史消息
+2025-05-20 10:49:04.514 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 私聊消息目录存在: D:\java-chatroom\message_store\private
+2025-05-20 10:49:04.515 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 0e53f82d-5fd7-47e9-8677-b05c9aa2e35d_521c718d-0f03-46f8-9732-9a6c8b57fa9a.dat
+2025-05-20 10:49:04.515 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\0e53f82d-5fd7-47e9-8677-b05c9aa2e35d_521c718d-0f03-46f8-9732-9a6c8b57fa9a.dat
+2025-05-20 10:49:04.516 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 3 条
+2025-05-20 10:49:04.516 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=0e53f82d-5fd7-47e9-8677-b05c9aa2e35d_521c718d-0f03-46f8-9732-9a6c8b57fa9a, new=0e53f82d-5fd7-47e9-8677-b05c9aa2e35d_521c718d-0f03-46f8-9732-9a6c8b57fa9a, userId1=521c718d-0f03-46f8-9732-9a6c8b57fa9a, userId2=0e53f82d-5fd7-47e9-8677-b05c9aa2e35d
+2025-05-20 10:49:04.516 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 0e53f82d-5fd7-47e9-8677-b05c9aa2e35d_521c718d-0f03-46f8-9732-9a6c8b57fa9a 的 3 条历史消息
+2025-05-20 10:49:04.516 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 1304ab0a-3af7-47ad-aadb-3eca30a27620_69b86457-6017-4f0c-bb67-a9a1f39af319.dat
+2025-05-20 10:49:04.516 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\1304ab0a-3af7-47ad-aadb-3eca30a27620_69b86457-6017-4f0c-bb67-a9a1f39af319.dat
+2025-05-20 10:49:04.517 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 2 条
+2025-05-20 10:49:04.518 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=1304ab0a-3af7-47ad-aadb-3eca30a27620_69b86457-6017-4f0c-bb67-a9a1f39af319, new=1304ab0a-3af7-47ad-aadb-3eca30a27620_69b86457-6017-4f0c-bb67-a9a1f39af319, userId1=1304ab0a-3af7-47ad-aadb-3eca30a27620, userId2=69b86457-6017-4f0c-bb67-a9a1f39af319
+2025-05-20 10:49:04.518 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 1304ab0a-3af7-47ad-aadb-3eca30a27620_69b86457-6017-4f0c-bb67-a9a1f39af319 的 2 条历史消息
+2025-05-20 10:49:04.518 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 28baa273-96a7-4bdb-9e09-31c7a50f0285_5d9a7898-7b7b-4f4a-973b-47b54389bf08.dat
+2025-05-20 10:49:04.518 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\28baa273-96a7-4bdb-9e09-31c7a50f0285_5d9a7898-7b7b-4f4a-973b-47b54389bf08.dat
+2025-05-20 10:49:04.519 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 4 条
+2025-05-20 10:49:04.519 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=28baa273-96a7-4bdb-9e09-31c7a50f0285_5d9a7898-7b7b-4f4a-973b-47b54389bf08, new=28baa273-96a7-4bdb-9e09-31c7a50f0285_5d9a7898-7b7b-4f4a-973b-47b54389bf08, userId1=28baa273-96a7-4bdb-9e09-31c7a50f0285, userId2=5d9a7898-7b7b-4f4a-973b-47b54389bf08
+2025-05-20 10:49:04.519 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 28baa273-96a7-4bdb-9e09-31c7a50f0285_5d9a7898-7b7b-4f4a-973b-47b54389bf08 的 4 条历史消息
+2025-05-20 10:49:04.519 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 2fbfb16f-ee5c-44f8-bd92-df51cc4e1617_b4cef39b-1188-4a45-af59-43e4c9c1da09.dat
+2025-05-20 10:49:04.519 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\2fbfb16f-ee5c-44f8-bd92-df51cc4e1617_b4cef39b-1188-4a45-af59-43e4c9c1da09.dat
+2025-05-20 10:49:04.520 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 1 条
+2025-05-20 10:49:04.520 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=2fbfb16f-ee5c-44f8-bd92-df51cc4e1617_b4cef39b-1188-4a45-af59-43e4c9c1da09, new=2fbfb16f-ee5c-44f8-bd92-df51cc4e1617_b4cef39b-1188-4a45-af59-43e4c9c1da09, userId1=b4cef39b-1188-4a45-af59-43e4c9c1da09, userId2=2fbfb16f-ee5c-44f8-bd92-df51cc4e1617
+2025-05-20 10:49:04.520 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 2fbfb16f-ee5c-44f8-bd92-df51cc4e1617_b4cef39b-1188-4a45-af59-43e4c9c1da09 的 1 条历史消息
+2025-05-20 10:49:04.520 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 3ba4d281-eb67-4770-b203-7ba5e50f92dc_c1865caa-6d9a-44c1-8e4b-bd08bcd8029b.dat
+2025-05-20 10:49:04.520 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\3ba4d281-eb67-4770-b203-7ba5e50f92dc_c1865caa-6d9a-44c1-8e4b-bd08bcd8029b.dat
+2025-05-20 10:49:04.521 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 4 条
+2025-05-20 10:49:04.522 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=3ba4d281-eb67-4770-b203-7ba5e50f92dc_c1865caa-6d9a-44c1-8e4b-bd08bcd8029b, new=3ba4d281-eb67-4770-b203-7ba5e50f92dc_c1865caa-6d9a-44c1-8e4b-bd08bcd8029b, userId1=3ba4d281-eb67-4770-b203-7ba5e50f92dc, userId2=c1865caa-6d9a-44c1-8e4b-bd08bcd8029b
+2025-05-20 10:49:04.522 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 3ba4d281-eb67-4770-b203-7ba5e50f92dc_c1865caa-6d9a-44c1-8e4b-bd08bcd8029b 的 4 条历史消息
+2025-05-20 10:49:04.522 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b_d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35.dat
+2025-05-20 10:49:04.522 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b_d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35.dat
+2025-05-20 10:49:04.523 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 2 条
+2025-05-20 10:49:04.523 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b_d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35, new=6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b_d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35, userId1=d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35, userId2=6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b
+2025-05-20 10:49:04.523 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b_d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35 的 2 条历史消息
+2025-05-20 10:49:04.523 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 6e700396-edde-4b85-9b9b-8d30c3b8ed52_8f0c93e8-e594-41bc-b7b3-27cad6165393.dat
+2025-05-20 10:49:04.523 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\6e700396-edde-4b85-9b9b-8d30c3b8ed52_8f0c93e8-e594-41bc-b7b3-27cad6165393.dat
+2025-05-20 10:49:04.524 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 3 条
+2025-05-20 10:49:04.524 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=6e700396-edde-4b85-9b9b-8d30c3b8ed52_8f0c93e8-e594-41bc-b7b3-27cad6165393, new=6e700396-edde-4b85-9b9b-8d30c3b8ed52_8f0c93e8-e594-41bc-b7b3-27cad6165393, userId1=8f0c93e8-e594-41bc-b7b3-27cad6165393, userId2=6e700396-edde-4b85-9b9b-8d30c3b8ed52
+2025-05-20 10:49:04.524 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 6e700396-edde-4b85-9b9b-8d30c3b8ed52_8f0c93e8-e594-41bc-b7b3-27cad6165393 的 3 条历史消息
+2025-05-20 10:49:04.524 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 80706aa6-6683-4fbf-bee5-20bdc153e675_9c89d8eb-2d02-4ee0-8a88-d2fb9dd05684.dat
+2025-05-20 10:49:04.524 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\80706aa6-6683-4fbf-bee5-20bdc153e675_9c89d8eb-2d02-4ee0-8a88-d2fb9dd05684.dat
+2025-05-20 10:49:04.525 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 2 条
+2025-05-20 10:49:04.525 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=80706aa6-6683-4fbf-bee5-20bdc153e675_9c89d8eb-2d02-4ee0-8a88-d2fb9dd05684, new=80706aa6-6683-4fbf-bee5-20bdc153e675_9c89d8eb-2d02-4ee0-8a88-d2fb9dd05684, userId1=80706aa6-6683-4fbf-bee5-20bdc153e675, userId2=9c89d8eb-2d02-4ee0-8a88-d2fb9dd05684
+2025-05-20 10:49:04.525 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 80706aa6-6683-4fbf-bee5-20bdc153e675_9c89d8eb-2d02-4ee0-8a88-d2fb9dd05684 的 2 条历史消息
+2025-05-20 10:49:04.525 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 发现私聊消息文件: 83bfa283-d9d8-40f5-b6f9-341b391150af_c9fd85dd-eb31-458f-ab7c-e8c188e281a0.dat
+2025-05-20 10:49:04.525 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 开始从文件加载消息: D:\java-chatroom\message_store\private\83bfa283-d9d8-40f5-b6f9-341b391150af_c9fd85dd-eb31-458f-ab7c-e8c188e281a0.dat
+2025-05-20 10:49:04.527 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 成功从文件加载消息: 5 条
+2025-05-20 10:49:04.527 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 重新生成会话键: old=83bfa283-d9d8-40f5-b6f9-341b391150af_c9fd85dd-eb31-458f-ab7c-e8c188e281a0, new=83bfa283-d9d8-40f5-b6f9-341b391150af_c9fd85dd-eb31-458f-ab7c-e8c188e281a0, userId1=83bfa283-d9d8-40f5-b6f9-341b391150af, userId2=c9fd85dd-eb31-458f-ab7c-e8c188e281a0
+2025-05-20 10:49:04.527 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 已加载私聊会话 83bfa283-d9d8-40f5-b6f9-341b391150af_c9fd85dd-eb31-458f-ab7c-e8c188e281a0 的 5 条历史消息
+2025-05-20 10:49:04.527 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 历史消息加载完成，群组消息数: 2, 私聊消息数: 9
+2025-05-20 10:49:04.527 [AWT-EventQueue-0] INFO  c.c.s.service.MessageStoreService - 消息存储服务初始化完成，存储路径: D:\java-chatroom\message_store
+2025-05-20 10:49:04.529 [AWT-EventQueue-0] INFO  c.chatroom.server.ChatServerLauncher - 服务器已启动: 10.29.183.159:9999
+2025-05-20 10:49:04.529 [ForkJoinPool.commonPool-worker-1] INFO  com.chatroom.server.ChatServer - 聊天服务器已启动，监听地址: 10.29.183.159:9999
+2025-05-20 10:49:04.534 [AWT-EventQueue-0] INFO  c.c.server.ui.ServerConfigFrame - 服务器已启动，监听地址: 10.29.183.159:9999
+2025-05-20 10:49:08.625 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已加载 2 个历史连接记录
+2025-05-20 10:49:11.265 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 尝试登录: 用户=1, 服务器=10.29.183.159:9999
+2025-05-20 10:49:11.267 [ForkJoinPool.commonPool-worker-1] INFO  com.chatroom.server.ChatServer - 新客户端连接: /10.29.183.159:5670
+2025-05-20 10:49:11.268 [AWT-EventQueue-0] INFO  com.chatroom.client.ChatClient - 已连接到服务器: 10.29.183.159:9999
+2025-05-20 10:49:11.269 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已保存 2 个历史连接记录
+2025-05-20 10:49:11.272 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 处理登录请求: ChatRequest{requestId='3334cc29-6c00-4a7a-a81a-0ccbb9732062', type=LOGIN, sender=null, timestamp=1747709351270}
+2025-05-20 10:49:11.275 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 用户尝试登录: 1，使用密码认证
+2025-05-20 10:49:11.276 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 已创建用户对象: com.chatroom.common.model.User@58a174b3
+2025-05-20 10:49:11.276 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 调用服务器处理登录逻辑
+2025-05-20 10:49:11.279 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 广播用户状态变更: [STATUS_CHANGE]1 已登录
+2025-05-20 10:49:11.280 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 已将用户 1 添加到公共聊天室
+2025-05-20 10:49:11.281 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 登录响应: success=true, message=登录成功
+2025-05-20 10:49:11.282 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 已发送登录响应
+2025-05-20 10:49:11.284 [pool-1-thread-1] INFO  com.chatroom.client.ui.LoginFrame - 收到响应: 类型=LOGIN_RESULT, 成功=true, 消息=登录成功
+2025-05-20 10:49:11.285 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 登录成功，准备打开主界面
+2025-05-20 10:49:11.285 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已设置当前用户: 1
+2025-05-20 10:49:11.285 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 收到公共聊天室: 公共聊天室
+2025-05-20 10:49:11.348 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 正在刷新用户列表...
+2025-05-20 10:49:11.349 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表自动刷新已启动，间隔: 30秒
+2025-05-20 10:49:11.349 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 正在刷新用户列表...
+2025-05-20 10:49:11.349 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 打开公共聊天室: 公共聊天室
+2025-05-20 10:49:11.350 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到用户列表响应：ChatResponse{responseId='d5b8996a-5ee4-4f6b-a817-62bb9bcdd445', requestId='09402717-f8aa-4cd7-b70e-044a8b05268e', type=USER_LIST, success=true, message='获取用户列表成功', timestamp=1747709351350}
+2025-05-20 10:49:11.354 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到用户列表响应：ChatResponse{responseId='d5b8996a-5ee4-4f6b-a817-62bb9bcdd445', requestId='09402717-f8aa-4cd7-b70e-044a8b05268e', type=USER_LIST, success=true, message='获取用户列表成功', timestamp=1747709351350}
+2025-05-20 10:49:11.355 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 开始加载历史消息: isGroupChat=true, target=公共聊天室
+2025-05-20 10:49:11.357 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 处理获取历史消息请求: sender=1
+2025-05-20 10:49:11.357 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 获取群聊历史消息: groupId=public
+2025-05-20 10:49:11.357 [pool-1-thread-1] INFO  c.c.s.service.MessageStoreService - 开始获取群组消息: groupId=public, limit=50
+2025-05-20 10:49:11.357 [pool-1-thread-1] INFO  c.c.s.service.MessageStoreService - 当前缓存中的群组消息: [public, public_chat_room]
+2025-05-20 10:49:11.357 [pool-1-thread-1] INFO  c.c.s.service.MessageStoreService - 从缓存中获取到群组 public 的 5 条消息
+2025-05-20 10:49:11.357 [pool-1-thread-1] INFO  c.c.s.service.MessageStoreService - 返回群组 public 的全部 5 条消息
+2025-05-20 10:49:11.357 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 获取到历史消息: 5 条
+2025-05-20 10:49:11.359 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到历史消息: 5 条
+2025-05-20 10:49:11.361 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到历史消息: 5 条
+2025-05-20 10:49:11.361 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public, 内容=1111, 是否群消息=true
+2025-05-20 10:49:11.361 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=1, 接收者=public, 内容=22222, 是否群消息=true
+2025-05-20 10:49:11.361 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public, 内容=1111, 是否群消息=true
+2025-05-20 10:49:11.362 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public, 内容=1111, 是否群消息=true
+2025-05-20 10:49:11.362 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=1, 接收者=public, 内容=11111, 是否群消息=true
+2025-05-20 10:49:11.413 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表不为空，共 1 个用户
+2025-05-20 10:49:11.415 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表已更新，共 0 个用户
+2025-05-20 10:49:11.415 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表不为空，共 1 个用户
+2025-05-20 10:49:11.415 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表已更新，共 0 个用户
+2025-05-20 10:49:14.963 [AWT-EventQueue-0] INFO  com.chatroom.client.ChatClient - 已断开与服务器的连接
+2025-05-20 10:49:14.963 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 广播用户状态变更: [STATUS_CHANGE]用户离线: 1
+2025-05-20 10:49:14.963 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 用户 1 已从群组 公共聊天室 中移除
+2025-05-20 10:49:14.963 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 消息处理器已停止
+2025-05-20 10:49:14.965 [pool-1-thread-1] ERROR c.c.server.handler.ClientHandler - 发送响应时出错: 你的主机中的软件中止了一个已建立的连接。
+java.net.SocketException: 你的主机中的软件中止了一个已建立的连接。
+	at java.base/sun.nio.ch.SocketDispatcher.write0(Native Method)
+	at java.base/sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:54)
+	at java.base/sun.nio.ch.NioSocketImpl.tryWrite(NioSocketImpl.java:394)
+	at java.base/sun.nio.ch.NioSocketImpl.implWrite(NioSocketImpl.java:410)
+	at java.base/sun.nio.ch.NioSocketImpl.write(NioSocketImpl.java:440)
+	at java.base/sun.nio.ch.NioSocketImpl$2.write(NioSocketImpl.java:819)
+	at java.base/java.net.Socket$SocketOutputStream.implWrite(Socket.java:1231)
+	at java.base/java.net.Socket$SocketOutputStream.write(Socket.java:1218)
+	at java.base/java.io.ObjectOutputStream$BlockDataOutputStream.drain(ObjectOutputStream.java:1900)
+	at java.base/java.io.ObjectOutputStream$BlockDataOutputStream.setBlockDataMode(ObjectOutputStream.java:1809)
+	at java.base/java.io.ObjectOutputStream.writeFatalException(ObjectOutputStream.java:1619)
+	at java.base/java.io.ObjectOutputStream.writeObject(ObjectOutputStream.java:362)
+	at com.chatroom.server.handler.ClientHandler.sendResponse(ClientHandler.java:410)
+	at com.chatroom.server.handler.ClientHandler.handleLogout(ClientHandler.java:231)
+	at com.chatroom.server.handler.ClientHandler.handleRequest(ClientHandler.java:113)
+	at com.chatroom.server.handler.ClientHandler.run(ClientHandler.java:78)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2025-05-20 10:49:14.968 [pool-1-thread-1] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
+2025-05-20 10:49:14.968 [pool-1-thread-1] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
+2025-05-20 10:49:17.636 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已加载 2 个历史连接记录
+2025-05-20 10:49:19.321 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已加载 2 个历史连接记录
+2025-05-20 10:49:21.192 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 尝试登录: 用户=1, 服务器=10.29.183.159:9999
+2025-05-20 10:49:21.193 [ForkJoinPool.commonPool-worker-1] INFO  com.chatroom.server.ChatServer - 新客户端连接: /10.29.183.159:5690
+2025-05-20 10:49:21.194 [AWT-EventQueue-0] INFO  com.chatroom.client.ChatClient - 已连接到服务器: 10.29.183.159:9999
+2025-05-20 10:49:21.195 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已保存 2 个历史连接记录
+2025-05-20 10:49:21.197 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 处理登录请求: ChatRequest{requestId='0701825d-3db3-4514-8394-87a9bd0b3a04', type=LOGIN, sender=null, timestamp=1747709361196}
+2025-05-20 10:49:21.198 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 用户尝试登录: 1，使用密码认证
+2025-05-20 10:49:21.198 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 已创建用户对象: com.chatroom.common.model.User@1a9fa6e5
+2025-05-20 10:49:21.198 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 调用服务器处理登录逻辑
+2025-05-20 10:49:21.198 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 广播用户状态变更: [STATUS_CHANGE]1 已登录
+2025-05-20 10:49:21.198 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 已将用户 1 添加到公共聊天室
+2025-05-20 10:49:21.199 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 登录响应: success=true, message=登录成功
+2025-05-20 10:49:21.199 [pool-1-thread-1] INFO  c.c.server.handler.ClientHandler - 已发送登录响应
+2025-05-20 10:49:21.203 [pool-1-thread-1] INFO  com.chatroom.client.ui.LoginFrame - 收到响应: 类型=LOGIN_RESULT, 成功=true, 消息=登录成功
+2025-05-20 10:49:21.204 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 登录成功，准备打开主界面
+2025-05-20 10:49:21.204 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已设置当前用户: 1
+2025-05-20 10:49:21.204 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 收到公共聊天室: 公共聊天室
+2025-05-20 10:49:21.268 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 正在刷新用户列表...
+2025-05-20 10:49:21.269 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表自动刷新已启动，间隔: 30秒
+2025-05-20 10:49:21.269 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 正在刷新用户列表...
+2025-05-20 10:49:21.269 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 打开公共聊天室: 公共聊天室
+2025-05-20 10:49:21.269 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到用户列表响应：ChatResponse{responseId='d477d9a7-d864-4577-b615-36d4afdbac97', requestId='ce242cdf-1731-401c-888a-773535c55bb4', type=USER_LIST, success=true, message='获取用户列表成功', timestamp=1747709361269}
+2025-05-20 10:49:21.272 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到用户列表响应：ChatResponse{responseId='d477d9a7-d864-4577-b615-36d4afdbac97', requestId='ce242cdf-1731-401c-888a-773535c55bb4', type=USER_LIST, success=true, message='获取用户列表成功', timestamp=1747709361269}
+2025-05-20 10:49:21.275 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 开始加载历史消息: isGroupChat=true, target=公共聊天室
+2025-05-20 10:49:21.275 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 处理获取历史消息请求: sender=1
+2025-05-20 10:49:21.276 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 获取群聊历史消息: groupId=public
+2025-05-20 10:49:21.276 [pool-1-thread-1] INFO  c.c.s.service.MessageStoreService - 开始获取群组消息: groupId=public, limit=50
+2025-05-20 10:49:21.276 [pool-1-thread-1] INFO  c.c.s.service.MessageStoreService - 当前缓存中的群组消息: [public, public_chat_room]
+2025-05-20 10:49:21.276 [pool-1-thread-1] INFO  c.c.s.service.MessageStoreService - 从缓存中获取到群组 public 的 5 条消息
+2025-05-20 10:49:21.276 [pool-1-thread-1] INFO  c.c.s.service.MessageStoreService - 返回群组 public 的全部 5 条消息
+2025-05-20 10:49:21.276 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 获取到历史消息: 5 条
+2025-05-20 10:49:21.277 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到历史消息: 5 条
+2025-05-20 10:49:21.279 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到历史消息: 5 条
+2025-05-20 10:49:21.279 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public, 内容=1111, 是否群消息=true
+2025-05-20 10:49:21.279 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=1, 接收者=public, 内容=22222, 是否群消息=true
+2025-05-20 10:49:21.279 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public, 内容=1111, 是否群消息=true
+2025-05-20 10:49:21.279 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public, 内容=1111, 是否群消息=true
+2025-05-20 10:49:21.279 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=1, 接收者=public, 内容=11111, 是否群消息=true
+2025-05-20 10:49:21.320 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表不为空，共 1 个用户
+2025-05-20 10:49:21.321 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表已更新，共 0 个用户
+2025-05-20 10:49:21.321 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表不为空，共 1 个用户
+2025-05-20 10:49:21.321 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表已更新，共 0 个用户
+2025-05-20 10:49:23.419 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 尝试登录: 用户=2, 服务器=10.29.183.159:9999
+2025-05-20 10:49:23.421 [ForkJoinPool.commonPool-worker-1] INFO  com.chatroom.server.ChatServer - 新客户端连接: /10.29.183.159:5693
+2025-05-20 10:49:23.422 [AWT-EventQueue-0] INFO  com.chatroom.client.ChatClient - 已连接到服务器: 10.29.183.159:9999
+2025-05-20 10:49:23.423 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已保存 2 个历史连接记录
+2025-05-20 10:49:23.424 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 处理登录请求: ChatRequest{requestId='4c7a467d-2c07-4154-9ab7-e4971c469846', type=LOGIN, sender=null, timestamp=1747709363424}
+2025-05-20 10:49:23.425 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 用户尝试登录: 2，使用密码认证
+2025-05-20 10:49:23.425 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 已创建用户对象: com.chatroom.common.model.User@5472263f
+2025-05-20 10:49:23.425 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 调用服务器处理登录逻辑
+2025-05-20 10:49:23.425 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 广播用户状态变更: [STATUS_CHANGE]2 已登录
+2025-05-20 10:49:23.426 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 已将用户 2 添加到公共聊天室
+2025-05-20 10:49:23.426 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 登录响应: success=true, message=登录成功
+2025-05-20 10:49:23.426 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=系统, 接收者=null, 内容=[STATUS_CHANGE]2 已登录, 是否群消息=false
+2025-05-20 10:49:23.427 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到控制消息: [STATUS_CHANGE]2 已登录
+2025-05-20 10:49:23.427 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 检测到重要状态变更: 2 已登录, 立即刷新用户列表
+2025-05-20 10:49:23.427 [pool-1-thread-2] INFO  c.c.server.handler.ClientHandler - 已发送登录响应
+2025-05-20 10:49:23.427 [AWT-EventQueue-0] WARN  c.chatroom.client.ui.ChatMainFrame - 无法确定目标用户，消息将显示在系统消息面板
+2025-05-20 10:49:23.428 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 正在刷新用户列表...
+2025-05-20 10:49:23.429 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到用户列表响应：ChatResponse{responseId='bcd0e1c3-66f6-4d9d-9f8f-243e6beb069b', requestId='23cd4700-3f74-4bc0-8db0-5cce1bf317ec', type=USER_LIST, success=true, message='获取用户列表成功', timestamp=1747709363429}
+2025-05-20 10:49:23.431 [pool-1-thread-1] INFO  com.chatroom.client.ui.LoginFrame - 收到响应: 类型=LOGIN_RESULT, 成功=true, 消息=登录成功
+2025-05-20 10:49:23.431 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 登录成功，准备打开主界面
+2025-05-20 10:49:23.432 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 已设置当前用户: 2
+2025-05-20 10:49:23.432 [AWT-EventQueue-0] INFO  com.chatroom.client.ui.LoginFrame - 收到公共聊天室: 公共聊天室
+2025-05-20 10:49:23.468 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表不为空，共 2 个用户
+2025-05-20 10:49:23.469 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表已更新，共 1 个用户
+2025-05-20 10:49:23.500 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 正在刷新用户列表...
+2025-05-20 10:49:23.501 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表自动刷新已启动，间隔: 30秒
+2025-05-20 10:49:23.502 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 正在刷新用户列表...
+2025-05-20 10:49:23.502 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 打开公共聊天室: 公共聊天室
+2025-05-20 10:49:23.502 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到用户列表响应：ChatResponse{responseId='1df49325-0444-4596-92e1-792179761ed8', requestId='145ac73d-db30-4438-b469-7bf8343f80fc', type=USER_LIST, success=true, message='获取用户列表成功', timestamp=1747709363501}
+2025-05-20 10:49:23.512 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到用户列表响应：ChatResponse{responseId='1bc27555-7aac-45be-84b5-e47a5a8e24d3', requestId='faf3cca0-1a55-4b27-832e-405e8559d554', type=USER_LIST, success=true, message='获取用户列表成功', timestamp=1747709363502}
+2025-05-20 10:49:23.515 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 开始加载历史消息: isGroupChat=true, target=公共聊天室
+2025-05-20 10:49:23.516 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 处理获取历史消息请求: sender=2
+2025-05-20 10:49:23.516 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 获取群聊历史消息: groupId=public
+2025-05-20 10:49:23.516 [pool-1-thread-2] INFO  c.c.s.service.MessageStoreService - 开始获取群组消息: groupId=public, limit=50
+2025-05-20 10:49:23.516 [pool-1-thread-2] INFO  c.c.s.service.MessageStoreService - 当前缓存中的群组消息: [public, public_chat_room]
+2025-05-20 10:49:23.516 [pool-1-thread-2] INFO  c.c.s.service.MessageStoreService - 从缓存中获取到群组 public 的 5 条消息
+2025-05-20 10:49:23.516 [pool-1-thread-2] INFO  c.c.s.service.MessageStoreService - 返回群组 public 的全部 5 条消息
+2025-05-20 10:49:23.516 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 获取到历史消息: 5 条
+2025-05-20 10:49:23.518 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到历史消息: 5 条
+2025-05-20 10:49:23.519 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到历史消息: 5 条
+2025-05-20 10:49:23.519 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public, 内容=1111, 是否群消息=true
+2025-05-20 10:49:23.519 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=1, 接收者=public, 内容=22222, 是否群消息=true
+2025-05-20 10:49:23.520 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public, 内容=1111, 是否群消息=true
+2025-05-20 10:49:23.520 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=public, 内容=1111, 是否群消息=true
+2025-05-20 10:49:23.520 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=1, 接收者=public, 内容=11111, 是否群消息=true
+2025-05-20 10:49:23.550 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表不为空，共 2 个用户
+2025-05-20 10:49:23.551 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表已更新，共 1 个用户
+2025-05-20 10:49:23.552 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表不为空，共 2 个用户
+2025-05-20 10:49:23.552 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表已更新，共 1 个用户
+2025-05-20 10:49:24.888 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 尝试打开与用户 1 的聊天窗口
+2025-05-20 10:49:24.895 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 开始加载历史消息: isGroupChat=false, target=1
+2025-05-20 10:49:24.896 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 已打开与用户 1 的新聊天窗口
+2025-05-20 10:49:24.896 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 处理获取历史消息请求: sender=2
+2025-05-20 10:49:24.896 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 获取私聊历史消息: targetId=6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b
+2025-05-20 10:49:24.896 [pool-1-thread-2] INFO  c.c.s.service.MessageStoreService - 开始获取私聊消息: userId1=d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35, userId2=6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b, sessionKey1=6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b_d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35, sessionKey2=6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b_d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35, limit=50
+2025-05-20 10:49:24.896 [pool-1-thread-2] INFO  c.c.s.service.MessageStoreService - 当前缓存中的私聊消息: [28baa273-96a7-4bdb-9e09-31c7a50f0285_5d9a7898-7b7b-4f4a-973b-47b54389bf08, 6e700396-edde-4b85-9b9b-8d30c3b8ed52_8f0c93e8-e594-41bc-b7b3-27cad6165393, 80706aa6-6683-4fbf-bee5-20bdc153e675_9c89d8eb-2d02-4ee0-8a88-d2fb9dd05684, 6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b_d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35, 3ba4d281-eb67-4770-b203-7ba5e50f92dc_c1865caa-6d9a-44c1-8e4b-bd08bcd8029b, 83bfa283-d9d8-40f5-b6f9-341b391150af_c9fd85dd-eb31-458f-ab7c-e8c188e281a0, 0e53f82d-5fd7-47e9-8677-b05c9aa2e35d_521c718d-0f03-46f8-9732-9a6c8b57fa9a, 2fbfb16f-ee5c-44f8-bd92-df51cc4e1617_b4cef39b-1188-4a45-af59-43e4c9c1da09, 1304ab0a-3af7-47ad-aadb-3eca30a27620_69b86457-6017-4f0c-bb67-a9a1f39af319]
+2025-05-20 10:49:24.896 [pool-1-thread-2] INFO  c.c.s.service.MessageStoreService - 从缓存中获取到会话 6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b_d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35 的 2 条消息
+2025-05-20 10:49:24.896 [pool-1-thread-2] INFO  c.c.s.service.MessageStoreService - 返回会话的全部 2 条消息
+2025-05-20 10:49:24.896 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 获取到历史消息: 2 条
+2025-05-20 10:49:24.898 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到历史消息: 2 条
+2025-05-20 10:49:24.898 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 收到历史消息: 2 条
+2025-05-20 10:49:24.898 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=2, 接收者=6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b, 内容=1111, 是否群消息=false
+2025-05-20 10:49:24.898 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=1, 接收者=d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35, 内容=22222, 是否群消息=false
+2025-05-20 10:49:26.758 [AWT-EventQueue-0] INFO  com.chatroom.client.ChatClient - 已断开与服务器的连接
+2025-05-20 10:49:26.759 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 广播用户状态变更: [STATUS_CHANGE]用户离线: 2
+2025-05-20 10:49:26.759 [pool-1-thread-2] INFO  com.chatroom.server.ChatServer - 用户 2 已从群组 公共聊天室 中移除
+2025-05-20 10:49:26.759 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 消息处理器已停止
+2025-05-20 10:49:26.759 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=系统, 接收者=null, 内容=2 已离开聊天室, 是否群消息=false
+2025-05-20 10:49:26.759 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到消息: 发送者=系统, 接收者=null, 内容=[STATUS_CHANGE]用户离线: 2, 是否群消息=false
+2025-05-20 10:49:26.760 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到控制消息: [STATUS_CHANGE]用户离线: 2
+2025-05-20 10:49:26.760 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 检测到重要状态变更: 用户离线: 2, 立即刷新用户列表
+2025-05-20 10:49:26.760 [AWT-EventQueue-0] WARN  c.chatroom.client.ui.ChatMainFrame - 无法确定目标用户，消息将显示在系统消息面板
+2025-05-20 10:49:26.760 [pool-1-thread-2] ERROR c.c.server.handler.ClientHandler - 发送响应时出错: 你的主机中的软件中止了一个已建立的连接。
+java.net.SocketException: 你的主机中的软件中止了一个已建立的连接。
+	at java.base/sun.nio.ch.SocketDispatcher.write0(Native Method)
+	at java.base/sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:54)
+	at java.base/sun.nio.ch.NioSocketImpl.tryWrite(NioSocketImpl.java:394)
+	at java.base/sun.nio.ch.NioSocketImpl.implWrite(NioSocketImpl.java:410)
+	at java.base/sun.nio.ch.NioSocketImpl.write(NioSocketImpl.java:440)
+	at java.base/sun.nio.ch.NioSocketImpl$2.write(NioSocketImpl.java:819)
+	at java.base/java.net.Socket$SocketOutputStream.implWrite(Socket.java:1231)
+	at java.base/java.net.Socket$SocketOutputStream.write(Socket.java:1218)
+	at java.base/java.io.ObjectOutputStream$BlockDataOutputStream.drain(ObjectOutputStream.java:1900)
+	at java.base/java.io.ObjectOutputStream$BlockDataOutputStream.setBlockDataMode(ObjectOutputStream.java:1809)
+	at java.base/java.io.ObjectOutputStream.writeFatalException(ObjectOutputStream.java:1619)
+	at java.base/java.io.ObjectOutputStream.writeObject(ObjectOutputStream.java:362)
+	at com.chatroom.server.handler.ClientHandler.sendResponse(ClientHandler.java:410)
+	at com.chatroom.server.handler.ClientHandler.handleLogout(ClientHandler.java:231)
+	at com.chatroom.server.handler.ClientHandler.handleRequest(ClientHandler.java:113)
+	at com.chatroom.server.handler.ClientHandler.run(ClientHandler.java:78)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2025-05-20 10:49:26.760 [pool-1-thread-2] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
+2025-05-20 10:49:26.760 [pool-1-thread-2] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
+2025-05-20 10:49:26.760 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 正在刷新用户列表...
+2025-05-20 10:49:26.761 [pool-1-thread-1] INFO  c.chatroom.client.ui.ChatMainFrame - 收到用户列表响应：ChatResponse{responseId='e5c55dc8-848a-4c8c-9512-38914bab11e2', requestId='bd37e6c7-7055-47de-85d7-8b1b16af6ab8', type=USER_LIST, success=true, message='获取用户列表成功', timestamp=1747709366761}
+2025-05-20 10:49:26.783 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表不为空，共 1 个用户
+2025-05-20 10:49:26.783 [AWT-EventQueue-0] INFO  c.chatroom.client.ui.ChatMainFrame - 用户列表已更新，共 0 个用户
+2025-05-20 10:49:28.532 [AWT-EventQueue-0] INFO  com.chatroom.client.ChatClient - 已断开与服务器的连接
+2025-05-20 10:49:28.532 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 广播用户状态变更: [STATUS_CHANGE]用户离线: 1
+2025-05-20 10:49:28.533 [pool-1-thread-1] INFO  com.chatroom.server.ChatServer - 用户 1 已从群组 公共聊天室 中移除
+2025-05-20 10:49:28.533 [pool-1-thread-1] INFO  com.chatroom.client.MessageHandler - 消息处理器已停止
+2025-05-20 10:49:28.534 [pool-1-thread-1] ERROR c.c.server.handler.ClientHandler - 发送响应时出错: 你的主机中的软件中止了一个已建立的连接。
+java.net.SocketException: 你的主机中的软件中止了一个已建立的连接。
+	at java.base/sun.nio.ch.SocketDispatcher.write0(Native Method)
+	at java.base/sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:54)
+	at java.base/sun.nio.ch.NioSocketImpl.tryWrite(NioSocketImpl.java:394)
+	at java.base/sun.nio.ch.NioSocketImpl.implWrite(NioSocketImpl.java:410)
+	at java.base/sun.nio.ch.NioSocketImpl.write(NioSocketImpl.java:440)
+	at java.base/sun.nio.ch.NioSocketImpl$2.write(NioSocketImpl.java:819)
+	at java.base/java.net.Socket$SocketOutputStream.implWrite(Socket.java:1231)
+	at java.base/java.net.Socket$SocketOutputStream.write(Socket.java:1218)
+	at java.base/java.io.ObjectOutputStream$BlockDataOutputStream.drain(ObjectOutputStream.java:1900)
+	at java.base/java.io.ObjectOutputStream$BlockDataOutputStream.setBlockDataMode(ObjectOutputStream.java:1809)
+	at java.base/java.io.ObjectOutputStream.writeFatalException(ObjectOutputStream.java:1619)
+	at java.base/java.io.ObjectOutputStream.writeObject(ObjectOutputStream.java:362)
+	at com.chatroom.server.handler.ClientHandler.sendResponse(ClientHandler.java:410)
+	at com.chatroom.server.handler.ClientHandler.handleLogout(ClientHandler.java:231)
+	at com.chatroom.server.handler.ClientHandler.handleRequest(ClientHandler.java:113)
+	at com.chatroom.server.handler.ClientHandler.run(ClientHandler.java:78)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2025-05-20 10:49:28.534 [pool-1-thread-1] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
+2025-05-20 10:49:28.534 [pool-1-thread-1] ERROR c.c.server.handler.ClientHandler - 关闭客户端连接时出错: Socket closed
