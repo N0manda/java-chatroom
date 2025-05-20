@@ -315,9 +315,8 @@ public class LoginFrame extends JFrame implements com.chatroom.client.MessageHan
     public void onResponseReceived(ChatResponse response) {
         logger.info("收到响应: 类型={}, 成功={}, 消息={}", response.getType(), response.isSuccess(), response.getMessage());
         
-        // 处理登录响应 - 同时接受LOGIN_RESULT和GENERIC_RESULT类型
-        if (response.getType() == ResponseType.LOGIN_RESULT || 
-            (response.getType() == ResponseType.GENERIC_RESULT && response.isSuccess() && "登录成功".equals(response.getMessage()))) {
+        // 处理登录响应
+        if (response.getType() == ResponseType.LOGIN_RESULT) {
             SwingUtilities.invokeLater(() -> {
                 if (response.isSuccess()) {
                     // 登录成功，打开主界面
@@ -329,6 +328,18 @@ public class LoginFrame extends JFrame implements com.chatroom.client.MessageHan
                     // 获取响应数据（用户和公共聊天室）
                     Object[] data = (Object[]) response.getData();
                     if (data != null && data.length > 0) {
+                        // 设置当前用户
+                        if (data[0] instanceof com.chatroom.common.model.User) {
+                            client.setCurrentUser((com.chatroom.common.model.User) data[0]);
+                            logger.info("已设置当前用户: {}", client.getCurrentUser().getUsername());
+                        } else {
+                            logger.error("响应数据中未找到用户对象");
+                            statusLabel.setText("登录失败: 服务器响应格式错误");
+                            statusLabel.setForeground(Color.RED);
+                            loginButton.setEnabled(true);
+                            return;
+                        }
+                        
                         // 如果存在公共聊天室，将其传递给主窗口
                         com.chatroom.common.model.ChatGroup publicChatRoom = null;
                         if (data.length > 1 && data[1] instanceof com.chatroom.common.model.ChatGroup) {
@@ -339,8 +350,10 @@ public class LoginFrame extends JFrame implements com.chatroom.client.MessageHan
                         // 打开主聊天窗口，传递公共聊天室
                         openChatMainFrame(publicChatRoom);
                     } else {
-                        // 如果没有收到数据，仍然打开主窗口
-                        openChatMainFrame(null);
+                        logger.error("响应数据为空");
+                        statusLabel.setText("登录失败: 服务器响应格式错误");
+                        statusLabel.setForeground(Color.RED);
+                        loginButton.setEnabled(true);
                     }
                 } else {
                     // 登录失败

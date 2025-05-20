@@ -130,6 +130,9 @@ public class ClientHandler implements Runnable {
                 case GET_GROUPS:
                     handleGetGroups(request);
                     break;
+                case GET_HISTORY_MESSAGES:
+                    server.handleRequest(request, this);
+                    break;
                 case HEARTBEAT:
                     handleHeartbeat(request);
                     break;
@@ -248,6 +251,8 @@ public class ClientHandler implements Runnable {
             // 群聊消息
             logger.info("发送群组消息: groupId={}", message.getReceiverId());
             server.broadcastToGroup(message, message.getReceiverId());
+            // 存储群组消息
+            server.getMessageStoreService().storeGroupMessage(message.getReceiverId(), message);
             messageSent = true;
         } else {
             // 私聊消息
@@ -257,6 +262,12 @@ public class ClientHandler implements Runnable {
             if (receiverHandler != null) {
                 logger.info("向接收者发送消息: {}", message.getReceiverId());
                 receiverHandler.sendMessage(message);
+                // 存储私聊消息
+                server.getMessageStoreService().storePrivateMessage(
+                    message.getSender().getUserId(),
+                    message.getReceiverId(),
+                    message
+                );
                 messageSent = true;
             } else {
                 logger.warn("接收者不在线: {}", message.getReceiverId());

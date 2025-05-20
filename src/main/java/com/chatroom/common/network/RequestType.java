@@ -59,5 +59,10 @@ public enum RequestType implements Serializable {
     /**
      * 语音通话
      */
-    VOICE_CALL
+    VOICE_CALL,
+    
+    /**
+     * 获取历史消息请求
+     */
+    GET_HISTORY_MESSAGES
 } 

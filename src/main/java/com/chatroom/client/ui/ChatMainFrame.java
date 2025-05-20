@@ -328,6 +328,10 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         // 添加到选项卡
         tabbedPane.addTab(user.getUsername(), null, chatPanel, "与 " + user.getUsername() + " 聊天");
         tabbedPane.setSelectedIndex(tabbedPane.getTabCount() - 1);
+        
+        // 加载历史消息
+        loadHistoryMessages(user, null, false);
+        
         logger.info("已打开与用户 {} 的新聊天窗口", user.getUsername());
     }
     
@@ -345,6 +349,9 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         tabbedPane.addTab(publicChatRoom.getGroupName(), null, chatPanel, "公共聊天室");
         tabbedPane.setIconAt(tabbedPane.getTabCount() - 1, createGroupIcon());
         tabbedPane.setSelectedIndex(tabbedPane.getTabCount() - 1);
+        
+        // 加载历史消息
+        loadHistoryMessages(null, publicChatRoom, true);
     }
     
     /**
@@ -2520,6 +2527,125 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         if (userListRefreshTimer != null && userListRefreshTimer.isRunning()) {
             userListRefreshTimer.stop();
             logger.info("用户列表自动刷新已停止");
+        }
+    }
+    
+    /**
+     * 加载历史消息
+     * 
+     * @param targetUser 目标用户（私聊）或群组（群聊）
+     * @param isGroupChat 是否是群聊
+     */
+    private void loadHistoryMessages(User targetUser, com.chatroom.common.model.ChatGroup chatGroup, boolean isGroupChat) {
+        logger.info("开始加载历史消息: isGroupChat={}, target={}", 
+            isGroupChat, 
+            isGroupChat ? chatGroup.getGroupName() : targetUser.getUsername());
+        
+        // 检查参数
+        if ((isGroupChat && chatGroup == null) || (!isGroupChat && targetUser == null)) {
+            logger.error("加载历史消息失败：参数无效");
+            return;
+        }
+        
+        // 创建请求
+        ChatRequest request = new ChatRequest(
+            RequestType.GET_HISTORY_MESSAGES,
+            client.getCurrentUser(),
+            isGroupChat ? chatGroup.getGroupId() : targetUser.getUserId()
+        );
+        
+        logger.debug("创建历史消息请求: request={}, targetId={}", 
+            request.getType(), 
+            isGroupChat ? chatGroup.getGroupId() : targetUser.getUserId());
+        
+        // 添加响应监听器
+        final MessageHandler.ResponseListener responseListener = new MessageHandler.ResponseListener() {
+            @Override
+            public void onResponseReceived(ChatResponse response) {
+                logger.debug("收到历史消息响应: type={}, success={}, message={}", 
+                    response.getType(), 
+                    response.isSuccess(), 
+                    response.getMessage());
+                
+                if (response.getType() == ResponseType.HISTORY_MESSAGES) {
+                    if (response.isSuccess()) {
+                        Object data = response.getData();
+                        logger.debug("历史消息响应数据: {}", data);
+                        
+                        if (data instanceof List<?>) {
+                            List<Message> messages = (List<Message>) data;
+                            logger.info("收到历史消息: {} 条", messages.size());
+                            
+                            // 在UI线程中显示消息
+                            SwingUtilities.invokeLater(() -> {
+                                boolean foundPanel = false;
+                                // 找到对应的聊天面板
+                                for (MessagePanel panel : chatPanels) {
+                                    if (isGroupChat) {
+                                        if (panel.getChatGroup() != null && 
+                                            panel.getChatGroup().getGroupId().equals(chatGroup.getGroupId())) {
+                                            logger.debug("找到群聊面板，添加历史消息");
+                                            // 显示历史消息
+                                            for (Message message : messages) {
+                                                panel.appendMessage(message);
+                                            }
+                                            foundPanel = true;
+                                            break;
+                                        }
+                                    } else {
+                                        if (panel.getTargetUser() != null && 
+                                            panel.getTargetUser().getUserId().equals(targetUser.getUserId())) {
+                                            logger.debug("找到私聊面板，添加历史消息");
+                                            // 显示历史消息
+                                            for (Message message : messages) {
+                                                panel.appendMessage(message);
+                                            }
+                                            foundPanel = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                
+                                if (!foundPanel) {
+                                    logger.warn("未找到对应的聊天面板来显示历史消息");
+                                }
+                            });
+                        } else {
+                            logger.warn("历史消息数据格式错误: {}", data);
+                        }
+                    } else {
+                        logger.error("获取历史消息失败: {}", response.getMessage());
+                        SwingUtilities.invokeLater(() -> 
+                            JOptionPane.showMessageDialog(ChatMainFrame.this, 
+                                "获取历史消息失败: " + response.getMessage(), 
+                                "错误", JOptionPane.ERROR_MESSAGE)
+                        );
+                    }
+                } else {
+                    logger.warn("收到非历史消息响应: {}", response.getType());
+                }
+                
+                // 移除监听器
+                client.getMessageHandler().removeResponseListener(this);
+                logger.debug("已移除历史消息响应监听器");
+            }
+        };
+        
+        // 注册监听器并发送请求
+        logger.debug("注册历史消息响应监听器");
+        client.getMessageHandler().addResponseListener(responseListener);
+        
+        logger.debug("发送获取历史消息请求");
+        if (!client.sendRequest(request)) {
+            logger.error("发送获取历史消息请求失败");
+            client.getMessageHandler().removeResponseListener(responseListener);
+            SwingUtilities.invokeLater(() -> 
+                JOptionPane.showMessageDialog(this, 
+                    "发送获取历史消息请求失败，请检查网络连接", 
+                    "错误", JOptionPane.ERROR_MESSAGE)
+            );
+        } else {
+            logger.debug("获取历史消息请求已发送");
         }
     }
 } 

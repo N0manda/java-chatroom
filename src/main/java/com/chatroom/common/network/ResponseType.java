@@ -7,6 +7,26 @@ import java.io.Serializable;
  */
 public enum ResponseType implements Serializable {
     /**
+     * 登录响应
+     */
+    LOGIN,
+    
+    /**
+     * 注销响应
+     */
+    LOGOUT,
+    
+    /**
+     * 用户列表响应
+     */
+    USER_LIST,
+    
+    /**
+     * 历史消息响应
+     */
+    HISTORY_MESSAGES,
+    
+    /**
      * 登录结果
      */
     LOGIN_RESULT,
@@ -25,11 +45,6 @@ public enum ResponseType implements Serializable {
      * 群组结果
      */
     GROUP_RESULT,
-    
-    /**
-     * 用户列表
-     */
-    USER_LIST,
     
     /**
      * 群组列表

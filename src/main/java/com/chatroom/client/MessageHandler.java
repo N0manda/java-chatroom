@@ -106,64 +106,39 @@ public class MessageHandler implements Runnable {
      * @param response 响应对象
      */
     private void handleResponse(ChatResponse response) {
-        logger.info("收到服务器响应: 类型={}, 成功={}, 消息={}", response.getType(), response.isSuccess(), response.getMessage());
+        logger.debug("收到响应: type={}, success={}, message={}", 
+            response.getType(), 
+            response.isSuccess(), 
+            response.getMessage());
         
-        // 处理登录响应 - 同时接受LOGIN_RESULT和GENERIC_RESULT类型
-        if (response.getType() == ResponseType.LOGIN_RESULT || 
-            (response.getType() == ResponseType.GENERIC_RESULT && response.isSuccess() && "登录成功".equals(response.getMessage()))) {
-            logger.info("处理登录响应: 成功={}, 消息={}", response.isSuccess(), response.getMessage());
-            
-            if (response.isSuccess()) {
-                // 提取用户对象
-                Object[] users = (Object[]) response.getData();
-                if (users != null && users.length > 0) {
-                    logger.info("登录响应包含 {} 个用户对象", users.length);
-                    
-                    for (Object user : users) {
-                        if (user instanceof com.chatroom.common.model.User) {
-                            com.chatroom.common.model.User currentUser = (com.chatroom.common.model.User) user;
-                            logger.info("设置当前用户: {}", currentUser.getUsername());
-                            client.setCurrentUser(currentUser);
-                            
-                            // 登录成功后，自动获取用户列表
-                            logger.info("发送获取用户列表请求");
-                            client.sendRequest(new ChatRequest(RequestType.GET_USERS, currentUser, null));
-                            
-                            break;
-                        } else {
-                            logger.warn("用户对象类型错误: {}", user.getClass().getName());
+        // 通知所有响应监听器
+        for (ResponseListener listener : responseListeners) {
+            try {
+                listener.onResponseReceived(response);
+            } catch (Exception e) {
+                logger.error("响应监听器处理响应出错: {}", e.getMessage());
+            }
+        }
+        
+        // 如果是历史消息响应，且成功，则通知消息监听器
+        if (response.getType() == ResponseType.HISTORY_MESSAGES && response.isSuccess()) {
+            Object data = response.getData();
+            if (data instanceof List<?>) {
+                List<Message> messages = (List<Message>) data;
+                logger.info("收到历史消息: {} 条", messages.size());
+                
+                // 按时间顺序显示消息
+                for (Message message : messages) {
+                    for (MessageListener listener : messageListeners) {
+                        try {
+                            listener.onMessageReceived(message);
+                        } catch (Exception e) {
+                            logger.error("消息监听器处理历史消息出错: {}", e.getMessage());
                         }
                     }
-                } else {
-                    logger.warn("登录响应不包含用户对象，尝试从请求中获取用户名");
-                    // 如果服务器没有返回用户对象，我们可以从登录请求中获取用户名
-                    String username = response.getMessage().replace("登录成功", "").trim();
-                    if (username.isEmpty()) {
-                        username = "用户" + System.currentTimeMillis(); // 生成临时用户名
-                    }
-                    // 创建临时用户对象
-                    com.chatroom.common.model.User tempUser = com.chatroom.common.model.User.createUser(username);
-                    logger.info("创建临时用户: {}", tempUser.getUsername());
-                    client.setCurrentUser(tempUser);
                 }
             }
         }
-        
-        // 通知所有响应监听器
-        logger.info("通知 {} 个响应监听器", responseListeners.size());
-        int notifiedCount = 0;
-        
-        for (ResponseListener listener : responseListeners) {
-            try {
-                logger.debug("通知响应监听器: {}", listener.getClass().getName());
-                listener.onResponseReceived(response);
-                notifiedCount++;
-            } catch (Exception e) {
-                logger.error("响应监听器处理响应出错: {}", e.getMessage(), e);
-            }
-        }
-        
-        logger.info("成功通知了 {} 个响应监听器", notifiedCount);
     }
     
     /**
