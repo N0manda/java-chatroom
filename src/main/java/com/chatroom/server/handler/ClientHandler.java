@@ -327,45 +327,59 @@ public class ClientHandler implements Runnable {
      * @param request 请求对象
      */
     private void handleJoinGroup(ChatRequest request) {
-        String groupId = (String) request.getData();
-        ChatGroup group = server.getChatGroups().get(groupId);
+        String groupId = request.getData().toString();
+        logger.info("用户 {} 请求加入群组 {}", user.getUsername(), groupId);
         
-        if (group != null && user != null) {
-            logger.info("用户 {} (ID: {}) 尝试加入群组 {} (ID: {})", 
-                user.getUsername(), 
-                user.getUserId(), 
-                group.getGroupName(), 
-                groupId);
-                
-            logger.info("加入前群组成员列表: {}", group.getMemberIds());
-            
-            boolean added = group.addMember(user.getUserId());
-            if (!added) {
-                logger.error("用户 {} 加入群组 {} 失败", user.getUsername(), group.getGroupName());
-                sendResponse(ChatResponse.createErrorResponse(request, "加入群组失败", null));
-                return;
-            }
-            
-            logger.info("加入后群组成员列表: {}", group.getMemberIds());
-            
-            // 保存群组数据
-            server.getGroupStoreService().saveGroup(group);
-            
-            // 通知群组内其他成员
-            String notificationContent = user.getUsername() + " 加入了群组 " + group.getGroupName();
-            Message notification = Message.createSystemMessage(notificationContent, groupId, true);
-            server.broadcastToGroup(notification, groupId);
-            
-            // 发送控制消息通知用户状态变更（非重要变更）
-            sendUserStatusControlMessage(user.getUsername() + " 加入群组: " + group.getGroupName(), false);
-            
-            // 通知所有在线用户刷新群组列表
-            server.broadcastMessage(Message.createSystemMessage("[REFRESH_GROUPS]", null, false));
-            
-            sendResponse(ChatResponse.createSuccessResponse(request, "加入群组成功", group));
-        } else {
-            logger.error("加入群组失败: 群组或用户不存在");
-            sendResponse(ChatResponse.createErrorResponse(request, "群组不存在或用户未登录", null));
+        // 查找群组
+        ChatGroup group = server.getChatGroups().get(groupId);
+        if (group == null) {
+            logger.warn("群组 {} 不存在", groupId);
+            sendResponse(ChatResponse.createErrorResponse(request, "群组不存在", null));
+            return;
+        }
+        
+        // 检查用户是否已经是群组成员
+        if (group.isMember(user.getUserId())) {
+            logger.info("用户 {} 已经是群组 {} 的成员", user.getUsername(), group.getGroupName());
+            sendResponse(ChatResponse.createSuccessResponse(request, "已经是群组成员", null));
+            return;
+        }
+        
+        // 添加用户到群组
+        boolean added = group.addMember(user.getUserId());
+        if (!added) {
+            logger.error("用户 {} 加入群组 {} 失败", user.getUsername(), group.getGroupName());
+            sendResponse(ChatResponse.createErrorResponse(request, "加入群组失败", null));
+            return;
+        }
+        
+        logger.info("用户 {} 已加入群组 {}", user.getUsername(), group.getGroupName());
+        
+        // 保存群组数据
+        server.getGroupStoreService().saveGroup(group);
+        logger.info("群组 {} 的成员信息已保存", group.getGroupName());
+        
+        // 发送成功响应
+        sendResponse(ChatResponse.createSuccessResponse(request, "成功加入群组", group));
+        
+        // 广播群组更新消息
+        Message groupUpdateMessage = Message.createSystemMessage(
+            String.format("用户 %s 加入了群组", user.getUsername()),
+            groupId,
+            true
+        );
+        server.broadcastToGroup(groupUpdateMessage, groupId);
+        
+        // 获取群组历史消息
+        List<Message> historyMessages = server.getMessageStoreService().getGroupMessages(groupId, 50);
+        logger.info("获取到群组 {} 的 {} 条历史消息", group.getGroupName(), historyMessages.size());
+        
+        // 发送历史消息
+        if (!historyMessages.isEmpty()) {
+            Message historyResponse = Message.createSystemMessage("[HISTORY_MESSAGES]", groupId, true);
+            historyResponse.setData(historyMessages);
+            sendResponse(ChatResponse.createSuccessResponse(request, "获取历史消息成功", historyResponse));
+            logger.info("已发送 {} 条历史消息给用户 {}", historyMessages.size(), user.getUsername());
         }
     }
     

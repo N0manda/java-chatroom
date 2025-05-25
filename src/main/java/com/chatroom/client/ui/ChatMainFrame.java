@@ -640,108 +640,12 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         }
     }
     
-    @Override
-    public void onMessageReceived(Message message) {
-        // 检查消息有效性
-        if (message == null) {
-            logger.error("收到无效消息");
-            return;
-        }
-        
-        // 检查是否是群组系统消息
-        if (message.getType() == MessageType.SYSTEM && message.isGroupMessage()) {
-            String content = message.getContent();
-            if (content != null) {
-                if (content.contains("加入了群组") || content.contains("离开了群组")) {
-                    // 刷新群组列表
-                    refreshGroupList();
-                }
-            }
-        }
-        
-        // 检查是否是群组邀请消息
-        if (message.getType() == MessageType.SYSTEM && 
-            message.getContent() != null && 
-            message.getContent().startsWith("[GROUP_INVITE]")) {
-            // 解析邀请信息
-            String[] parts = message.getContent().substring("[GROUP_INVITE]".length()).split("\\|");
-            if (parts.length >= 2) {
-                String groupId = parts[0];
-                String groupName = parts[1];
-                String inviterName = message.getSender() != null ? message.getSender().getUsername() : "未知用户";
-                
-                // 显示邀请对话框
-                SwingUtilities.invokeLater(() -> {
-                    int result = JOptionPane.showConfirmDialog(this,
-                        inviterName + " 邀请您加入群组 \"" + groupName + "\"",
-                        "群组邀请",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE);
-                    
-                    // 发送接受或拒绝请求
-                    ChatRequest request = new ChatRequest(
-                        result == JOptionPane.YES_OPTION ? RequestType.JOIN_GROUP : RequestType.LEAVE_GROUP,
-                        client.getCurrentUser(),
-                        groupId
-                    );
-                    
-                    // 添加响应监听器
-                    final MessageHandler.ResponseListener responseListener = new MessageHandler.ResponseListener() {
-                        @Override
-                        public void onResponseReceived(ChatResponse response) {
-                            if (response.getType() == ResponseType.GROUP_RESULT) {
-                                if (response.isSuccess()) {
-                                    SwingUtilities.invokeLater(() -> {
-                                        if (result == JOptionPane.YES_OPTION) {
-                                            // 如果接受邀请，刷新群组列表并打开群聊
-                                            refreshGroupList();
-                                            com.chatroom.common.model.ChatGroup group = (com.chatroom.common.model.ChatGroup) response.getData();
-                                            openGroupChat(group);
-                                        }
-                                    });
-                                } else {
-                                    SwingUtilities.invokeLater(() -> 
-                                        JOptionPane.showMessageDialog(ChatMainFrame.this,
-                                            (result == JOptionPane.YES_OPTION ? "加入" : "拒绝") + "群组失败: " + response.getMessage(),
-                                            "错误",
-                                            JOptionPane.ERROR_MESSAGE)
-                                    );
-                                }
-                            }
-                            client.getMessageHandler().removeResponseListener(this);
-                        }
-                    };
-                    
-                    client.getMessageHandler().addResponseListener(responseListener);
-                    if (!client.sendRequest(request)) {
-                        client.getMessageHandler().removeResponseListener(responseListener);
-                        JOptionPane.showMessageDialog(this,
-                            "发送请求失败，请检查网络连接",
-                            "错误",
-                            JOptionPane.ERROR_MESSAGE);
-                    }
-                });
-                return;
-            }
-        }
-        
-        // 检查是否是异地登录的系统消息
-        if (message.getType() == MessageType.SYSTEM && 
-            message.getContent() != null && 
-            message.getContent().contains("您的账号在其他地方登录")) {
-            // 显示弹窗提醒
-            SwingUtilities.invokeLater(() -> {
-                JOptionPane.showMessageDialog(this,
-                    "您的账号在其他地方登录，此连接已断开",
-                    "异地登录提醒",
-                    JOptionPane.WARNING_MESSAGE);
-                // 关闭当前窗口，打开登录窗口
-                dispose();
-                new LoginFrame().setVisible(true);
-            });
-            return;
-        }
-        
+    /**
+     * 显示消息
+     * 
+     * @param message 消息对象
+     */
+    private void displayMessage(Message message) {
         // 创建消息唯一标识，用于去重
         String messageId = message.getSender() != null ? message.getSender().getUserId() : "system";
         messageId += "_" + (message.getTimestamp() != null ? message.getTimestamp().getTime() : System.currentTimeMillis());
@@ -756,12 +660,12 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         // 添加到缓存
         recentMessageCache.put(messageId, Boolean.TRUE);
         
-        logger.info("收到消息: 发送者={}, 接收者={}, 内容={}, 是否群消息={}", 
+        logger.info("显示消息: 发送者={}, 接收者={}, 内容={}, 是否群消息={}", 
             message.getSender() != null ? message.getSender().getUsername() : "系统",
             message.getReceiverId(),
             message.getContent(),
             message.isGroupMessage());
-            
+        
         SwingUtilities.invokeLater(() -> {
             // 处理接收到的消息
             if (message.getType() == MessageType.SYSTEM) {
@@ -933,44 +837,131 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
                 }
             }
         });
+    }
+    
+    @Override
+    public void onMessageReceived(Message message) {
+        // 检查消息有效性
+        if (message == null) {
+            logger.error("收到无效消息");
+            return;
+        }
         
-        // 添加对用户状态变更消息的处理
-        if (message.getType() == MessageType.CONTROL) {
+        // 检查是否是群组系统消息
+        if (message.getType() == MessageType.SYSTEM && message.isGroupMessage()) {
             String content = message.getContent();
             if (content != null) {
-                logger.info("收到控制消息: {}", content);
-                
-                // 检测是否是带特殊标记的重要状态变更消息
-                if (content.startsWith("[STATUS_CHANGE]")) {
-                    // 移除特殊标记
-                    content = content.substring("[STATUS_CHANGE]".length());
-                    logger.info("检测到重要状态变更: {}, 立即刷新用户列表", content);
-                    
-                    // 在UI线程中立即执行刷新
-                    SwingUtilities.invokeLater(this::refreshUserList);
-                }
-                // 检测是否是其他类型的用户状态变更
-                else if (content.contains("用户上线") || content.contains("用户离线") ||
-                         content.startsWith("用户") && (content.contains("加入") || content.contains("退出"))) {
-                    // 普通用户状态变更，也立即刷新
-                    logger.info("检测到用户状态变更: {}, 刷新用户列表", content);
-                    
-                    // 在UI线程中执行刷新
-                    SwingUtilities.invokeLater(this::refreshUserList);
-                } 
-                // 其他状态变更消息，如群组操作等，按照延迟逻辑处理
-                else if (content.contains("加入群组") || content.contains("离开群组") || 
-                         content.contains("新群组创建")) {
-                    // 在UI线程中延迟执行，避免频繁刷新
-                    SwingUtilities.invokeLater(() -> {
-                        // 如果距离上次刷新已经超过5秒，才执行刷新
-                        if (System.currentTimeMillis() - lastUserListRefreshTime >= 5000) {
-                            refreshUserList();
-                        }
-                    });
+                if (content.contains("加入了群组") || content.contains("离开了群组")) {
+                    // 刷新群组列表
+                    refreshGroupList();
                 }
             }
         }
+        
+        // 检查是否是群组邀请消息
+        if (message.getType() == MessageType.SYSTEM && 
+            message.getContent() != null && 
+            message.getContent().startsWith("[GROUP_INVITE]")) {
+            // 解析邀请信息
+            String[] parts = message.getContent().substring("[GROUP_INVITE]".length()).split("\\|");
+            if (parts.length >= 2) {
+                String groupId = parts[0];
+                String groupName = parts[1];
+                String inviterName = message.getSender() != null ? message.getSender().getUsername() : "未知用户";
+                
+                // 显示邀请对话框
+                SwingUtilities.invokeLater(() -> {
+                    int result = JOptionPane.showConfirmDialog(this,
+                        inviterName + " 邀请您加入群组 \"" + groupName + "\"",
+                        "群组邀请",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+                    
+                    // 发送接受或拒绝请求
+                    ChatRequest request = new ChatRequest(
+                        result == JOptionPane.YES_OPTION ? RequestType.JOIN_GROUP : RequestType.LEAVE_GROUP,
+                        client.getCurrentUser(),
+                        groupId
+                    );
+                    
+                    // 添加响应监听器
+                    final MessageHandler.ResponseListener responseListener = new MessageHandler.ResponseListener() {
+                        @Override
+                        public void onResponseReceived(ChatResponse response) {
+                            if (response.getType() == ResponseType.GROUP_RESULT) {
+                                if (response.isSuccess()) {
+                                    SwingUtilities.invokeLater(() -> {
+                                        if (result == JOptionPane.YES_OPTION) {
+                                            // 如果接受邀请，刷新群组列表并打开群聊
+                                            refreshGroupList();
+                                            com.chatroom.common.model.ChatGroup group = (com.chatroom.common.model.ChatGroup) response.getData();
+                                            openGroupChat(group);
+                                        }
+                                    });
+                                } else {
+                                    SwingUtilities.invokeLater(() -> 
+                                        JOptionPane.showMessageDialog(ChatMainFrame.this,
+                                            (result == JOptionPane.YES_OPTION ? "加入" : "拒绝") + "群组失败: " + response.getMessage(),
+                                            "错误",
+                                            JOptionPane.ERROR_MESSAGE)
+                                    );
+                                }
+                            }
+                            client.getMessageHandler().removeResponseListener(this);
+                        }
+                    };
+                    
+                    client.getMessageHandler().addResponseListener(responseListener);
+                    if (!client.sendRequest(request)) {
+                        client.getMessageHandler().removeResponseListener(responseListener);
+                        JOptionPane.showMessageDialog(this,
+                            "发送请求失败，请检查网络连接",
+                            "错误",
+                            JOptionPane.ERROR_MESSAGE);
+                    }
+                });
+                return;
+            }
+        }
+        
+        // 检查是否是异地登录的系统消息
+        if (message.getType() == MessageType.SYSTEM && 
+            message.getContent() != null && 
+            message.getContent().contains("您的账号在其他地方登录")) {
+            // 显示弹窗提醒
+            SwingUtilities.invokeLater(() -> {
+                JOptionPane.showMessageDialog(this,
+                    "您的账号在其他地方登录，此连接已断开",
+                    "异地登录提醒",
+                    JOptionPane.WARNING_MESSAGE);
+                // 关闭当前窗口，打开登录窗口
+                dispose();
+                new LoginFrame().setVisible(true);
+            });
+            return;
+        }
+        
+        // 检查是否是历史消息响应
+        if (message.getType() == MessageType.SYSTEM && 
+            message.getContent() != null && 
+            message.getContent().equals("[HISTORY_MESSAGES]")) {
+            logger.info("收到历史消息响应");
+            Object data = message.getData();
+            if (data instanceof List) {
+                List<Message> historyMessages = (List<Message>) data;
+                logger.info("收到 {} 条历史消息", historyMessages.size());
+                
+                // 在UI线程中显示历史消息
+                SwingUtilities.invokeLater(() -> {
+                    for (Message historyMessage : historyMessages) {
+                        displayMessage(historyMessage);
+                    }
+                });
+            }
+        }
+        
+        // 显示普通消息
+        displayMessage(message);
     }
     
     /**
@@ -2998,7 +2989,7 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         
         // 创建并启动定时器
         userListRefreshTimer = new javax.swing.Timer(USER_LIST_REFRESH_INTERVAL, e -> {
-            // 如果距离上次刷新超过了设定的间隔时间，则刷新
+            // 如果距离上次刷新已经超过设定的间隔时间，则刷新
             if (System.currentTimeMillis() - lastUserListRefreshTime >= USER_LIST_REFRESH_INTERVAL) {
                 logger.debug("定时刷新用户列表");
                 refreshUserList();

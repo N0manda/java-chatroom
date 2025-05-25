@@ -76,6 +76,11 @@ public class Message implements Serializable {
     private int transferProgress;
     
     /**
+     * 附加数据
+     */
+    private Object data;
+    
+    /**
      * 默认构造函数
      */
     public Message() {
@@ -431,5 +436,19 @@ public class Message implements Serializable {
      */
     public void setSubGroupId(String subGroupId) {
         this.subGroupId = subGroupId;
+    }
+    
+    /**
+     * 获取附加数据
+     */
+    public Object getData() {
+        return data;
+    }
+    
+    /**
+     * 设置附加数据
+     */
+    public void setData(Object data) {
+        this.data = data;
     }
 } 

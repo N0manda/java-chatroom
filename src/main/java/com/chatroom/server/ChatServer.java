@@ -445,16 +445,16 @@ public class ChatServer {
         try {
             List<Message> messages;
             // 判断是群聊还是私聊
-            if (targetId.equals("public") || targetId.equals("public_chat_room")) {
+            if (targetId.equals("public") || targetId.equals("public_chat_room") || 
+                chatGroups.containsKey(targetId)) {  // 检查是否是群组ID
                 logger.info("获取群聊历史消息: groupId={}", targetId);
-                messages = messageStoreService.getGroupMessages(targetId, 50); // 获取最近50条消息
+                messages = messageStoreService.getGroupMessages(targetId, 50);
             } else {
                 logger.info("获取私聊历史消息: targetId={}", targetId);
-                // 使用当前用户的ID和targetId获取消息
                 messages = messageStoreService.getPrivateMessages(
-                    handler.getUser().getUserId(),  // 使用当前用户的ID
-                    targetId,                       // 使用目标用户的ID
-                    50                             // 获取最近50条消息
+                    handler.getUser().getUserId(),
+                    targetId,
+                    50
                 );
             }
             
@@ -463,7 +463,7 @@ public class ChatServer {
             // 发送响应
             ChatResponse response = new ChatResponse(
                 request.getRequestId(),
-                ResponseType.HISTORY_MESSAGES,  // 使用正确的响应类型
+                ResponseType.HISTORY_MESSAGES,
                 true,
                 "获取历史消息成功",
                 messages
