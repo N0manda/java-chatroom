@@ -162,8 +162,6 @@ public class ClientHandler implements Runnable {
      * @param request 请求对象
      */
     private void handleLogin(ChatRequest request) {
-        logger.info("处理登录请求: {}", request);
-        
         try {
             Object requestData = request.getData();
             if (!(requestData instanceof String[]) || ((String[])requestData).length < 1) {
@@ -181,48 +179,55 @@ public class ClientHandler implements Runnable {
             logger.info("用户尝试登录: {}，使用密码认证", username);
             
             // 创建新用户对象，但此时还未验证
-            user = User.createUser(username, password);
-            logger.info("已创建用户对象: {}", user);
+            User loginUser = User.createUser(username, password);
+            logger.info("已创建用户对象: {}", loginUser);
             
             // 检查该用户名是否已经存在
             for (ClientHandler existingHandler : server.getOnlineUsers().values()) {
                 User existingUser = existingHandler.getUser();
                 if (existingUser != null && existingUser.getUsername().equals(username)) {
-                    // 用户名已经存在，检查密码是否正确
-                    if (existingUser.verifyPassword(password)) {
-                        // 密码正确，踢掉旧连接（实现单点登录）
-                        logger.info("用户密码验证通过，踢掉旧连接: {}", username);
-                        existingHandler.disconnect("您的账号在其他地方登录，此连接已断开");
-                        server.getOnlineUsers().remove(existingUser.getUserId());
-                    } else {
-                        // 密码错误
-                        logger.warn("用户密码验证失败: {}", username);
-                        sendResponse(ChatResponse.createErrorResponse(
-                                ResponseType.LOGIN_RESULT, 
-                                "密码错误", 
-                                null));
-                        user = null;
-                        return;
-                    }
+                    // 用户已在线，踢掉旧连接
+                    logger.info("用户 {} 已在其他位置登录，踢掉旧连接", username);
+                    existingHandler.disconnect("您的账号在其他地方登录，此连接已断开");
+                    server.getOnlineUsers().remove(existingUser.getUserId());
                     break;
                 }
             }
             
-            // 处理登录逻辑
-            logger.info("调用服务器处理登录逻辑");
-            ChatResponse response = server.handleLogin(user, this);
-            logger.info("登录响应: success={}, message={}", response.isSuccess(), response.getMessage());
+            // 验证用户
+            ChatResponse response = server.handleLogin(loginUser, this);
             
-            // 如果登录失败，清除user引用
             if (!response.isSuccess()) {
                 user = null;
+                logger.warn("用户登录失败: {}", response.getMessage());
             } else {
+                user = loginUser;
+                logger.info("用户登录成功，开始获取用户加入的群组列表");
+                
                 // 登录成功后，获取用户加入的群组列表
                 List<ChatGroup> userGroups = new ArrayList<>();
-                for (ChatGroup group : server.getChatGroups().values()) {
+                Map<String, ChatGroup> allGroups = server.getChatGroups();
+                logger.info("服务器共有 {} 个群组", allGroups.size());
+                
+                for (ChatGroup group : allGroups.values()) {
+                    logger.info("检查群组: {} (ID: {})", group.getGroupName(), group.getGroupId());
+                    logger.info("  群组成员列表: {}", group.getMemberIds());
+                    logger.info("  当前用户ID: {}", user.getUserId());
+                    logger.info("  用户是否在群组中: {}", group.isMember(user.getUserId()));
+                    
                     if (group.isMember(user.getUserId())) {
+                        logger.info("用户 {} 是群组 {} 的成员", user.getUsername(), group.getGroupName());
                         userGroups.add(group);
                     }
+                }
+                
+                logger.info("用户 {} 加入了 {} 个群组", user.getUsername(), userGroups.size());
+                if (userGroups.isEmpty()) {
+                    logger.warn("用户 {} 没有加入任何群组", user.getUsername());
+                } else {
+                    logger.info("用户加入的群组列表: {}", userGroups.stream()
+                        .map(g -> g.getGroupName() + "(" + g.getGroupId() + ")")
+                        .collect(Collectors.joining(", ")));
                 }
                 
                 // 发送群组列表
@@ -234,6 +239,9 @@ public class ClientHandler implements Runnable {
                     userGroups.toArray()
                 );
                 sendResponse(groupListResponse);
+                
+                // 通知所有在线用户刷新群组列表
+                server.broadcastMessage(Message.createSystemMessage("[REFRESH_GROUPS]", null, false));
             }
             
             // 发送响应
@@ -323,7 +331,25 @@ public class ClientHandler implements Runnable {
         ChatGroup group = server.getChatGroups().get(groupId);
         
         if (group != null && user != null) {
-            group.addMember(user.getUserId());
+            logger.info("用户 {} (ID: {}) 尝试加入群组 {} (ID: {})", 
+                user.getUsername(), 
+                user.getUserId(), 
+                group.getGroupName(), 
+                groupId);
+                
+            logger.info("加入前群组成员列表: {}", group.getMemberIds());
+            
+            boolean added = group.addMember(user.getUserId());
+            if (!added) {
+                logger.error("用户 {} 加入群组 {} 失败", user.getUsername(), group.getGroupName());
+                sendResponse(ChatResponse.createErrorResponse(request, "加入群组失败", null));
+                return;
+            }
+            
+            logger.info("加入后群组成员列表: {}", group.getMemberIds());
+            
+            // 保存群组数据
+            server.getGroupStoreService().saveGroup(group);
             
             // 通知群组内其他成员
             String notificationContent = user.getUsername() + " 加入了群组 " + group.getGroupName();
@@ -338,6 +364,7 @@ public class ClientHandler implements Runnable {
             
             sendResponse(ChatResponse.createSuccessResponse(request, "加入群组成功", group));
         } else {
+            logger.error("加入群组失败: 群组或用户不存在");
             sendResponse(ChatResponse.createErrorResponse(request, "群组不存在或用户未登录", null));
         }
     }

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -99,19 +100,36 @@ public class ChatServer {
         this.messageStoreService = MessageStoreService.getInstance();
         this.groupStoreService = GroupStoreService.getInstance();
         
+        logger.info("开始初始化服务器...");
+        logger.info("从存储中加载群组数据...");
+        
         // 从存储中加载群组
-        for (ChatGroup group : groupStoreService.getAllGroups()) {
+        List<ChatGroup> loadedGroups = groupStoreService.getAllGroups();
+        logger.info("从存储中加载到 {} 个群组", loadedGroups.size());
+        
+        for (ChatGroup group : loadedGroups) {
+            logger.info("正在加载群组: {}", group.getGroupName());
+            logger.info("  群组ID: {}", group.getGroupId());
+            logger.info("  创建者ID: {}", group.getCreatorId());
+            logger.info("  成员数量: {}", group.getMemberIds().size());
+            logger.info("  成员列表: {}", group.getMemberIds());
+            
             chatGroups.put(group.getGroupId(), group);
+            logger.info("群组 {} 加载完成", group.getGroupName());
         }
         
         // 创建公共聊天室（如果不存在）
         if (!chatGroups.containsKey("public")) {
+            logger.info("创建公共聊天室...");
             ChatGroup publicChatRoom = new ChatGroup();
             publicChatRoom.setGroupId("public");
             publicChatRoom.setGroupName("公共聊天室");
             chatGroups.put(publicChatRoom.getGroupId(), publicChatRoom);
             groupStoreService.saveGroup(publicChatRoom);
+            logger.info("公共聊天室创建完成");
         }
+        
+        logger.info("服务器初始化完成，当前共有 {} 个群组", chatGroups.size());
     }
     
     /**
@@ -253,6 +271,8 @@ public class ChatServer {
         String username = user.getUsername();
         String password = user.getPasswordHash().isEmpty() ? "" : user.getPasswordHash(); // 获取密码
         
+        logger.info("用户 {} 尝试登录", username);
+        
         // 检查用户名是否已经存在
         for (ClientHandler existingHandler : onlineUsers.values()) {
             User existingUser = existingHandler.getUser();
@@ -271,6 +291,7 @@ public class ChatServer {
         
         // 验证失败
         if (!credentialsValid) {
+            logger.warn("用户 {} 登录失败：凭据无效", username);
             return ChatResponse.createErrorResponse(
                     ResponseType.LOGIN_RESULT, 
                     "用户名或密码错误", 
@@ -279,6 +300,7 @@ public class ChatServer {
         
         // 登录成功
         onlineUsers.put(user.getUserId(), handler);
+        logger.info("用户 {} 登录成功，用户ID: {}", username, user.getUserId());
         
         // 广播用户登录消息
         broadcastUserStatusChange(username + " 已登录", true);
@@ -292,13 +314,35 @@ public class ChatServer {
             logger.info("已将用户 {} 添加到公共聊天室", username);
         }
         
+        // 恢复用户在其他群组中的成员身份
+        logger.info("开始恢复用户 {} 的群组成员身份", username);
+        List<ChatGroup> userGroups = new ArrayList<>();
+        for (ChatGroup group : chatGroups.values()) {
+            if (!group.getGroupId().equals("public")) {
+                logger.info("检查群组: {} (ID: {})", group.getGroupName(), group.getGroupId());
+                logger.info("群组成员列表: {}", group.getMemberIds());
+                logger.info("用户ID: {}", user.getUserId());
+                
+                if (group.isMember(user.getUserId())) {
+                    logger.info("用户 {} 是群组 {} 的成员，正在恢复成员身份", username, group.getGroupName());
+                    // 确保群组成员信息被保存
+                    groupStoreService.saveGroup(group);
+                    userGroups.add(group);
+                    logger.info("群组 {} 的成员信息已保存", group.getGroupName());
+                } else {
+                    logger.info("用户 {} 不是群组 {} 的成员", username, group.getGroupName());
+                }
+            }
+        }
+        
         // 返回成功响应和公共聊天室信息
+        logger.info("用户 {} 登录处理完成，准备返回响应", username);
         return new ChatResponse(
                 null,
                 ResponseType.LOGIN_RESULT,
                 true,
                 "登录成功",
-                new Object[]{user, publicChatRoom}
+                new Object[]{user, publicChatRoom, userGroups.toArray()}
         );
     }
     
@@ -320,13 +364,10 @@ public class ChatServer {
                 // 发送用户状态变更控制消息（标记为重要状态变更）
                 broadcastUserStatusChange("用户离线: " + user.getUsername(), true);
                 
-                // 从所有群组中移除该用户
-                for (ChatGroup group : chatGroups.values()) {
-                    if (group.getMemberIds().contains(userId)) {
-                        group.removeMember(userId);
-                        logger.info("用户 {} 已从群组 {} 中移除", user.getUsername(), group.getGroupName());
-                    }
-                }
+                // 通知所有在线用户刷新群组列表
+                broadcastMessage(Message.createSystemMessage("[REFRESH_GROUPS]", null, false));
+                
+                logger.info("用户 {} 已离线，但保留群组成员身份", user.getUsername());
             }
         }
     }

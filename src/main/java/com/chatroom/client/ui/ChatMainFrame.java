@@ -107,27 +107,43 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
     /**
      * 构造方法
      * 
-     * @param client 客户端引用
-     * @param publicChatRoom 公共聊天室对象
+     * @param client 聊天客户端
+     * @param publicChatRoom 公共聊天室
+     * @param userGroups 用户所在的群组列表
      */
-    public ChatMainFrame(ChatClient client, com.chatroom.common.model.ChatGroup publicChatRoom) {
+    public ChatMainFrame(ChatClient client, com.chatroom.common.model.ChatGroup publicChatRoom, List<com.chatroom.common.model.ChatGroup> userGroups) {
         this.client = client;
         this.chatPanels = new ArrayList<>();
         this.publicChatRoom = publicChatRoom;
         
+        // 初始化UI组件
         initComponents();
         setupListeners();
+        
+        // 设置窗口关闭事件
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         // 初始化时刷新用户列表
         refreshUserList();
         
-        // 初始化群组列表
-        initGroupList();
-        
-        // 如果有公共聊天室，自动打开
-        if (publicChatRoom != null) {
-            openPublicChatRoom();
+        // 添加用户所在的群组到群组列表
+        if (userGroups != null) {
+            for (com.chatroom.common.model.ChatGroup group : userGroups) {
+                if (group != null) {
+                    groupListModel.addElement(group);
+                    logger.info("添加用户所在群组: {}", group.getGroupName());
+                }
+            }
         }
+        
+        // 如果存在公共聊天室，添加到群组列表
+        if (publicChatRoom != null) {
+            groupListModel.addElement(publicChatRoom);
+            logger.info("添加公共聊天室: {}", publicChatRoom.getGroupName());
+        }
+        
+        // 设置窗口位置
+        setLocationRelativeTo(null);
     }
     
     /**
@@ -222,6 +238,8 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         
         // 创建群组列表
         groupList = new JList<>();
+        groupListModel = new DefaultListModel<>();
+        groupList.setModel(groupListModel);
         groupList.setCellRenderer(new GroupListCellRenderer());
         JScrollPane groupScrollPane = new JScrollPane(groupList);
         

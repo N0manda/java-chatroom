@@ -2,12 +2,16 @@ package com.chatroom.common.model;
 
 import java.io.Serializable;
 import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 聊天群组模型类
  */
 public class ChatGroup implements Serializable {
     private static final long serialVersionUID = 1L;
+    
+    private static final Logger logger = LoggerFactory.getLogger(ChatGroup.class);
     
     /**
      * 群组ID
@@ -80,7 +84,13 @@ public class ChatGroup implements Serializable {
      * @return 是否添加成功
      */
     public boolean addMember(String userId) {
-        return memberIds.add(userId);
+        boolean added = memberIds.add(userId);
+        if (added) {
+            logger.info("用户 {} 成功加入群组 {}, 当前成员数: {}", userId, groupName, memberIds.size());
+        } else {
+            logger.warn("用户 {} 已经是群组 {} 的成员", userId, groupName);
+        }
+        return added;
     }
     
     /**

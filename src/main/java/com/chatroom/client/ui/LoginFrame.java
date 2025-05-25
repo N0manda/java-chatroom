@@ -346,8 +346,22 @@ public class LoginFrame extends JFrame implements com.chatroom.client.MessageHan
                             logger.info("收到公共聊天室: {}", publicChatRoom.getGroupName());
                         }
                         
-                        // 打开主聊天窗口，传递公共聊天室
-                        openChatMainFrame(publicChatRoom);
+                        // 处理用户所在的群组列表
+                        if (data.length > 2 && data[2] instanceof Object[]) {
+                            Object[] groupArray = (Object[]) data[2];
+                            List<com.chatroom.common.model.ChatGroup> userGroups = new ArrayList<>();
+                            for (Object obj : groupArray) {
+                                if (obj instanceof com.chatroom.common.model.ChatGroup) {
+                                    userGroups.add((com.chatroom.common.model.ChatGroup) obj);
+                                    logger.info("用户所在群组: {}", ((com.chatroom.common.model.ChatGroup) obj).getGroupName());
+                                }
+                            }
+                            // 将群组列表传递给主窗口
+                            openChatMainFrame(publicChatRoom, userGroups);
+                        } else {
+                            // 如果没有群组列表，只传递公共聊天室
+                            openChatMainFrame(publicChatRoom, new ArrayList<>());
+                        }
                     } else {
                         logger.error("响应数据为空");
                         statusLabel.setText("登录失败: 服务器响应格式错误");
@@ -371,14 +385,14 @@ public class LoginFrame extends JFrame implements com.chatroom.client.MessageHan
      * 
      * @param publicChatRoom 公共聊天室（可为null）
      */
-    private void openChatMainFrame(com.chatroom.common.model.ChatGroup publicChatRoom) {
+    private void openChatMainFrame(com.chatroom.common.model.ChatGroup publicChatRoom, List<com.chatroom.common.model.ChatGroup> userGroups) {
         // 关闭登录窗口
         setVisible(false);
         dispose();
         
         // 打开主聊天窗口
         SwingUtilities.invokeLater(() -> {
-            ChatMainFrame mainFrame = new ChatMainFrame(client, publicChatRoom);
+            ChatMainFrame mainFrame = new ChatMainFrame(client, publicChatRoom, userGroups);
             mainFrame.setVisible(true);
         });
     }
