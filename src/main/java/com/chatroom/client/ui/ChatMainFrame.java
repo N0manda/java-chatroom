@@ -211,6 +211,34 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         userInfoPanel.add(avatarPanel, BorderLayout.CENTER);
         
         // 创建选项卡面板
+        JTabbedPane leftTabbedPane = new JTabbedPane(JTabbedPane.TOP);
+        leftTabbedPane.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
+        
+        // 创建用户列表
+        userList = new JList<>();
+        userList.setCellRenderer(new UserListCellRenderer());
+        JScrollPane userScrollPane = new JScrollPane(userList);
+        leftTabbedPane.addTab("在线用户", userScrollPane);
+        
+        // 创建群组列表
+        groupList = new JList<>();
+        groupList.setCellRenderer(new GroupListCellRenderer());
+        JScrollPane groupScrollPane = new JScrollPane(groupList);
+        leftTabbedPane.addTab("我的群组", groupScrollPane);
+        
+        // 添加选项卡切换监听器
+        leftTabbedPane.addChangeListener(e -> {
+            int selectedIndex = leftTabbedPane.getSelectedIndex();
+            if (selectedIndex == 1) { // 切换到"我的群组"选项卡
+                refreshGroupList();
+            }
+        });
+        
+        // 将选项卡面板添加到左侧面板
+        leftPanel.add(userInfoPanel, BorderLayout.NORTH);
+        leftPanel.add(leftTabbedPane, BorderLayout.CENTER);
+        
+        // 创建选项卡面板
         tabbedPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
         tabbedPane.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
         
@@ -270,9 +298,6 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
                 }
             }
         });
-        
-        // 自定义选项卡渲染器，添加关闭按钮
-        tabbedPane.setTabComponentAt(0, createTabComponent("系统消息", false));
         
         // 添加到分割面板
         splitPane.setLeftComponent(leftPanel);
@@ -2799,7 +2824,7 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
             if (result == JOptionPane.YES_OPTION) {
                 // 发送解散群组请求
                 ChatRequest request = new ChatRequest(
-                    RequestType.DISMISS_GROUP,
+                    com.chatroom.common.network.RequestType.DISMISS_GROUP,
                     client.getCurrentUser(),
                     chatGroup.getGroupId()
                 );

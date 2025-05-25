@@ -143,6 +143,9 @@ public class ClientHandler implements Runnable {
                 case INVITE_TO_GROUP:
                     handleInviteToGroup(request);
                     break;
+                case DISMISS_GROUP:
+                    handleDismissGroup(request);
+                    break;
                 default:
                     logger.warn("未知请求类型: {}", request.getType());
                     break;
@@ -508,6 +511,38 @@ public class ClientHandler implements Runnable {
 
         inviteeHandler.sendMessage(inviteMessage);
         sendResponse(ChatResponse.createSuccessResponse(request, "邀请已发送", null));
+    }
+    
+    /**
+     * 处理解散群组请求
+     * 
+     * @param request 请求对象
+     */
+    private void handleDismissGroup(ChatRequest request) {
+        String groupId = (String) request.getData();
+        ChatGroup group = server.getChatGroups().get(groupId);
+        
+        if (group != null && user != null) {
+            // 检查是否是群主
+            if (group.getCreatorId().equals(user.getUserId())) {
+                // 通知群组内所有成员
+                String notificationContent = "群组 " + group.getGroupName() + " 已被群主解散";
+                Message notification = Message.createSystemMessage(notificationContent, groupId, true);
+                server.broadcastToGroup(notification, groupId);
+                
+                // 从服务器移除群组
+                server.getChatGroups().remove(groupId);
+                
+                // 发送控制消息通知用户状态变更（重要变更）
+                sendUserStatusControlMessage("[STATUS_CHANGE]群组 " + group.getGroupName() + " 已被解散", true);
+                
+                sendResponse(ChatResponse.createSuccessResponse(request, "解散群组成功", null));
+            } else {
+                sendResponse(ChatResponse.createErrorResponse(request, "只有群主才能解散群组", null));
+            }
+        } else {
+            sendResponse(ChatResponse.createErrorResponse(request, "群组不存在或用户未登录", null));
+        }
     }
     
     /**

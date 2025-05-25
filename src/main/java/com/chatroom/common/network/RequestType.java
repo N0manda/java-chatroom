@@ -99,5 +99,10 @@ public enum RequestType implements Serializable {
     /**
      * 获取小组成员列表
      */
-    GET_SUBGROUP_MEMBERS
+    GET_SUBGROUP_MEMBERS,
+    
+    /**
+     * 解散群组
+     */
+    DISMISS_GROUP
 } 
