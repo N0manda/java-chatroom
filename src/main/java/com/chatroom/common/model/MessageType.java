@@ -39,5 +39,30 @@ public enum MessageType implements Serializable {
     /**
      * 控制消息 - 用于客户端和服务器之间的控制通信
      */
-    CONTROL
+    CONTROL,
+    
+    /**
+     * 小组创建消息
+     */
+    SUBGROUP_CREATE,
+    
+    /**
+     * 小组邀请消息
+     */
+    SUBGROUP_INVITE,
+    
+    /**
+     * 小组加入消息
+     */
+    SUBGROUP_JOIN,
+    
+    /**
+     * 小组离开消息
+     */
+    SUBGROUP_LEAVE,
+    
+    /**
+     * 小组消息
+     */
+    SUBGROUP_MESSAGE
 } 

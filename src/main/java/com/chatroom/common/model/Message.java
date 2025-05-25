@@ -41,6 +41,16 @@ public class Message implements Serializable {
     private boolean isGroupMessage;
     
     /**
+     * 是否是小组消息
+     */
+    private boolean isSubGroupMessage;
+    
+    /**
+     * 小组ID（如果是小组消息）
+     */
+    private String subGroupId;
+    
+    /**
      * 发送时间
      */
     private Date timestamp;
@@ -204,6 +214,44 @@ public class Message implements Serializable {
     }
     
     /**
+     * 创建一个小组文本消息
+     * 
+     * @param sender 发送者
+     * @param subGroupId 小组ID
+     * @param content 消息内容
+     * @return 新消息对象
+     */
+    public static Message createSubGroupTextMessage(User sender, String subGroupId, String content) {
+        Message message = new Message();
+        message.setMessageId(UUID.randomUUID().toString());
+        message.setType(MessageType.SUBGROUP_MESSAGE);
+        message.setContent(content);
+        message.setSender(sender);
+        message.setSubGroupId(subGroupId);
+        message.setSubGroupMessage(true);
+        message.setTimestamp(new Date());
+        return message;
+    }
+    
+    /**
+     * 创建一个小组系统消息
+     * 
+     * @param content 消息内容
+     * @param subGroupId 小组ID
+     * @return 系统消息对象
+     */
+    public static Message createSubGroupSystemMessage(String content, String subGroupId) {
+        Message message = new Message();
+        message.setMessageId(UUID.randomUUID().toString());
+        message.setType(MessageType.SYSTEM);
+        message.setContent(content);
+        message.setSubGroupId(subGroupId);
+        message.setSubGroupMessage(true);
+        message.setTimestamp(new Date());
+        return message;
+    }
+    
+    /**
      * 获取消息ID
      */
     public String getMessageId() {
@@ -355,5 +403,33 @@ public class Message implements Serializable {
      */
     public void setTransferProgress(int transferProgress) {
         this.transferProgress = transferProgress;
+    }
+    
+    /**
+     * 是否是小组消息
+     */
+    public boolean isSubGroupMessage() {
+        return isSubGroupMessage;
+    }
+    
+    /**
+     * 设置是否是小组消息
+     */
+    public void setSubGroupMessage(boolean subGroupMessage) {
+        isSubGroupMessage = subGroupMessage;
+    }
+    
+    /**
+     * 获取小组ID
+     */
+    public String getSubGroupId() {
+        return subGroupId;
+    }
+    
+    /**
+     * 设置小组ID
+     */
+    public void setSubGroupId(String subGroupId) {
+        this.subGroupId = subGroupId;
     }
 } 

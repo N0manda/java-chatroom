@@ -4,9 +4,9 @@ import com.chatroom.common.model.ChatGroup;
 import com.chatroom.common.model.Message;
 import com.chatroom.common.model.MessageType;
 import com.chatroom.common.model.User;
+import com.chatroom.common.model.RequestType;
 import com.chatroom.common.network.ChatRequest;
 import com.chatroom.common.network.ChatResponse;
-import com.chatroom.common.network.RequestType;
 import com.chatroom.common.network.ResponseType;
 import com.chatroom.server.ChatServer;
 import org.slf4j.Logger;
@@ -115,14 +115,14 @@ public class ClientHandler implements Runnable {
                 case SEND_MESSAGE:
                     handleSendMessage(request);
                     break;
-                case CREATE_GROUP:
-                    handleCreateGroup(request);
-                    break;
                 case JOIN_GROUP:
                     handleJoinGroup(request);
                     break;
                 case LEAVE_GROUP:
                     handleLeaveGroup(request);
+                    break;
+                case CREATE_GROUP:
+                    handleCreateGroup(request);
                     break;
                 case GET_USERS:
                     handleGetUsers(request);
@@ -135,6 +135,9 @@ public class ClientHandler implements Runnable {
                     break;
                 case HEARTBEAT:
                     handleHeartbeat(request);
+                    break;
+                case INVITE_TO_GROUP:
+                    handleInviteToGroup(request);
                     break;
                 default:
                     logger.warn("未知请求类型: {}", request.getType());
@@ -206,6 +209,16 @@ public class ClientHandler implements Runnable {
             // 如果登录失败，清除user引用
             if (!response.isSuccess()) {
                 user = null;
+            } else {
+                // 登录成功后，发送群组列表
+                ChatResponse groupListResponse = new ChatResponse(
+                    null,
+                    ResponseType.GROUP_LIST,
+                    true,
+                    "获取群组列表成功",
+                    server.getChatGroups().values().toArray()
+                );
+                sendResponse(groupListResponse);
             }
             
             // 发送响应
@@ -347,6 +360,7 @@ public class ClientHandler implements Runnable {
             group.addMember(user.getUserId());
             
             server.getChatGroups().put(group.getGroupId(), group);
+            server.getGroupStoreService().saveGroup(group);
             
             // 发送控制消息通知用户状态变更（非重要变更）
             sendUserStatusControlMessage("新群组创建: " + groupName + " (创建者: " + user.getUsername() + ")", false);
@@ -395,6 +409,60 @@ public class ClientHandler implements Runnable {
             user.updateActiveTime();
         }
         sendResponse(ChatResponse.createSuccessResponse(request, "心跳成功", null));
+    }
+    
+    /**
+     * 处理邀请加入群组请求
+     * 
+     * @param request 请求对象
+     */
+    private void handleInviteToGroup(ChatRequest request) {
+        if (user == null) {
+            sendResponse(ChatResponse.createErrorResponse(request, "用户未登录", null));
+            return;
+        }
+
+        Object[] data = (Object[]) request.getData();
+        if (data == null || data.length != 2) {
+            sendResponse(ChatResponse.createErrorResponse(request, "无效的邀请数据", null));
+            return;
+        }
+
+        String groupId = (String) data[0];
+        String inviteeId = (String) data[1];
+
+        ChatGroup group = server.getChatGroups().get(groupId);
+        if (group == null) {
+            sendResponse(ChatResponse.createErrorResponse(request, "群组不存在", null));
+            return;
+        }
+
+        // 检查邀请者是否是群组成员
+        if (!group.isMember(user.getUserId())) {
+            sendResponse(ChatResponse.createErrorResponse(request, "您不是该群组成员", null));
+            return;
+        }
+
+        // 检查被邀请者是否已经是群组成员
+        if (group.isMember(inviteeId)) {
+            sendResponse(ChatResponse.createErrorResponse(request, "该用户已经是群组成员", null));
+            return;
+        }
+
+        // 获取被邀请者的ClientHandler
+        ClientHandler inviteeHandler = server.getClientHandler(inviteeId);
+        if (inviteeHandler == null) {
+            sendResponse(ChatResponse.createErrorResponse(request, "被邀请的用户不在线", null));
+            return;
+        }
+
+        // 发送邀请消息给被邀请者
+        String inviteContent = "[GROUP_INVITE]" + groupId + "|" + group.getGroupName();
+        Message inviteMessage = Message.createSystemMessage(inviteContent, null, false);
+        inviteMessage.setSender(user);
+
+        inviteeHandler.sendMessage(inviteMessage);
+        sendResponse(ChatResponse.createSuccessResponse(request, "邀请已发送", null));
     }
     
     /**

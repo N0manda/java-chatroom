@@ -49,6 +49,11 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
     private JList<User> userList;
     
     /**
+     * 群组列表
+     */
+    private JList<com.chatroom.common.model.ChatGroup> groupList;
+    
+    /**
      * 活跃窗口
      */
     private final List<MessagePanel> chatPanels;
@@ -136,7 +141,15 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         fileMenu.add(logoutItem);
         fileMenu.addSeparator();
         fileMenu.add(exitItem);
-        menuBar.add(fileMenu);
+        
+        // 添加群组菜单
+        JMenu groupMenu = new JMenu("群组");
+        JMenuItem createGroupItem = new JMenuItem("创建群组");
+        JMenuItem joinGroupItem = new JMenuItem("加入群组");
+        groupMenu.add(createGroupItem);
+        groupMenu.add(joinGroupItem);
+        menuBar.add(groupMenu);
+        
         setJMenuBar(menuBar);
         
         // 注销菜单项事件
@@ -145,12 +158,18 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         // 退出菜单项事件
         exitItem.addActionListener(e -> exit());
         
+        // 创建群组菜单项事件
+        createGroupItem.addActionListener(e -> showCreateGroupDialog());
+        
+        // 加入群组菜单项事件
+        joinGroupItem.addActionListener(e -> showJoinGroupDialog());
+        
         // 创建分割面板
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitPane.setDividerLocation(250);
         splitPane.setDividerSize(5);
         
-        // 用户列表面板
+        // 左侧面板（用户列表和群组列表）
         JPanel leftPanel = new JPanel(new BorderLayout());
         leftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         
@@ -178,14 +197,17 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         
         userInfoPanel.add(avatarPanel, BorderLayout.CENTER);
         
+        // 创建选项卡面板
+        JTabbedPane leftTabbedPane = new JTabbedPane();
+        
         // 在线用户列表面板
         JPanel userListPanel = new JPanel(new BorderLayout());
         userListPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
         
         // 列表标题
-        JLabel titleLabel = new JLabel("在线用户");
-        titleLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 12));
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        JLabel userTitleLabel = new JLabel("在线用户");
+        userTitleLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 12));
+        userTitleLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         
         // 创建用户列表
         userList = new JList<>();
@@ -194,12 +216,58 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         JScrollPane userListScrollPane = new JScrollPane(userList);
         userListScrollPane.setBorder(BorderFactory.createEmptyBorder());
         
-        userListPanel.add(titleLabel, BorderLayout.NORTH);
+        userListPanel.add(userTitleLabel, BorderLayout.NORTH);
         userListPanel.add(userListScrollPane, BorderLayout.CENTER);
+        
+        // 群组列表面板
+        JPanel groupListPanel = new JPanel(new BorderLayout());
+        groupListPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        
+        // 群组列表标题和按钮面板
+        JPanel groupHeaderPanel = new JPanel(new BorderLayout());
+        groupHeaderPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        
+        JLabel groupTitleLabel = new JLabel("我的群组");
+        groupTitleLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 12));
+        
+        // 按钮面板
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+        buttonPanel.setOpaque(false);
+        
+        // 加入群组按钮
+        JButton joinGroupButton = new JButton("加入群组");
+        joinGroupButton.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
+        joinGroupButton.addActionListener(e -> showJoinGroupDialog());
+        
+        // 创建群组按钮
+        JButton createGroupButton = new JButton("创建群组");
+        createGroupButton.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
+        createGroupButton.addActionListener(e -> showCreateGroupDialog());
+        
+        buttonPanel.add(joinGroupButton);
+        buttonPanel.add(createGroupButton);
+        
+        groupHeaderPanel.add(groupTitleLabel, BorderLayout.WEST);
+        groupHeaderPanel.add(buttonPanel, BorderLayout.EAST);
+        
+        groupListPanel.add(groupHeaderPanel, BorderLayout.NORTH);
+        
+        // 创建群组列表
+        groupList = new JList<>();
+        groupList.setCellRenderer(new GroupListCellRenderer());
+        groupList.setFixedCellHeight(50);
+        JScrollPane groupListScrollPane = new JScrollPane(groupList);
+        groupListScrollPane.setBorder(BorderFactory.createEmptyBorder());
+        
+        groupListPanel.add(groupListScrollPane, BorderLayout.CENTER);
+        
+        // 添加选项卡
+        leftTabbedPane.addTab("在线用户", null, userListPanel, "查看在线用户");
+        leftTabbedPane.addTab("我的群组", null, groupListPanel, "查看我的群组");
         
         // 添加到左侧面板
         leftPanel.add(userInfoPanel, BorderLayout.NORTH);
-        leftPanel.add(userListPanel, BorderLayout.CENTER);
+        leftPanel.add(leftTabbedPane, BorderLayout.CENTER);
         
         // 创建聊天选项卡面板
         tabbedPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -226,6 +294,20 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         
         // 创建默认的系统消息面板
         addSystemPanel();
+        
+        // 设置群组列表双击事件
+        groupList.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    int index = groupList.locationToIndex(e.getPoint());
+                    if (index >= 0) {
+                        com.chatroom.common.model.ChatGroup selectedGroup = groupList.getModel().getElementAt(index);
+                        openGroupChat(selectedGroup);
+                    }
+                }
+            }
+        });
     }
     
     /**
@@ -342,7 +424,7 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         logger.info("打开公共聊天室: {}", publicChatRoom.getGroupName());
         
         // 创建聊天面板
-        GroupChatPanel chatPanel = new GroupChatPanel(publicChatRoom.getGroupName(), publicChatRoom, client, userList);
+        GroupChatPanel chatPanel = new GroupChatPanel(publicChatRoom.getGroupName(), publicChatRoom, client, userList, this);
         chatPanels.add(chatPanel);
         
         // 添加到选项卡
@@ -515,6 +597,83 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
             return;
         }
         
+        // 检查是否是群组系统消息
+        if (message.getType() == MessageType.SYSTEM && message.isGroupMessage()) {
+            String content = message.getContent();
+            if (content != null) {
+                if (content.contains("加入了群组") || content.contains("离开了群组")) {
+                    // 刷新群组列表
+                    refreshGroupList();
+                }
+            }
+        }
+        
+        // 检查是否是群组邀请消息
+        if (message.getType() == MessageType.SYSTEM && 
+            message.getContent() != null && 
+            message.getContent().startsWith("[GROUP_INVITE]")) {
+            // 解析邀请信息
+            String[] parts = message.getContent().substring("[GROUP_INVITE]".length()).split("\\|");
+            if (parts.length >= 2) {
+                String groupId = parts[0];
+                String groupName = parts[1];
+                String inviterName = message.getSender() != null ? message.getSender().getUsername() : "未知用户";
+                
+                // 显示邀请对话框
+                SwingUtilities.invokeLater(() -> {
+                    int result = JOptionPane.showConfirmDialog(this,
+                        inviterName + " 邀请您加入群组 \"" + groupName + "\"",
+                        "群组邀请",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+                    
+                    // 发送接受或拒绝请求
+                    ChatRequest request = new ChatRequest(
+                        result == JOptionPane.YES_OPTION ? RequestType.JOIN_GROUP : RequestType.LEAVE_GROUP,
+                        client.getCurrentUser(),
+                        groupId
+                    );
+                    
+                    // 添加响应监听器
+                    final MessageHandler.ResponseListener responseListener = new MessageHandler.ResponseListener() {
+                        @Override
+                        public void onResponseReceived(ChatResponse response) {
+                            if (response.getType() == ResponseType.GROUP_RESULT) {
+                                if (response.isSuccess()) {
+                                    SwingUtilities.invokeLater(() -> {
+                                        if (result == JOptionPane.YES_OPTION) {
+                                            // 如果接受邀请，刷新群组列表并打开群聊
+                                            refreshGroupList();
+                                            com.chatroom.common.model.ChatGroup group = (com.chatroom.common.model.ChatGroup) response.getData();
+                                            openGroupChat(group);
+                                        }
+                                    });
+                                } else {
+                                    SwingUtilities.invokeLater(() -> 
+                                        JOptionPane.showMessageDialog(ChatMainFrame.this,
+                                            (result == JOptionPane.YES_OPTION ? "加入" : "拒绝") + "群组失败: " + response.getMessage(),
+                                            "错误",
+                                            JOptionPane.ERROR_MESSAGE)
+                                    );
+                                }
+                            }
+                            client.getMessageHandler().removeResponseListener(this);
+                        }
+                    };
+                    
+                    client.getMessageHandler().addResponseListener(responseListener);
+                    if (!client.sendRequest(request)) {
+                        client.getMessageHandler().removeResponseListener(responseListener);
+                        JOptionPane.showMessageDialog(this,
+                            "发送请求失败，请检查网络连接",
+                            "错误",
+                            JOptionPane.ERROR_MESSAGE);
+                    }
+                });
+                return;
+            }
+        }
+        
         // 检查是否是异地登录的系统消息
         if (message.getType() == MessageType.SYSTEM && 
             message.getContent() != null && 
@@ -595,30 +754,40 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
                 }
             } else if (message.isGroupMessage()) {
                 // 处理群聊消息
-                if (publicChatRoom != null && message.getReceiverId() != null && 
-                    message.getReceiverId().equals(publicChatRoom.getGroupId())) {
+                // 查找对应的群聊面板
+                boolean foundPanel = false;
+                for (int i = 0; i < chatPanels.size(); i++) {
+                    MessagePanel panel = chatPanels.get(i);
+                    com.chatroom.common.model.ChatGroup group = panel.getChatGroup();
                     
-                    // 查找公共聊天室面板
-                    boolean foundPanel = false;
-                    for (int i = 0; i < chatPanels.size(); i++) {
-                        MessagePanel panel = chatPanels.get(i);
-                        com.chatroom.common.model.ChatGroup group = panel.getChatGroup();
+                    if (group != null && group.getGroupId().equals(message.getReceiverId())) {
+                        panel.appendMessage(message);
+                        foundPanel = true;
                         
-                        if (group != null && group.getGroupId().equals(publicChatRoom.getGroupId())) {
-                            panel.appendMessage(message);
-                            foundPanel = true;
-                            
-                            // 如果不是当前选中的选项卡，标记为有新消息
-                            if (i != tabbedPane.getSelectedIndex()) {
-                                tabbedPane.setTitleAt(i, "* " + publicChatRoom.getGroupName());
+                        // 如果不是当前选中的选项卡，标记为有新消息
+                        if (i != tabbedPane.getSelectedIndex()) {
+                            String title = tabbedPane.getTitleAt(i);
+                            if (!title.startsWith("* ")) {
+                                tabbedPane.setTitleAt(i, "* " + title);
                             }
+                        }
+                        break;
+                    }
+                }
+                
+                // 如果没有找到面板，尝试打开
+                if (!foundPanel) {
+                    com.chatroom.common.model.ChatGroup group = null;
+                    for (int i = 0; i < groupList.getModel().getSize(); i++) {
+                        com.chatroom.common.model.ChatGroup g = groupList.getModel().getElementAt(i);
+                        if (g.getGroupId().equals(message.getReceiverId())) {
+                            group = g;
                             break;
                         }
                     }
                     
-                    // 如果没有找到面板，尝试打开
-                    if (!foundPanel && publicChatRoom != null) {
-                        openPublicChatRoom();
+                    if (group != null) {
+                        openGroupChat(group);
                         // 将消息添加到新打开的面板
                         chatPanels.get(chatPanels.size() - 1).appendMessage(message);
                     }
@@ -1602,7 +1771,7 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
     /**
      * 群聊面板
      */
-    private static class GroupChatPanel extends JPanel implements MessagePanel {
+    private class GroupChatPanel extends JPanel implements MessagePanel {
         /**
          * 群组对象
          */
@@ -1634,6 +1803,11 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         private final JList<User> userList;
         
         /**
+         * 主窗口引用
+         */
+        private final ChatMainFrame mainFrame;
+        
+        /**
          * 日期格式化
          */
         private final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
@@ -1645,11 +1819,13 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
          * @param chatGroup 群组对象
          * @param client 客户端引用
          * @param userList 用户列表
+         * @param mainFrame 主窗口引用
          */
-        public GroupChatPanel(String title, com.chatroom.common.model.ChatGroup chatGroup, ChatClient client, JList<User> userList) {
+        public GroupChatPanel(String title, com.chatroom.common.model.ChatGroup chatGroup, ChatClient client, JList<User> userList, ChatMainFrame mainFrame) {
             this.chatGroup = chatGroup;
             this.client = client;
             this.userList = userList;
+            this.mainFrame = mainFrame;
             
             // 检查客户端是否有效
             if (client == null) {
@@ -1686,12 +1862,17 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
             JButton membersButton = new JButton("成员列表");
             membersButton.addActionListener(e -> showMemberList());
             
+            // 邀请成员按钮
+            JButton inviteButton = new JButton("邀请成员");
+            inviteButton.addActionListener(e -> showInviteDialog());
+            
             // 输入面板
             JPanel inputPanel = new JPanel(new BorderLayout());
             inputPanel.add(inputScrollPane, BorderLayout.CENTER);
             
             // 按钮面板
             JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            buttonPanel.add(inviteButton);
             buttonPanel.add(membersButton);
             buttonPanel.add(fileButton);
             buttonPanel.add(sendButton);
@@ -2432,6 +2613,103 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
                 e.printStackTrace();
             }
         }
+        
+        /**
+         * 显示邀请成员对话框
+         */
+        private void showInviteDialog() {
+            // 获取在线用户列表
+            List<User> onlineUsers = new ArrayList<>();
+            for (int i = 0; i < userList.getModel().getSize(); i++) {
+                User user = userList.getModel().getElementAt(i);
+                // 排除已经在群组中的用户
+                if (!chatGroup.getMemberIds().contains(user.getUserId())) {
+                    onlineUsers.add(user);
+                }
+            }
+            
+            if (onlineUsers.isEmpty()) {
+                JOptionPane.showMessageDialog(this, 
+                    "没有可邀请的用户", 
+                    "邀请成员", 
+                    JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            
+            // 创建用户选择列表
+            JList<User> userSelectList = new JList<>(new DefaultListModel<User>() {
+                {
+                    for (User user : onlineUsers) {
+                        addElement(user);
+                    }
+                }
+            });
+            userSelectList.setCellRenderer(new UserListCellRenderer());
+            userSelectList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+            
+            JScrollPane scrollPane = new JScrollPane(userSelectList);
+            scrollPane.setPreferredSize(new Dimension(300, 200));
+            
+            JPanel panel = new JPanel(new BorderLayout());
+            panel.add(new JLabel("选择要邀请的用户："), BorderLayout.NORTH);
+            panel.add(scrollPane, BorderLayout.CENTER);
+            
+            int result = JOptionPane.showConfirmDialog(this, panel, "邀请成员", 
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                
+            if (result == JOptionPane.OK_OPTION) {
+                List<User> selectedUsers = userSelectList.getSelectedValuesList();
+                if (selectedUsers.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, 
+                        "请选择要邀请的用户", 
+                        "邀请成员", 
+                        JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                
+                // 发送邀请请求
+                for (User user : selectedUsers) {
+                    ChatRequest request = new ChatRequest(
+                        RequestType.INVITE_TO_GROUP,
+                        client.getCurrentUser(),
+                        new Object[] { chatGroup.getGroupId(), user.getUserId() }
+                    );
+                    
+                    // 添加响应监听器
+                    final MessageHandler.ResponseListener responseListener = new MessageHandler.ResponseListener() {
+                        @Override
+                        public void onResponseReceived(ChatResponse response) {
+                            if (response.getType() == ResponseType.GROUP_RESULT) {
+                                if (response.isSuccess()) {
+                                    SwingUtilities.invokeLater(() -> {
+                                        addSystemMessage("已邀请用户 " + user.getUsername() + " 加入群组");
+                                        // 刷新群组列表
+                                        mainFrame.refreshGroupList();
+                                    });
+                                } else {
+                                    SwingUtilities.invokeLater(() -> 
+                                        JOptionPane.showMessageDialog(mainFrame, 
+                                            "邀请用户 " + user.getUsername() + " 失败: " + response.getMessage(), 
+                                            "邀请失败", 
+                                            JOptionPane.ERROR_MESSAGE)
+                                    );
+                                }
+                            }
+                            client.getMessageHandler().removeResponseListener(this);
+                        }
+                    };
+                    
+                    client.getMessageHandler().addResponseListener(responseListener);
+                    if (!client.sendRequest(request)) {
+                        client.getMessageHandler().removeResponseListener(responseListener);
+                        JOptionPane.showMessageDialog(this, 
+                            "发送邀请请求失败，请检查网络连接", 
+                            "邀请失败", 
+                            JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        }
     }
     
     /**
@@ -2663,6 +2941,282 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
             );
         } else {
             logger.debug("获取历史消息请求已发送");
+        }
+    }
+    
+    /**
+     * 显示创建群组对话框
+     */
+    private void showCreateGroupDialog() {
+        JTextField groupNameField = new JTextField(20);
+        JPanel panel = new JPanel(new GridLayout(0, 1));
+        panel.add(new JLabel("请输入群组名称:"));
+        panel.add(groupNameField);
+        
+        int result = JOptionPane.showConfirmDialog(this, panel, "创建群组", 
+            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            
+        if (result == JOptionPane.OK_OPTION) {
+            String groupName = groupNameField.getText().trim();
+            if (groupName.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "群组名称不能为空", "错误", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // 创建群组请求
+            ChatRequest request = new ChatRequest(
+                RequestType.CREATE_GROUP,
+                client.getCurrentUser(),
+                groupName
+            );
+            
+            // 添加响应监听器
+            final MessageHandler.ResponseListener responseListener = new MessageHandler.ResponseListener() {
+                @Override
+                public void onResponseReceived(ChatResponse response) {
+                    if (response.getType() == ResponseType.GROUP_RESULT) {
+                        if (response.isSuccess()) {
+                            com.chatroom.common.model.ChatGroup newGroup = (com.chatroom.common.model.ChatGroup) response.getData();
+                            SwingUtilities.invokeLater(() -> {
+                                // 更新群组列表
+                                refreshGroupList();
+                                // 打开新创建的群组聊天
+                                openGroupChat(newGroup);
+                            });
+                        } else {
+                            SwingUtilities.invokeLater(() -> 
+                                JOptionPane.showMessageDialog(ChatMainFrame.this, 
+                                    "创建群组失败: " + response.getMessage(), 
+                                    "错误", JOptionPane.ERROR_MESSAGE)
+                            );
+                        }
+                    }
+                    client.getMessageHandler().removeResponseListener(this);
+                }
+            };
+            
+            client.getMessageHandler().addResponseListener(responseListener);
+            if (!client.sendRequest(request)) {
+                client.getMessageHandler().removeResponseListener(responseListener);
+                JOptionPane.showMessageDialog(this, 
+                    "发送创建群组请求失败，请检查网络连接", 
+                    "错误", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    
+    /**
+     * 显示加入群组对话框
+     */
+    private void showJoinGroupDialog() {
+        JTextField groupIdField = new JTextField(20);
+        JPanel panel = new JPanel(new GridLayout(0, 1));
+        panel.add(new JLabel("请输入群组ID:"));
+        panel.add(groupIdField);
+        
+        int result = JOptionPane.showConfirmDialog(this, panel, "加入群组", 
+            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            
+        if (result == JOptionPane.OK_OPTION) {
+            String groupId = groupIdField.getText().trim();
+            if (groupId.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "群组ID不能为空", "错误", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // 加入群组请求
+            ChatRequest request = new ChatRequest(
+                RequestType.JOIN_GROUP,
+                client.getCurrentUser(),
+                groupId
+            );
+            
+            // 添加响应监听器
+            final MessageHandler.ResponseListener responseListener = new MessageHandler.ResponseListener() {
+                @Override
+                public void onResponseReceived(ChatResponse response) {
+                    if (response.getType() == ResponseType.GROUP_RESULT) {
+                        if (response.isSuccess()) {
+                            com.chatroom.common.model.ChatGroup group = (com.chatroom.common.model.ChatGroup) response.getData();
+                            SwingUtilities.invokeLater(() -> {
+                                // 更新群组列表
+                                refreshGroupList();
+                                // 打开群组聊天
+                                openGroupChat(group);
+                            });
+                        } else {
+                            SwingUtilities.invokeLater(() -> 
+                                JOptionPane.showMessageDialog(ChatMainFrame.this, 
+                                    "加入群组失败: " + response.getMessage(), 
+                                    "错误", JOptionPane.ERROR_MESSAGE)
+                            );
+                        }
+                    }
+                    client.getMessageHandler().removeResponseListener(this);
+                }
+            };
+            
+            client.getMessageHandler().addResponseListener(responseListener);
+            if (!client.sendRequest(request)) {
+                client.getMessageHandler().removeResponseListener(responseListener);
+                JOptionPane.showMessageDialog(this, 
+                    "发送加入群组请求失败，请检查网络连接", 
+                    "错误", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    
+    /**
+     * 刷新群组列表
+     */
+    private void refreshGroupList() {
+        logger.info("正在刷新群组列表...");
+        
+        // 发送获取群组列表的请求
+        ChatRequest request = new ChatRequest(
+            RequestType.GET_GROUPS,
+            client.getCurrentUser(),
+            null
+        );
+        
+        // 添加响应监听器
+        final MessageHandler.ResponseListener responseListener = new MessageHandler.ResponseListener() {
+            @Override
+            public void onResponseReceived(ChatResponse response) {
+                if (response.getType() == ResponseType.GROUP_LIST) {
+                    if (response.isSuccess()) {
+                        Object data = response.getData();
+                        if (data instanceof Object[]) {
+                            Object[] groupArray = (Object[]) data;
+                            List<com.chatroom.common.model.ChatGroup> groups = new ArrayList<>();
+                            
+                            for (Object obj : groupArray) {
+                                if (obj instanceof com.chatroom.common.model.ChatGroup) {
+                                    groups.add((com.chatroom.common.model.ChatGroup) obj);
+                                }
+                            }
+                            
+                            SwingUtilities.invokeLater(() -> {
+                                groupList.setModel(new DefaultListModel<com.chatroom.common.model.ChatGroup>() {
+                                    {
+                                        for (com.chatroom.common.model.ChatGroup group : groups) {
+                                            addElement(group);
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                    } else {
+                        SwingUtilities.invokeLater(() -> 
+                            JOptionPane.showMessageDialog(ChatMainFrame.this, 
+                                "获取群组列表失败: " + response.getMessage(), 
+                                "错误", JOptionPane.ERROR_MESSAGE)
+                        );
+                    }
+                }
+                client.getMessageHandler().removeResponseListener(this);
+            }
+        };
+        
+        client.getMessageHandler().addResponseListener(responseListener);
+        if (!client.sendRequest(request)) {
+            client.getMessageHandler().removeResponseListener(responseListener);
+            SwingUtilities.invokeLater(() -> 
+                JOptionPane.showMessageDialog(this, 
+                    "发送获取群组列表请求失败，请检查网络连接", 
+                    "错误", JOptionPane.ERROR_MESSAGE)
+            );
+        }
+    }
+    
+    /**
+     * 打开群组聊天
+     */
+    private void openGroupChat(com.chatroom.common.model.ChatGroup group) {
+        // 检查是否已存在该群组的聊天窗口
+        for (int i = 0; i < chatPanels.size(); i++) {
+            MessagePanel panel = chatPanels.get(i);
+            com.chatroom.common.model.ChatGroup existingGroup = panel.getChatGroup();
+            
+            if (existingGroup != null && existingGroup.getGroupId().equals(group.getGroupId())) {
+                // 切换到已有的选项卡
+                tabbedPane.setSelectedIndex(i);
+                return;
+            }
+        }
+        
+        // 检查是否超过最大窗口数
+        if (chatPanels.size() >= MAX_CHAT_WINDOWS) {
+            JOptionPane.showMessageDialog(this, 
+                "最多只能打开 " + MAX_CHAT_WINDOWS + " 个聊天窗口", 
+                "警告", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // 创建新的群聊面板
+        GroupChatPanel chatPanel = new GroupChatPanel(group.getGroupName(), group, client, userList, this);
+        chatPanels.add(chatPanel);
+        
+        // 添加到选项卡
+        tabbedPane.addTab(group.getGroupName(), null, chatPanel, "群组: " + group.getGroupName());
+        tabbedPane.setIconAt(tabbedPane.getTabCount() - 1, createGroupIcon());
+        tabbedPane.setSelectedIndex(tabbedPane.getTabCount() - 1);
+        
+        // 加载历史消息
+        loadHistoryMessages(null, group, true);
+    }
+    
+    /**
+     * 群组列表单元格渲染器
+     */
+    private class GroupListCellRenderer extends DefaultListCellRenderer {
+        @Override
+        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            JPanel panel = new JPanel(new BorderLayout(10, 0));
+            panel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+            
+            if (isSelected) {
+                panel.setBackground(new Color(240, 248, 255)); // 浅蓝色背景
+                panel.setBorder(BorderFactory.createMatteBorder(0, 3, 0, 0, new Color(52, 152, 219)));
+            } else {
+                panel.setBackground(Color.WHITE);
+            }
+            
+            if (value instanceof com.chatroom.common.model.ChatGroup) {
+                com.chatroom.common.model.ChatGroup group = (com.chatroom.common.model.ChatGroup) value;
+                
+                // 创建群组图标
+                JLabel iconLabel = new JLabel();
+                iconLabel.setIcon(createGroupIcon());
+                
+                // 群组信息面板
+                JPanel groupInfoPanel = new JPanel(new BorderLayout());
+                groupInfoPanel.setOpaque(false);
+                
+                JLabel nameLabel = new JLabel(group.getGroupName());
+                nameLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 13));
+                
+                JLabel memberLabel = new JLabel(group.getMemberIds().size() + " 人");
+                memberLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 11));
+                memberLabel.setForeground(Color.GRAY);
+                
+                groupInfoPanel.add(nameLabel, BorderLayout.NORTH);
+                groupInfoPanel.add(memberLabel, BorderLayout.SOUTH);
+                
+                // 添加到面板
+                panel.add(iconLabel, BorderLayout.WEST);
+                panel.add(groupInfoPanel, BorderLayout.CENTER);
+                
+                // 添加双击提示标签
+                JLabel tipLabel = new JLabel("双击进入群聊");
+                tipLabel.setFont(new Font("Microsoft YaHei", Font.ITALIC, 10));
+                tipLabel.setForeground(Color.GRAY);
+                tipLabel.setHorizontalAlignment(JLabel.RIGHT);
+                
+                panel.add(tipLabel, BorderLayout.EAST);
+            }
+            
+            return panel;
         }
     }
 } 

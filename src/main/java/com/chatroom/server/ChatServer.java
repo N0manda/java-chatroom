@@ -11,6 +11,7 @@ import com.chatroom.common.network.ResponseType;
 import com.chatroom.server.config.UserCredentials;
 import com.chatroom.server.handler.ClientHandler;
 import com.chatroom.server.service.MessageStoreService;
+import com.chatroom.server.service.GroupStoreService;
 import com.chatroom.server.ui.ServerConfigFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,6 +71,11 @@ public class ChatServer {
     private final MessageStoreService messageStoreService;
     
     /**
+     * 群组存储服务
+     */
+    private final GroupStoreService groupStoreService;
+    
+    /**
      * 构造方法 - 只指定端口
      * 
      * @param port 服务器端口
@@ -91,12 +97,21 @@ public class ChatServer {
         this.onlineUsers = new ConcurrentHashMap<>();
         this.chatGroups = new ConcurrentHashMap<>();
         this.messageStoreService = MessageStoreService.getInstance();
+        this.groupStoreService = GroupStoreService.getInstance();
         
-        // 创建公共聊天室
-        ChatGroup publicChatRoom = new ChatGroup();
-        publicChatRoom.setGroupId("public");
-        publicChatRoom.setGroupName("公共聊天室");
-        chatGroups.put(publicChatRoom.getGroupId(), publicChatRoom);
+        // 从存储中加载群组
+        for (ChatGroup group : groupStoreService.getAllGroups()) {
+            chatGroups.put(group.getGroupId(), group);
+        }
+        
+        // 创建公共聊天室（如果不存在）
+        if (!chatGroups.containsKey("public")) {
+            ChatGroup publicChatRoom = new ChatGroup();
+            publicChatRoom.setGroupId("public");
+            publicChatRoom.setGroupName("公共聊天室");
+            chatGroups.put(publicChatRoom.getGroupId(), publicChatRoom);
+            groupStoreService.saveGroup(publicChatRoom);
+        }
     }
     
     /**
@@ -451,6 +466,23 @@ public class ChatServer {
      */
     public MessageStoreService getMessageStoreService() {
         return messageStoreService;
+    }
+    
+    /**
+     * 获取群组存储服务
+     */
+    public GroupStoreService getGroupStoreService() {
+        return groupStoreService;
+    }
+    
+    /**
+     * 获取用户的ClientHandler
+     * 
+     * @param userId 用户ID
+     * @return ClientHandler对象，如果用户不在线则返回null
+     */
+    public ClientHandler getClientHandler(String userId) {
+        return onlineUsers.get(userId);
     }
     
     /**

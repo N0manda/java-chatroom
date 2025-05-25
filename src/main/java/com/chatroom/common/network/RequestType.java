@@ -37,6 +37,11 @@ public enum RequestType implements Serializable {
     LEAVE_GROUP,
     
     /**
+     * 邀请加入群组
+     */
+    INVITE_TO_GROUP,
+    
+    /**
      * 获取用户列表
      */
     GET_USERS,
@@ -64,5 +69,35 @@ public enum RequestType implements Serializable {
     /**
      * 获取历史消息请求
      */
-    GET_HISTORY_MESSAGES
+    GET_HISTORY_MESSAGES,
+    
+    /**
+     * 创建小组
+     */
+    CREATE_SUBGROUP,
+    
+    /**
+     * 邀请加入小组
+     */
+    INVITE_TO_SUBGROUP,
+    
+    /**
+     * 加入小组
+     */
+    JOIN_SUBGROUP,
+    
+    /**
+     * 离开小组
+     */
+    LEAVE_SUBGROUP,
+    
+    /**
+     * 获取小组列表
+     */
+    GET_SUBGROUPS,
+    
+    /**
+     * 获取小组成员列表
+     */
+    GET_SUBGROUP_MEMBERS
 } 

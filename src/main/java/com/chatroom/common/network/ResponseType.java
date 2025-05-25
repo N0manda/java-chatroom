@@ -69,5 +69,20 @@ public enum ResponseType implements Serializable {
     /**
      * 错误
      */
-    ERROR
+    ERROR,
+    
+    /**
+     * 小组结果
+     */
+    SUBGROUP_RESULT,
+    
+    /**
+     * 小组列表
+     */
+    SUBGROUP_LIST,
+    
+    /**
+     * 小组成员列表
+     */
+    SUBGROUP_MEMBERS
 } 
