@@ -14,6 +14,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 客户端处理器，处理单个客户端的请求
@@ -210,13 +214,21 @@ public class ClientHandler implements Runnable {
             if (!response.isSuccess()) {
                 user = null;
             } else {
-                // 登录成功后，发送群组列表
+                // 登录成功后，获取用户加入的群组列表
+                List<ChatGroup> userGroups = new ArrayList<>();
+                for (ChatGroup group : server.getChatGroups().values()) {
+                    if (group.isMember(user.getUserId())) {
+                        userGroups.add(group);
+                    }
+                }
+                
+                // 发送群组列表
                 ChatResponse groupListResponse = new ChatResponse(
                     null,
                     ResponseType.GROUP_LIST,
                     true,
                     "获取群组列表成功",
-                    server.getChatGroups().values().toArray()
+                    userGroups.toArray()
                 );
                 sendResponse(groupListResponse);
             }
@@ -391,11 +403,44 @@ public class ClientHandler implements Runnable {
      * @param request 请求对象
      */
     private void handleGetGroups(ChatRequest request) {
-        // 获取所有群组
+        if (user == null) {
+            logger.warn("获取群组列表失败：用户未登录");
+            sendResponse(ChatResponse.createErrorResponse(request, "用户未登录", null));
+            return;
+        }
+
+        logger.info("开始获取用户 {} (ID: {}) 的群组列表", user.getUsername(), user.getUserId());
+        
+        // 获取用户加入的群组列表
+        List<ChatGroup> userGroups = new ArrayList<>();
+        Map<String, ChatGroup> allGroups = server.getChatGroups();
+        logger.info("服务器共有 {} 个群组", allGroups.size());
+        
+        for (ChatGroup group : allGroups.values()) {
+            logger.info("检查群组: {} (ID: {})", group.getGroupName(), group.getGroupId());
+            logger.info("群组成员列表: {}", group.getMemberIds());
+            logger.info("当前用户ID: {}", user.getUserId());
+            logger.info("用户是否在群组中: {}", group.isMember(user.getUserId()));
+            
+            if (group.isMember(user.getUserId())) {
+                logger.info("用户 {} 是群组 {} 的成员", user.getUsername(), group.getGroupName());
+                userGroups.add(group);
+            }
+        }
+        
+        logger.info("用户 {} 加入了 {} 个群组", user.getUsername(), userGroups.size());
+        if (userGroups.isEmpty()) {
+            logger.warn("用户 {} 没有加入任何群组", user.getUsername());
+        } else {
+            logger.info("用户加入的群组列表: {}", userGroups.stream()
+                .map(g -> g.getGroupName() + "(" + g.getGroupId() + ")")
+                .collect(Collectors.joining(", ")));
+        }
+        
         sendResponse(ChatResponse.createSuccessResponse(
                 request,
                 "获取群组列表成功",
-                server.getChatGroups().values().toArray()
+                userGroups.toArray()
         ));
     }
     

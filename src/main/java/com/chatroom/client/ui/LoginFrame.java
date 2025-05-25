@@ -315,7 +315,7 @@ public class LoginFrame extends JFrame implements com.chatroom.client.MessageHan
     public void onResponseReceived(ChatResponse response) {
         logger.info("收到响应: 类型={}, 成功={}, 消息={}", response.getType(), response.isSuccess(), response.getMessage());
         
-        // 处理登录响应
+        // 只处理登录响应
         if (response.getType() == ResponseType.LOGIN_RESULT) {
             SwingUtilities.invokeLater(() -> {
                 if (response.isSuccess()) {
@@ -323,7 +323,6 @@ public class LoginFrame extends JFrame implements com.chatroom.client.MessageHan
                     logger.info("登录成功，准备打开主界面");
                     statusLabel.setText("登录成功");
                     statusLabel.setForeground(Color.GREEN);
-                    client.getMessageHandler().removeResponseListener(this);
                     
                     // 获取响应数据（用户和公共聊天室）
                     Object[] data = (Object[]) response.getData();
@@ -363,9 +362,8 @@ public class LoginFrame extends JFrame implements com.chatroom.client.MessageHan
                     loginButton.setEnabled(true);
                 }
             });
-        } else {
-            logger.debug("忽略非登录响应: {}", response.getType());
         }
+        // 其他类型的响应不需要处理，直接忽略
     }
     
     /**

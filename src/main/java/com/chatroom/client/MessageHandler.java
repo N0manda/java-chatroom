@@ -160,6 +160,22 @@ public class MessageHandler implements Runnable {
     }
     
     /**
+     * 处理响应（公共方法）
+     * 
+     * @param response 响应对象
+     */
+    public void processResponse(ChatResponse response) {
+        // 直接通知响应监听器，避免重复处理
+        for (ResponseListener listener : responseListeners) {
+            try {
+                listener.onResponseReceived(response);
+            } catch (Exception e) {
+                logger.error("响应监听器处理响应出错: {}", e.getMessage());
+            }
+        }
+    }
+    
+    /**
      * 停止处理器
      */
     public void stop() {
