@@ -224,7 +224,21 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
         groupList = new JList<>();
         groupList.setCellRenderer(new GroupListCellRenderer());
         JScrollPane groupScrollPane = new JScrollPane(groupList);
-        leftTabbedPane.addTab("我的群组", groupScrollPane);
+        
+        // 创建群组列表面板
+        JPanel groupPanel = new JPanel(new BorderLayout());
+        
+        // 创建按钮面板
+        JPanel groupButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JButton createGroupButton = new JButton("创建群组");
+        createGroupButton.addActionListener(e -> showCreateGroupDialog());
+        groupButtonPanel.add(createGroupButton);
+        
+        // 将按钮面板和群组列表添加到群组面板
+        groupPanel.add(groupButtonPanel, BorderLayout.NORTH);
+        groupPanel.add(groupScrollPane, BorderLayout.CENTER);
+        
+        leftTabbedPane.addTab("我的群组", groupPanel);
         
         // 添加选项卡切换监听器
         leftTabbedPane.addChangeListener(e -> {

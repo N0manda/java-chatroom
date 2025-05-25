@@ -255,6 +255,9 @@ public class ClientHandler implements Runnable {
      */
     private void handleLogout(ChatRequest request) {
         if (user != null) {
+            // 通知所有在线用户刷新群组列表
+            server.broadcastMessage(Message.createSystemMessage("[REFRESH_GROUPS]", null, false));
+            
             server.handleLogout(user.getUserId());
             sendResponse(ChatResponse.createSuccessResponse(request, "注销成功", null));
             disconnect(null);
@@ -330,6 +333,9 @@ public class ClientHandler implements Runnable {
             // 发送控制消息通知用户状态变更（非重要变更）
             sendUserStatusControlMessage(user.getUsername() + " 加入群组: " + group.getGroupName(), false);
             
+            // 通知所有在线用户刷新群组列表
+            server.broadcastMessage(Message.createSystemMessage("[REFRESH_GROUPS]", null, false));
+            
             sendResponse(ChatResponse.createSuccessResponse(request, "加入群组成功", group));
         } else {
             sendResponse(ChatResponse.createErrorResponse(request, "群组不存在或用户未登录", null));
@@ -356,6 +362,9 @@ public class ClientHandler implements Runnable {
             // 发送控制消息通知用户状态变更（非重要变更）
             sendUserStatusControlMessage(user.getUsername() + " 离开群组: " + group.getGroupName(), false);
             
+            // 通知所有在线用户刷新群组列表
+            server.broadcastMessage(Message.createSystemMessage("[REFRESH_GROUPS]", null, false));
+            
             sendResponse(ChatResponse.createSuccessResponse(request, "离开群组成功", null));
         } else {
             sendResponse(ChatResponse.createErrorResponse(request, "群组不存在或用户未登录", null));
@@ -379,6 +388,9 @@ public class ClientHandler implements Runnable {
             
             // 发送控制消息通知用户状态变更（非重要变更）
             sendUserStatusControlMessage("新群组创建: " + groupName + " (创建者: " + user.getUsername() + ")", false);
+            
+            // 通知所有在线用户刷新群组列表
+            server.broadcastMessage(Message.createSystemMessage("[REFRESH_GROUPS]", null, false));
             
             sendResponse(ChatResponse.createSuccessResponse(request, "创建群组成功", group));
         } else {
@@ -533,8 +545,14 @@ public class ClientHandler implements Runnable {
                 // 从服务器移除群组
                 server.getChatGroups().remove(groupId);
                 
+                // 从持久化存储中删除群组
+                server.getGroupStoreService().deleteGroup(groupId);
+                
                 // 发送控制消息通知用户状态变更（重要变更）
                 sendUserStatusControlMessage("[STATUS_CHANGE]群组 " + group.getGroupName() + " 已被解散", true);
+                
+                // 通知所有在线用户刷新群组列表
+                server.broadcastMessage(Message.createSystemMessage("[REFRESH_GROUPS]", null, false));
                 
                 sendResponse(ChatResponse.createSuccessResponse(request, "解散群组成功", null));
             } else {
