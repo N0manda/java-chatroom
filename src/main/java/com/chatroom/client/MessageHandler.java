@@ -1,6 +1,7 @@
 package com.chatroom.client;
 
 import com.chatroom.common.model.Message;
+import com.chatroom.common.model.MessageType;
 import com.chatroom.common.network.ChatRequest;
 import com.chatroom.common.network.ChatResponse;
 import com.chatroom.common.network.RequestType;
@@ -90,6 +91,23 @@ public class MessageHandler implements Runnable {
      * @param message 消息对象
      */
     private void handleMessage(Message message) {
+        // 检查是否是异地登录的系统消息
+        if (message.getType() == MessageType.SYSTEM && 
+            message.getContent() != null && 
+            message.getContent().contains("您的账号在其他地方登录")) {
+            // 通知所有消息监听器
+            for (MessageListener listener : messageListeners) {
+                try {
+                    listener.onMessageReceived(message);
+                } catch (Exception e) {
+                    logger.error("消息监听器处理消息出错: {}", e.getMessage());
+                }
+            }
+            // 断开连接
+            client.disconnect();
+            return;
+        }
+
         // 通知所有消息监听器
         for (MessageListener listener : messageListeners) {
             try {

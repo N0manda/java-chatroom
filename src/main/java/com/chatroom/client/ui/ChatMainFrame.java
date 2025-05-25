@@ -515,6 +515,23 @@ public class ChatMainFrame extends JFrame implements MessageHandler.MessageListe
             return;
         }
         
+        // 检查是否是异地登录的系统消息
+        if (message.getType() == MessageType.SYSTEM && 
+            message.getContent() != null && 
+            message.getContent().contains("您的账号在其他地方登录")) {
+            // 显示弹窗提醒
+            SwingUtilities.invokeLater(() -> {
+                JOptionPane.showMessageDialog(this,
+                    "您的账号在其他地方登录，此连接已断开",
+                    "异地登录提醒",
+                    JOptionPane.WARNING_MESSAGE);
+                // 关闭当前窗口，打开登录窗口
+                dispose();
+                new LoginFrame().setVisible(true);
+            });
+            return;
+        }
+        
         // 创建消息唯一标识，用于去重
         String messageId = message.getSender() != null ? message.getSender().getUserId() : "system";
         messageId += "_" + (message.getTimestamp() != null ? message.getTimestamp().getTime() : System.currentTimeMillis());
